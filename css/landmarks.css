@@ -1,0 +1,168 @@
+/* Always set the map height explicitly to define the size of the div
+ * element that contains the map. */
+ .navbar {
+     position: relative;
+     display: flex;
+     flex-wrap: wrap;
+     align-items: center;
+     justify-content: space-between;
+     padding-top: .5rem;
+     padding-bottom: .5rem;
+}
+
+#map {
+  height: 90%;
+  width: 50%;
+}
+
+#maplist {
+  background-color:white;
+  position:absolute;
+  width:45%;
+  z-index: 99;
+  height:80%;
+  opacity: 0.9;
+  top:15%;
+  left:2%;
+  border-radius: 10px;
+  padding-top:1%;
+  overflow-y: scroll;
+  display:none;
+}
+
+#maplist li{
+  list-style-type: none;
+}
+/* Optional: Makes the sample page fill the window. */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+  .right {
+      height: 100%;
+      display: block;
+      overflow-y: scroll;
+  }
+
+
+.gpstory_tags li {
+  display: inline;
+
+}
+
+.gpstory_author {
+  font-size: 16px;
+  font-weight: bold;
+  width:100%;;
+  margin-top:10px;
+}
+
+.gpstory_header{
+
+  font-size: 20px;
+  font-weight: bold;
+  width:100%;
+
+}
+
+.gpstory_header img{
+  width:25px;
+}
+.gpstory_title {
+width:100%;
+
+}
+.gpstory_source{
+  font-size: 16px;
+  font-weight:bold;
+  display: block;
+  margin-top:5px;
+  color:#65676C;
+}
+.gpstory_info a{
+  color:black;
+}
+
+.gpstory_source a{
+  color:#757575;
+}
+
+.gpstory_catagory {
+  margin-top:20px;
+
+}
+.gpstory_catagory li{
+  display:inline;
+}
+
+.gpstory_catagory button{
+  background-color: #008CBA;
+  border-radius: 16px;
+  border: 0px;
+  padding-left:10px;
+  padding-right:10px;
+  font-weight:bold;
+  color: white;
+  font-size: 20px;
+
+}
+
+.gpstory_catagory {
+  padding-left:0px;
+
+}
+
+.gpstory_catagory span{
+  display:inline;
+}
+.gpstory_catagory ul{
+  display:inline;
+}
+.gpstory_info{
+  width:100%;
+}
+
+.gpstory_info input{
+  display:inline-block;
+}
+.gpstory_list div{
+  display:inline-block;
+  float:left;
+  margin-top:10px;
+  background-color:#F0F2F6;
+  padding-left:10px;
+  padding-right:10px;
+  border-radius: 16px;
+}
+.gpstory_thumbnail {
+  //width:20%;
+//  display:none;
+}
+.gpstory_thumbnail img {
+  width:95%;
+  height:95%;
+  border: 5px solid #FFF;
+}
+
+.gpstory_author_name {
+  margin-left:10px;
+}
+
+
+.gpstory_tags ul{
+padding-left:0;
+margin-top:10px;
+
+}
+
+.gpstory_tags button{
+  background-color: #abdbe3;
+  border-radius: 16px;
+  border: 0px;
+  padding-left:10px;
+  padding-right:10px;
+
+}
