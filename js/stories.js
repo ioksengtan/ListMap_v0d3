@@ -23,11 +23,13 @@ $(document).ready(
             for (i in data_json.table) {
                 addmyappList(gpsstory_list_all, data_json.table[i], 'prepend')
             }
+			
             let inpt = document.querySelectorAll('.groupinput')
             for(let i = 0; i < inpt.length; i++)  {
                 let id = inpt[i].id.replace('genInput','')
                 getGPSbyStoryID(id)
             }
+			
         })
     });
 
@@ -300,53 +302,7 @@ function addmyappList(div_id_to_add, data_to_append, where_to_add, id_div) {
     html_reg += '     </div>';
     html_reg += '   </div>';
     html_reg += ' </div>';
-    /*
-    html_reg += "<div class=\"myapp_list\">";
-    html_reg += "   <div class=\"myapp_info\">";
-    html_reg += "      <div class=\"myapp_source\">"+myapp_what + " @ </span><span class=\"myapp_location\">" + myapp_where + "</div>";
-    html_reg += "      <div class=\"myapp_header\">";
-    html_reg += "      <input type=\"checkbox\" aria-label=\"Checkbox for following text input\">";
-    switch(myapp_types){
-      case 'youtube':
-        html_reg += "      <span class=\"myapp_title\"><a href=\"javascript:getGPSbyStoryID("+ myapp_story_id +")\">" + myapp_title + "</a> <br/></span><span>(" + "<a href=\""+ myapp_link +"\"><img src=\"youtube_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
-        break;
-      case 'book':
-        html_reg += "      <span class=\"myapp_title\"><a href=\"javascript:getGPSbyStoryID("+ myapp_story_id +")\">" + myapp_title + "</a> <br/></span><span>(" + "<a href=\""+ myapp_link +"\"><img src=\"book_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
-        break;
-      case 'blog':
-        html_reg += "      <span class=\"myapp_title\"><a href=\"javascript:getGPSbyStoryID("+ myapp_story_id +")\">" + myapp_title + "</a> <br/></span><span>(" + "<a href=\""+ myapp_link +"\"><img src=\"webpage_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
-        break;
-      default:
-        html_reg += "      <span class=\"myapp_title\"><a href=\"javascript:getGPSbyStoryID("+ myapp_story_id +")\">" + myapp_title + "</a> <br/></span><span>(" + "<a href=\""+ myapp_link +"\"><img src=\"webpage_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
-  }
-    html_reg += "      </div>";
-
-    html_reg += "      <div class=\"myapp_author\">";
-    html_reg += "         <a href=\"\">";
-    html_reg += "         <img src=\"" + myapp_avatar + "\" class=\"rounded-circle z-depth-0\" alt=\"avatar image\" height=\"35\"><span class=\"myapp_author_name\">";
-    html_reg += "         " + myapp_author ;
-    html_reg += "         </span></a>";
-    html_reg += "      </div>";
-    html_reg += "      <div class=\"myapp_tags\">";
-    html_reg += "         <ul>";
-
-    tags = myapp_tags.trim().split(",");
-    for(i=0;i<tags.length;i++){
-        if(tags[i] == ''){
-          continue;
-        }else{
-          html_reg += "            <button type=\"button\"> " + tags[i] + "</button>";
-      }
-    //html_reg += "            <li><a href=\"\">#blog</a></li>";
-    //html_reg += "            <li><a href=\"\">#taipei</a></li>";
-    //tml_reg += "            <li><a href=\"\">#malaysia</a></li>";
-    }
-    html_reg += "         </ul>";
-    html_reg += "      </div>";
-    html_reg += "   </div>";
-    //html_reg += "   <div class=\"myapp_thumbnail\"><img src=\"" + myapp_thumbnail + "\" /></div>";
-    html_reg += "</div>";
-    */
+    
 
     //console.log(html_reg);
     if (where_to_add == 'prepend') {
@@ -685,28 +641,7 @@ mymap = L.map('map', {
       */
 }
 function refreshMap2(locations, sid) {
-  //console.log(locations);
-    // if(markerIcon.length !== locations.length) {
-    //     let test = markerIcon[0]
-    //     console.log(markerIcon)
-    // }
 
-    //mymap.invalidateSize();
-    //var mymap = L.map('map').setView([25.1130643, 121.5227629], 7);
-    //console.log(locations);
-    /*
-
-  var markers = L.markerClusterGroup();
-  //var landmarks_layergroup = L.layerGroup();
-  locations.map(item => L.marker(new L.LatLng(item.lat, item.lng)))
-             //.forEach(item => mymap.addLayer(item));
-             .forEach(item => markers.addLayer(item));
-
-mymap = L.map('map', {
-  center: [25.1130643, 121.5227629],
-  zoom: 7,
-  layers: [streets, markers]
-});*/
 
 
     var streets = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -737,14 +672,7 @@ mymap = L.map('map', {
 
     let genInput = document.getElementById(`genInput${sid}`)
 
-    // let markerShadow = document.querySelectorAll('.leaflet-marker-shadow')
 
-    // if (gps_locations.length != markerIcon.length) {
-    //     for (let i = 0; i < (markerShadow.length - gps_locations.length); i++) {
-    //         markerIcon[i].remove()
-    //         markerShadow[i].remove()
-    //     }
-    // }
     let markerIcon = document.querySelectorAll('.leaflet-marker-icon')
     let markerShadow = document.querySelectorAll('.leaflet-marker-shadow')
     genInput.addEventListener('click', function () {
@@ -778,118 +706,10 @@ mymap = L.map('map', {
     var overlayMaps = {
         "Landmarks": markers
     };
-    /*
-    mymap.eachLayer(function (layer) {
-        mymap.removeLayer(layer);
-    	//console.log(layer);
-    });
-    */
-    //mymap.clearLayers();
-
-
-
-    // const DIFF = +document.querySelector('input').value.replace(',', '.');
-    //     const toDel = [];
-
-    //     markers.getLayers().forEach((n, i, arr) => {
-    //         const coordN = n.getLatLng();
-    //         if (n !== arr.find(m => {
-    //         const coordM = m.getLatLng();
-    //         return !toDel.includes(m) && Object.keys(coordM).every(c => Math.abs(coordM[c] - coordN[c]) < DIFF);
-    //         })) {
-    //         toDel.push(n);
-    //         }
-    //     });
-
-    // toDel.forEach(n => markers.removeLayer(n));
 
     mymap.addLayer(markers);
 
-    //setTimeout(function(){
-    // markers.zoomToBounds({padding: [20, 20]});
-    //mymap.rem
-    //mymap.removeControl(p_control);
-    //p_control.removeFrom(mymap);
-    //p_control = L.control.layers(baseMaps, overlayMaps).addTo(mymap);
-    /*
-  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-  attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-  maxZoom: 18,
-  id: 'mapbox/streets-v11',
-  tileSize: 512,
-  zoomOffset: -1,
-  accessToken: 'pk.eyJ1IjoiaW9rc2VuZ3RhbiIsImEiOiJja3JkeTgxMHI1Z3B2MzFxcHM0NWo3cTEwIn0.kkcIlaMdiTpqqaCk6YpOgQ'
-}).addTo(mymap);
-*/
-    /*mymap.setLayoutProperty('country-label', 'text-field', [
-    'get',
-    'name_zh-Hant'
-    ]);
-    */
-    /*
-    var markers = L.markerClusterGroup();
-
-    locations.map(item => L.marker(new L.LatLng(item.lat, item.lng)))
-               //.forEach(item => mymap.addLayer(item));
-               .forEach(item => markers.addLayer(item));
-    mymap.addLayer(markers);
-    */
-    /*
-      map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 8,
-          center: {
-              lat: 24.790078397806973,
-              lng: 121.07471724480152
-          },
-      });
-      const infowindow = new google.maps.InfoWindow({
-        content: "<h1>test</h1>",
-      });
-      // Create an array of alphabetical characters used to label the markers.
-      let labels = [];
-      for (location_id in locations){
-        //const labels = ["", "B1"];
-        labels.push(locations[location_id].name);
-      }
-      // Add some markers to the map.
-      // Note: The code uses the JavaScript Array.prototype.map() method to
-      // create an array of markers based on a given "locations" array.
-      // The map() method here has nothing to do with the Google Maps API.
-      markers = locations.map((location, i) => {
-          var marker = new google.maps.Marker({
-              position: location,
-              label: labels[i % labels.length],
-              title: 'test'
-          });
-          marker.addListener("click", () => {
-              //map.setZoom(8);
-              //map.setCenter(marker.getPosition());
-              infowindow.setContent(location.content + '<br/>' + '<a href=\"' + location.link + '\">link</a>');
-              infowindow.open(map, marker);
-              console.log(marker.getLabel());
-
-          });
-          return marker
-      });
-      // Add a marker clusterer to manage the markers.
-      markerCluster = new MarkerClusterer(map, markers, {
-          imagePath: "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
-      });
-      marker = new google.maps.Marker({
-        position: {lat:25.0489782,lng:121.5208181},
-      });
-      //markerCluster.addMarkers(marker, true);
-
-      google.maps.event.addListener(markerCluster, 'clusterclick', function(c) {
-          console.log('Number of managed markers in cluster: ' + c.getSize());
-          var m = c.getMarkers();
-          for (let i in m) {
-              //console.log(m[i].getLabel());
-              //console.log(m[i].getTitle());
-              //console.log(m[i].myObj.myKey);
-          }
-      });
-      */
+    
 }
 
 
