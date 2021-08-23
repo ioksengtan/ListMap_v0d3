@@ -103,7 +103,7 @@ function getGPSbyStoryID(story_id) {
 
         let genInpt = document.getElementById(`genInput${story_id}`)
         genInpt.checked = true
-        GotoStory(story_id,genInpt.checked)
+        MultiCheck(story_id,genInpt.checked)
 
     });
 
@@ -268,8 +268,7 @@ function GetCluster(story_id) {
     });
 }
 
-function GotoStory(id,val) {
-	
+function MultiCheck(id,val) {
     let childIcon = document.querySelectorAll(`.chilInput${id}`)
     childIcon.forEach(child => {
         child.checked = val
@@ -318,14 +317,14 @@ function UpdateMap(locations, sid) {
                 mymap.addLayer(layer)
             })
             mymap.addLayer(markers);
-            GotoStory(id,val)
+            MultiCheck(id,val)
             console.log(markerIcon.length)
         } else {
             markers.eachLayer(function (layer) {
                 layer.remove()
             })
             mymap.removeLayer(markers);
-            GotoStory(id,val)
+            MultiCheck(id,val)
             console.log(markerIcon.length)
         }
     })
