@@ -12,6 +12,13 @@ var sheetName = 'landmarks';
 $(document).ready(
 
     function () {
+
+const i18n = new VueI18n({
+  locale: 'en',
+  messages,
+})
+new Vue({ i18n }).$mount('#dropdown')
+
         $.get(appUrl, parameter, function (data) {
 
 //            console.log(data);
@@ -407,7 +414,6 @@ function refreshGMap(locations) {
 function initMap() {
     //mymap = L.map('map').setView([25.1130643, 121.5227629], 7);
     //console.log('test');
-	/*
     var streets = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
@@ -416,12 +422,13 @@ function initMap() {
         zoomOffset: -1,
         accessToken: 'pk.eyJ1IjoiaW9rc2VuZ3RhbiIsImEiOiJja3JkeTgxMHI1Z3B2MzFxcHM0NWo3cTEwIn0.kkcIlaMdiTpqqaCk6YpOgQ'
     });
-	*/
+/*
 	var streets = L.tileLayer('https://api.mapbox.com/styles/v1/yushengc/cksmkvn1wnscl17lydjzbzhtv/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoieXVzaGVuZ2MiLCJhIjoiY2phYnJ6NDdwMDM2bzMzcXV1NTEzMWlucCJ9.0mKbx5AhNu9BLzYyLwCyXQ', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
         
     });
+*/
     var markers = L.markerClusterGroup();
     //var landmarks_layergroup = L.layerGroup();
     locations.map(item => L.marker(new L.LatLng(item.lat, item.lng)))

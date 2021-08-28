@@ -663,8 +663,8 @@ function initMap() {
         .forEach(item => markers.addLayer(item));
     */
     mymap = L.map('map', {
-        //center: [25.1130643, 121.5227629],
-        center: [39.921640, -75.412165],
+        center: [25.1130643, 121.5227629],
+        //center: [39.921640, -75.412165],
         zoom: 7,
         layers: [streets]
     });
@@ -676,12 +676,16 @@ function initMap() {
 	
 	mymap.on('moveend', function () {
         console.log('zoom');
-        console.log(this.getZoom() + ' ' + this.getCenter()+' ' + this.getBounds().getWest());
-
-		$.get(appUrl, { url:sheetsUrl, name:sheetName, command:"getRecentStories" }, function (data) {
+        console.log(this.getZoom() + ' ' + this.getCenter()+' ' + this.getBounds().getWest()+ ' ' + this.getBounds().getEast() + ' ' + this.getBounds().getNorth() + ' ' + this.getBounds().getSouth());
+	west = this.getBounds().getWest();
+	north = this.getBounds().getNorth();
+	east = this.getBounds().getEast();
+	south = this.getBounds().getSouth();
+		$.get(appUrl, { url:sheetsUrl, name:sheetName, command:"getGPSByZone", lat_south:south, lat_north:north, lng_west:west, lng_east:east }, function (data) {
 			$('#gpsstory_list_all').empty();
 			data_json = JSON.parse(data);
-
+			console.log(data_json)
+/*
             for (i in data_json.table) {
                 addmyappList("gpsstory_list_all", data_json.table[i], 'prepend')
             }
@@ -690,7 +694,9 @@ function initMap() {
                 let id = inpt[i].id.replace('genInput','')
                 getGPSbyStoryID(id)
             }
+*/
         })
+
     });
 
     var baseMaps = {
