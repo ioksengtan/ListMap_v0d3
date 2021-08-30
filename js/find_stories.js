@@ -1,4 +1,3 @@
-
 var appUrl = 'https://script.google.com/macros/s/AKfycby-gL9w_PIzt4TDnqfpErNP1YTck93p4j7z1FTpt52bCkryg5Iu/exec';
 var sheetsUrl = 'https://docs.google.com/spreadsheets/d/1GNvkC8t3xua_ibN2GnnXJi-MXasuX5SXb4y1G6idFSc/edit#gid=1023127248';
 
@@ -11,8 +10,13 @@ parameter = {
     //story_id:"1"
 };
 $(document).ready(
-    function () {
-        
+    function() {
+      const i18n = new VueI18n({
+        locale: 'en',
+        messages,
+      })
+      new Vue({ i18n }).$mount('#dropdown')
+
     });
 
 function renderMap() {
@@ -66,7 +70,7 @@ function getGPSbyStoryID(story_id) {
         command: "getLandmarksByStory",
         story_id: story_id
     };
-    $.get(appUrl, parameter, function (data) {
+    $.get(appUrl, parameter, function(data) {
         //console.log(data);
         var data_json = JSON.parse(data);
 
@@ -134,7 +138,7 @@ function getGPSbyStoryID2(story_id) {
         command: "getLandmarksByStory",
         story_id: story_id
     };
-    $.get(appUrl, parameter, function (data) {
+    $.get(appUrl, parameter, function(data) {
         console.log(data);
         var data_json = JSON.parse(data);
 
@@ -169,7 +173,7 @@ function getGPSbyStoryID2(story_id) {
 
         let genInpt = document.getElementById(`genInput${story_id}`)
         genInpt.checked = true
-        MultiCheck(story_id,genInpt.checked)
+        MultiCheck(story_id, genInpt.checked)
 
     });
     /*[{
@@ -194,7 +198,7 @@ function ZoomByStoryID(story_id) {
         command: "getLandmarksByStory",
         story_id: story_id
     };
-    $.get(appUrl, parameter, function (data) {
+    $.get(appUrl, parameter, function(data) {
         //console.log(data);
         var data_json = JSON.parse(data);
 
@@ -212,16 +216,16 @@ function ZoomByStoryID(story_id) {
         let genInpt = document.getElementById(`genInput${story_id}`)
         genInpt.checked = true
 
-        MultiCheck(story_id,genInpt.checked)
+        MultiCheck(story_id, genInpt.checked)
 
         let markerIcon = document.querySelectorAll('.leaflet-marker-icon')
         let markerShadow = document.querySelectorAll('.leaflet-marker-shadow')
-        console.log('markerIcon',markerIcon)
+        console.log('markerIcon', markerIcon)
         if (markerIcon.length === 0) {
             GetCluster(story_id)
         } else {
-            console.log('no iconssss',gps_locations.length)
-            console.log('no icon',markerIcon.length)
+            console.log('no iconssss', gps_locations.length)
+            console.log('no icon', markerIcon.length)
             for (let i = 0; i < (markerShadow.length - gps_locations.length); i++) {
                 markerIcon[i].remove()
                 markerShadow[i].remove()
@@ -257,7 +261,7 @@ function ZoomByStoryID(story_id) {
 
 function addmyappList(div_id_to_add, data_to_append, where_to_add, id_div) {
     //console.log(div_id_to_add);
-	//console.log(data_to_append);
+    //console.log(data_to_append);
     myapp_what = data_to_append.what;
     myapp_where = data_to_append.where;
     myapp_title = data_to_append.title;
@@ -285,11 +289,11 @@ function addmyappList(div_id_to_add, data_to_append, where_to_add, id_div) {
     html_reg += '     </div>';
     html_reg += '   </div>';
     html_reg += ' </div>';
-    
+
 
     //console.log(html_reg);
     if (where_to_add == 'prepend') {
-        $('#'+div_id_to_add).prepend(html_reg);
+        $('#' + div_id_to_add).prepend(html_reg);
     } else if (where_to_ad == 'append') {
         //$(div_id_to_append).
     }
@@ -303,7 +307,11 @@ function addmyappList(div_id_to_add, data_to_append, where_to_add, id_div) {
 function addStoriesToLayer(locations) {
     var markers = L.markerClusterGroup();
     locations.map(item => L.marker(new L.LatLng(item.lat, item.lng)))
-        .forEach(item => markers.addLayer(item));
+        .forEach((marker,i) => {
+          markers.addLayer(marker)
+          marker.bindPopup("<b>"+ locations[i].name +"</b><br>" + locations[i].notes).openPopup();
+          }
+        );
     mymap.addLayer(markers)
 }
 
@@ -320,7 +328,7 @@ function addStoriesToLayer(locations) {
 // }
 
 
-function ShowHideMarker(input, loc,opt) {
+function ShowHideMarker(input, loc, opt) {
 
     input.addEventListener('click', () => {
         if (input.checked === false) {
@@ -351,13 +359,13 @@ function ZoomToGroup(coor) {
             markers.addLayer(item)
         });
 
-        let bound = markers.getBounds()
-        mymap.fitBounds(bound)
+    let bound = markers.getBounds()
+    mymap.fitBounds(bound)
 
     // ZoomToGroup(markers)
 }
 
-function ShowHideCluster(location,input) {
+function ShowHideCluster(location, input) {
     var markers = L.markerClusterGroup();
     input.addEventListener('click', () => {
         if (input.checked === false) {
@@ -386,10 +394,10 @@ function GetCluster(story_id) {
         command: "getLandmarksByStory",
         story_id: story_id
     };
-    $.get(appUrl, parameter, function (data) {
-        //console.log(data);
-        var data_json = JSON.parse(data);
+    $.get(appUrl, parameter, function(data) {
 
+        var data_json = JSON.parse(data);
+        console.log(data_json);
         var gps_locations = [];
 
         for (i in data_json.table) {
@@ -400,6 +408,7 @@ function GetCluster(story_id) {
                 content: data_json.table[i].content,
                 link: data_json.table[i].link,
                 landmark_id: data_json.table[i].landmark_id,
+                notes: data_json.table[i].notes,
             })
         }
 
@@ -411,12 +420,13 @@ function GetCluster(story_id) {
     });
 }
 
-function MultiCheck(id,val) {
+function MultiCheck(id, val) {
     let childIcon = document.querySelectorAll(`.chilInput${id}`)
     childIcon.forEach(child => {
         child.checked = val
     })
 }
+
 function refreshMap(locations, sid) {
 
     // if(markerIcon.length !== locations.length) {
@@ -462,7 +472,7 @@ mymap = L.map('map', {
         //.forEach(item => mymap.addLayer(item));
         .forEach((item, i) => {
             markers.addLayer(item)
-            ShowHideMarker(input[i], item,markers)
+            ShowHideMarker(input[i], item, markers)
             SingleZoom(a[i], item)
 
         });
@@ -479,23 +489,23 @@ mymap = L.map('map', {
     // }
     let markerIcon = document.querySelectorAll('.leaflet-marker-icon')
     let markerShadow = document.querySelectorAll('.leaflet-marker-shadow')
-    genInput.addEventListener('click', function () {
-        let id = genInput.id.replace('genInput','')
+    genInput.addEventListener('click', function() {
+        let id = genInput.id.replace('genInput', '')
         let val = genInput.checked
 
         if (genInput.checked === true) {
-            mymap.eachLayer(function (layer) {
+            mymap.eachLayer(function(layer) {
                 mymap.addLayer(layer)
             })
             mymap.addLayer(markers);
-            MultiCheck(id,val)
+            MultiCheck(id, val)
             console.log(markerIcon.length)
         } else {
-            markers.eachLayer(function (layer) {
+            markers.eachLayer(function(layer) {
                 layer.remove()
             })
             mymap.removeLayer(markers);
-            MultiCheck(id,val)
+            MultiCheck(id, val)
             console.log(markerIcon.length)
         }
     })
@@ -513,6 +523,7 @@ mymap = L.map('map', {
     mymap.removeLayer(markers);
 
 }
+
 function refreshMap2(locations, sid) {
 
 
@@ -536,9 +547,9 @@ function refreshMap2(locations, sid) {
         //.forEach(item => mymap.addLayer(item));
         .forEach((marker, i) => {
             markers.addLayer(marker);
-            ShowHideMarker(input[i], marker,markers);
+            ShowHideMarker(input[i], marker, markers);
             SingleZoom(a[i], marker);
-            marker.bindPopup("<b>"+ locations[i].name +"</b><br>" + locations[i].notes).openPopup();
+            marker.bindPopup("<b>" + locations[i].name + "</b><br>" + locations[i].notes).openPopup();
 
         });
 
@@ -546,23 +557,23 @@ function refreshMap2(locations, sid) {
 
     let markerIcon = document.querySelectorAll('.leaflet-marker-icon')
     let markerShadow = document.querySelectorAll('.leaflet-marker-shadow')
-    genInput.addEventListener('click', function () {
-        let id = genInput.id.replace('genInput','')
+    genInput.addEventListener('click', function() {
+        let id = genInput.id.replace('genInput', '')
         let val = genInput.checked
 
         if (genInput.checked === true) {
-            mymap.eachLayer(function (layer) {
+            mymap.eachLayer(function(layer) {
                 mymap.addLayer(layer)
             })
             mymap.addLayer(markers);
-            MultiCheck(id,val)
+            MultiCheck(id, val)
             console.log(markerIcon.length)
         } else {
-            markers.eachLayer(function (layer) {
+            markers.eachLayer(function(layer) {
                 layer.remove()
             })
             mymap.removeLayer(markers);
-            MultiCheck(id,val)
+            MultiCheck(id, val)
             console.log(markerIcon.length)
         }
     })
@@ -577,7 +588,7 @@ function refreshMap2(locations, sid) {
     var overlayMaps = {
         "Landmarks": markers
     };
- 
+
     mymap.addLayer(markers);
 
 }
@@ -632,7 +643,7 @@ function refreshGMap(locations) {
     });
     //markerCluster.addMarkers(marker, true);
 
-    google.maps.event.addListener(markerCluster, 'clusterclick', function (c) {
+    google.maps.event.addListener(markerCluster, 'clusterclick', function(c) {
         console.log('Number of managed markers in cluster: ' + c.getSize());
         var m = c.getMarkers();
         for (let i in m) {
@@ -665,38 +676,59 @@ function initMap() {
     mymap = L.map('map', {
         center: [25.1130643, 121.5227629],
         //center: [39.921640, -75.412165],
-        zoom: 7,
+        zoom: 12,
         layers: [streets]
     });
 
-    mymap.on('zoomend', function () {
+    mymap.on('zoomend', function() {
+        if(this.getZoom()>11){
         console.log('zoom');
-        console.log(this.getZoom() + ' ' + this.getCenter()+' ' + this.getBounds().getWest());
+        console.log(this.getZoom() + ' ' + this.getCenter() + ' ' + this.getBounds().getWest());
+      }
     });
-	
-	mymap.on('moveend', function () {
-        console.log('zoom');
-        console.log(this.getZoom() + ' ' + this.getCenter()+' ' + this.getBounds().getWest()+ ' ' + this.getBounds().getEast() + ' ' + this.getBounds().getNorth() + ' ' + this.getBounds().getSouth());
-	west = this.getBounds().getWest();
-	north = this.getBounds().getNorth();
-	east = this.getBounds().getEast();
-	south = this.getBounds().getSouth();
-		$.get(appUrl, { url:sheetsUrl, name:sheetName, command:"getGPSByZone", lat_south:south, lat_north:north, lng_west:west, lng_east:east }, function (data) {
-			$('#gpsstory_list_all').empty();
-			data_json = JSON.parse(data);
-			console.log(data_json)
-/*
-            for (i in data_json.table) {
-                addmyappList("gpsstory_list_all", data_json.table[i], 'prepend')
-            }
-            let inpt = document.querySelectorAll('.groupinput')
-            for(let i = 0; i < inpt.length; i++)  {
-                let id = inpt[i].id.replace('genInput','')
-                getGPSbyStoryID(id)
-            }
-*/
-        })
 
+
+    mymap.on('moveend', function() {
+      $('#gpsstory_list_all').empty();
+        console.log('zoom');
+        console.log(this.getZoom() + ' ' + this.getCenter() + ' ' + this.getBounds().getWest() + ' ' + this.getBounds().getEast() + ' ' + this.getBounds().getNorth() + ' ' + this.getBounds().getSouth());
+        if (this.getZoom() > 12) {
+            west = this.getBounds().getWest();
+            north = this.getBounds().getNorth();
+            east = this.getBounds().getEast();
+            south = this.getBounds().getSouth();
+            $.get(appUrl, {
+                url: sheetsUrl,
+                name: sheetName,
+                command: "getGPSByZone",
+                lat_south: south,
+                lat_north: north,
+                lng_west: west,
+                lng_east: east
+            }, function(data) {
+
+                data_json = JSON.parse(data);
+                //console.log(data_json)
+                var gps_locations = [];
+                for (i in data_json.table){
+                    $('#gpsstory_list_all').append(data_json.table[i].name + '<br/>');
+                    gps_locations.push({
+                        lat: data_json.table[i].lat,
+                        lng: data_json.table[i].lng,
+                        name: data_json.table[i].name,
+                        content: data_json.table[i].content,
+                        link: data_json.table[i].link,
+                        landmark_id: data_json.table[i].landmark_id,
+                        notes: data_json.table[i].notes,
+                    })
+                }
+
+                // onclickTitleShowMarker(gps_locations)
+                addStoriesToLayer(gps_locations)
+
+
+            })
+        }
     });
 
     var baseMaps = {
@@ -753,7 +785,7 @@ function initGMap() {
     });
     //markerCluster.addMarkers(marker, true);
 
-    google.maps.event.addListener(markerCluster, 'clusterclick', function (c) {
+    google.maps.event.addListener(markerCluster, 'clusterclick', function(c) {
         console.log('Number of managed markers in cluster: ' + c.getSize());
         var m = c.getMarkers();
         for (let i in m) {
@@ -763,4 +795,3 @@ function initGMap() {
         }
     });
 }
-
