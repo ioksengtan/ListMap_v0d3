@@ -706,12 +706,18 @@ function initMap() {
                 lng_west: west,
                 lng_east: east
             }, function(data) {
-
+                $('#gpsstory_list_all').empty();
                 data_json = JSON.parse(data);
                 //console.log(data_json)
                 var gps_locations = [];
+                var landmarks = {};
                 for (i in data_json.table){
-                    $('#gpsstory_list_all').append(data_json.table[i].name + '<br/>');
+                    if(typeof(landmarks[data_json.table[i].story_id])=="undefined"){
+                      landmarks[data_json.table[i].story_id] = [];
+                      landmarks[data_json.table[i].story_id].push(data_json.table[i]);
+                    }else{
+                      landmarks[data_json.table[i].story_id].push(data_json.table[i]);
+                    }
                     gps_locations.push({
                         lat: data_json.table[i].lat,
                         lng: data_json.table[i].lng,
@@ -722,6 +728,16 @@ function initMap() {
                         notes: data_json.table[i].notes,
                     })
                 }
+                console.log(landmarks);
+                for(story_id in landmarks){
+                  $('#gpsstory_list_all').append("<h1>" + story_id + "</h1>" + '<br/>');
+                  for(i in landmarks[story_id]){
+                      $('#gpsstory_list_all').append(landmarks[story_id][i].name + '<br/>');
+                  }
+                }
+
+                //$('#gpsstory_list_all').append(data_json.table[i].name + '<br/>');
+
 
                 // onclickTitleShowMarker(gps_locations)
                 addStoriesToLayer(gps_locations)

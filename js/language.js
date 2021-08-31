@@ -3,14 +3,20 @@ const messages = {
     message: {
       hello: 'hello',
       minwt:'minwt',
-      lab:'lab'
+      lab:'lab',
+      tour:'tour',
+      task:'task',
+      QandA:'Q and A'
     }
   },
   tw: {
     message: {
       hello: '哈囉',
       minwt:'梅問題',
-      lab:'實驗室'
+      lab:'實驗室',
+      tour:'走讀',
+      task:'任務',
+      QandA:'問答'
     }
   },
   cn: {
