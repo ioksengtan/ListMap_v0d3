@@ -15,7 +15,12 @@
 .accordion-item img{
 	width:30px;
 }
-
+#geostory_blog img{
+	//width:80%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto	
+}
 #map {
   height: 90%;
   width: 50%;

@@ -19,7 +19,7 @@ $(document).ready(
         new Vue({
             i18n
         }).$mount('#dropdown')
-
+		/*
         $.get(appUrl, parameter, function(data) {
 
             //            console.log(data);
@@ -32,11 +32,12 @@ $(document).ready(
 					'youtube_key':data_json.table[i].link.split('v=')[1],
 					'link':data_json.table[i].link,
 				};
-
+				
             }
 
-
+			
         })
+		*/
     });
 
 function renderMap() {
@@ -75,11 +76,11 @@ function getGPSbyStoryID(story_id) {
     };
     $.get(appUrl, parameter, function(data) {
         console.log(data);
-
+		
         var data_json = JSON.parse(data);
 		dbg = data_json;
         var gps_locations = [];
-        content_reg = '';
+        content_reg = '';		
 		switch(data_dict[story_id].type){
 			case 'youtube':
 				if (typeof data_dict[story_id].youtube_key != 'undefined'){
@@ -89,10 +90,10 @@ function getGPSbyStoryID(story_id) {
 			case 'webpage':
 				if (typeof data_dict[story_id].link != 'undefined'){
 					content_reg += '<iframe width="100%" height="315" src="'+ data_dict[story_id].link +'" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
-				}
+				}			
 				break;
 		}
-
+		
         content_reg += '<ul>'
         for (i in data_json.table) {
             gps_locations.push({
@@ -147,6 +148,15 @@ function addStoriesToLayer(locations) {
     mymap.addLayer(markers)
 }
 
+function zoomto(loc = {'lat': -34.003646,'lng': 18.469909}, zoom = 16){
+  //var loc = {'lat': -34.003646,'lng': 18.469909};
+  
+  mymap.flyTo(loc, 16, {
+      animate: true,
+      duration: 0.3
+  })
+}
+
 // function ZoomToGroup(input, coor) {
 
 //     input.forEach((input, i) => {
@@ -169,14 +179,6 @@ function ShowHideMarker(input, loc, opt) {
             mymap.addLayer(loc)
         }
     })
-}
-
-function zoomto(){
-  var loc = {'lat': -34.003646,'lng': 18.469909};
-  mymap.flyTo(loc, 16, {
-      animate: true,
-      duration: 0.3
-  })
 }
 
 function SingleZoom(name, loc) {
@@ -237,7 +239,7 @@ function GetCluster(story_id) {
     $.get(appUrl, parameter, function(data) {
         //console.log(data);
         var data_json = JSON.parse(data);
-        var gps_locations = [];
+        var gps_locations = [];		
         for (i in data_json.table) {
             gps_locations.push({
                 lat: data_json.table[i].lat,
@@ -247,10 +249,10 @@ function GetCluster(story_id) {
                 link: data_json.table[i].link,
                 landmark_id: data_json.table[i].landmark_id,
             })
-
+	
         }
 
-
+		
 
 
         // onclickTitleShowMarker(gps_locations)
@@ -292,6 +294,7 @@ function UpdateMap(locations, sid) {
             ShowHideMarker(input[i], marker, markers);
             SingleZoom(a[i], marker);
             marker.bindPopup("<b>" + locations[i].name + "</b><br>" + locations[i].notes).openPopup();
+
         });
 
     let genInput = document.getElementById(`genInput${sid}`)
