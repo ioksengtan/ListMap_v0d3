@@ -30,7 +30,7 @@ const messages = {
     message: {
       hello: 'ハロー',
       minwt:'メイウンディー',
-      lab:'lab'
+      lab:'メイウンディー'
     }
   }
 }

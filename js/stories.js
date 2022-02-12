@@ -8,6 +8,52 @@ parameter = {
     command: "getRecentStories",
 };
 data_dict = {}
+
+
+
+$.getScript('http://www.youtube.com/iframe_api');
+
+var player;
+
+function onYouTubePlayerAPIReady() {
+  /*
+    player = new YT.Player('player', {
+      height: '390',
+      width: '640',
+      videoId: 'EVNTyuZrAlg',
+        playerVars: { 'start': 159, 'autoplay': 1, 'controls': 1 },
+      events: {
+        'onReady': onPlayerReady,
+        'onStateChange': onPlayerStateChange,
+      }
+
+    });
+    */
+}
+
+function onPlayerStateChange(evt)
+{
+    if (evt.data==1)
+    {
+        // this will seek to a certain point when video starts
+        // but you're better off using 'start' parameter
+        // player.seekTo(22);
+    }
+}
+
+     function onPlayerReady(evt) {
+
+        // doesn't work here
+        // player.seekTo(30);
+
+         // lets make ure we have a function
+         //alert("typeof(player.SeekTo) = " + typeof(player.seekTo));
+     }
+     $(document).on('click', '#btnSeek', function() {
+         player.seekTo($(this).data('seek'), true);
+     });
+
+
 $(document).ready(
 
     function() {
@@ -65,8 +111,14 @@ function renderMap() {
     mymap.addLayer(markers);
 
 }
+function seekto(story_id, time){
+  youtube_players[story_id].seekTo(time, true);
+  //console.log('seekto:'+player+' '+time);
+  //console.log('seekto:'+time);
+  //player.seekTo(60, true);
 
-
+}
+var youtube_players = {}
 function getGPSbyStoryID(story_id) {
     parameter = {
         url: sheetsUrl,
@@ -76,14 +128,26 @@ function getGPSbyStoryID(story_id) {
     $.get(appUrl, parameter, function(data) {
         console.log(data);
 
-        var data_json = JSON.parse(data);
-		dbg = data_json;
+        var data_json_landmarks_by_story = JSON.parse(data);
+		dbg = data_json_landmarks_by_story;
         var gps_locations = [];
         content_reg = '';
+        player_id = 'collapse_player_' + story_id;
 		switch(data_dict[story_id].type){
 			case 'youtube':
 				if (typeof data_dict[story_id].youtube_key != 'undefined'){
-					content_reg += '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + data_dict[story_id].youtube_key	+ '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+          youtube_players[story_id] = new YT.Player(player_id, {
+            height: '390',
+            width: '640',
+            videoId: data_dict[story_id].youtube_key,
+              playerVars: { 'start': 0, 'autoplay': 0, 'controls': 1 },
+            events: {
+              'onReady': onPlayerReady,
+              'onStateChange': onPlayerStateChange,
+            }
+
+          });
+					//content_reg += '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + data_dict[story_id].youtube_key	+ '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
 				}
 				break;
 			case 'webpage':
@@ -94,25 +158,34 @@ function getGPSbyStoryID(story_id) {
 		}
 
         content_reg += '<ul>'
-        for (i in data_json.table) {
+        for (i in data_json_landmarks_by_story.table) {
             gps_locations.push({
-                lat: data_json.table[i].lat,
-                lng: data_json.table[i].lng,
-                name: data_json.table[i].name,
-                notes: data_json.table[i].notes,
-                link: data_json.table[i].link,
-                landmark_id: data_json.table[i].landmark_id,
+                lat: data_json_landmarks_by_story.table[i].lat,
+                lng: data_json_landmarks_by_story.table[i].lng,
+                name: data_json_landmarks_by_story.table[i].name,
+                notes: data_json_landmarks_by_story.table[i].notes,
+                link: data_json_landmarks_by_story.table[i].link,
+                landmark_id: data_json_landmarks_by_story.table[i].landmark_id,
             })
             content_reg += `<li style="cursor:pointer" class="checkboxLandmark"><input class="chilInput${story_id}" id="${data_json.table[i].landmark_id}" type="checkbox"> <a class="singleZoom">`
-            content_reg += data_json.table[i].name + '</a>';
-            content_reg += '<a href=\"javascript:spec_func(' + data_json.table[i].landmark_id + ')\">(add)</a>'
+            content_reg += data_json_landmarks_by_story.table[i].name + '</a>';
+            //content_reg += '<a href=\"javascript:seekto(' + youtube_players[story_id] +','+data_json.table[i].link + ')\">('+ data_json.table[i].link +')</a>'
+            if(data_json_landmarks_by_story.table[i].link == ''){
+              content_reg += '<a href=\"javascript:seekto('+ story_id +',' + data_json_landmarks_by_story.table[i].link + ')\">' +'</a>'
+            }else{
+            var video_seconds = data_json_landmarks_by_story.table[i].link;
+              video_mm = Math.floor(video_seconds / 60);
+              video_ss = video_seconds - video_mm * 60;
+              content_reg += '<a href=\"javascript:seekto('+ story_id +',' + data_json_landmarks_by_story.table[i].link + ')\">(t='+ video_mm + 'm' + video_ss +'s)</a>'
+            }
+            //content_reg += '<a href=\"javascript:add_to_favorite(' + data_json_landmarks_by_story.table[i].landmark_id + ')\">(add)</a>'
             content_reg += '</li>'
 
         }
 
         content_reg += '</ul>'
         test_str = '#collapse_' + story_id;
-        $('#collapse_' + story_id).html(content_reg);
+        $('#collapse_ul_' + story_id).html(content_reg);
         UpdateMap(gps_locations, story_id);
 
         let markerIcon = document.querySelectorAll('.leaflet-marker-icon')
@@ -179,9 +252,10 @@ function zoomto(){
   })
 }
 
-function SingleZoom(name, loc) {
-    name.addEventListener('click', () => {
-        mymap.flyTo(loc._latlng, 16, {
+function SingleZoom(hyperlink, loc) {
+    hyperlink.addEventListener('click', () => {
+        console.log('hyperlink:' + hyperlink + ', loc:' + loc);
+        mymap.flyTo(loc._latlng, 18, {
             animate: true,
             duration: 0.3
         })
