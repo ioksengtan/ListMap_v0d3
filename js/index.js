@@ -26,35 +26,12 @@ parameter = {
                      console.log(data);
                      data_json = JSON.parse(data);
                      for(i in data_json.table){
-                       addGPStoryList(gpsstory_list_all,data_json.table[i],'prepend')
+                       addGPStoryList(DivStoriesList,data_json.table[i],'prepend')
                     }
                      //addMarker({lat:25.0489782,lng:121.5208181});
           })
           */
         });
-
-function renderMap() {
-    var mymap = L.map('map').setView([25.1130643, 121.5227629], 7);
-    console.log('test');
-    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 18,
-    id: 'mapbox/streets-v11',
-    tileSize: 512,
-    zoomOffset: -1,
-    accessToken: 'pk.eyJ1IjoiaW9rc2VuZ3RhbiIsImEiOiJja3JkeTgxMHI1Z3B2MzFxcHM0NWo3cTEwIn0.kkcIlaMdiTpqqaCk6YpOgQ'
-}).addTo(mymap);
-  /*mymap.setLayoutProperty('country-label', 'text-field', [
-'get',
-'name_zh-Hant'
-  ]);
-  */
-  var markers = L.markerClusterGroup();
-  locations.map(item => L.marker(new L.LatLng(item.lat, item.lng)))
-             //.forEach(item => mymap.addLayer(item));
-             .forEach(item => markers.addLayer(item));
-  mymap.addLayer(markers);
-}
 
 
 
@@ -68,40 +45,6 @@ function addMarker() {
   markerCluster.addMarkers(marker, true);
 }
 
-function getGPSbyStoryID(story_id){
-  console.log(story_id);
-  parameter = {
-              url: sheetsUrl,
-              //command:"getLandmarksByStory",
-              command:"getLandmarksByStory",
-              story_id: story_id
-          };
-  $.get(appUrl, parameter, function(data) {
-           console.log(data);
-           var data_json = JSON.parse(data);
-           var gps_locations = [];
-           for(i in data_json.table){
-              gps_locations.push(
-                {
-                  lat:data_json.table[i].lat,
-                  lng:data_json.table[i].lng,
-                  name:data_json.table[i].name,
-                  content:data_json.table[i].content,
-                  link:data_json.table[i].link
-                }
-              )
-            }
-            refreshMap(gps_locations);
-           //addMarker({lat:25.0489782,lng:121.5208181});
-         });
-  /*[{
-          lat: 25.0682519,
-          lng: 121.5922095
-      },
-  ]*/
-
-
-}
 
 function addGPStoryList(div_id_to_add, data_to_append, where_to_add){
   //console.log(data_to_append);
@@ -124,16 +67,16 @@ function addGPStoryList(div_id_to_add, data_to_append, where_to_add){
     html_reg += "      <input type=\"checkbox\" aria-label=\"Checkbox for following text input\">";
     switch(gpstory_types){
       case 'youtube':
-        html_reg += "      <span class=\"gpstory_title\"><a href=\"javascript:getGPSbyStoryID("+ gpstory_story_id +")\">" + gpstory_title + "</a> <br/></span><span>(" + "<a href=\""+ gpstory_link +"\"><img src=\"youtube_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
+        html_reg += "      <span class=\"gpstory_title\"><a href=\"javascript:getLandmarksByStoryID("+ gpstory_story_id +")\">" + gpstory_title + "</a> <br/></span><span>(" + "<a href=\""+ gpstory_link +"\"><img src=\"youtube_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
         break;
       case 'book':
-        html_reg += "      <span class=\"gpstory_title\"><a href=\"javascript:getGPSbyStoryID("+ gpstory_story_id +")\">" + gpstory_title + "</a> <br/></span><span>(" + "<a href=\""+ gpstory_link +"\"><img src=\"book_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
+        html_reg += "      <span class=\"gpstory_title\"><a href=\"javascript:getLandmarksByStoryID("+ gpstory_story_id +")\">" + gpstory_title + "</a> <br/></span><span>(" + "<a href=\""+ gpstory_link +"\"><img src=\"book_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
         break;
       case 'blog':
-        html_reg += "      <span class=\"gpstory_title\"><a href=\"javascript:getGPSbyStoryID("+ gpstory_story_id +")\">" + gpstory_title + "</a> <br/></span><span>(" + "<a href=\""+ gpstory_link +"\"><img src=\"webpage_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
+        html_reg += "      <span class=\"gpstory_title\"><a href=\"javascript:getLandmarksByStoryID("+ gpstory_story_id +")\">" + gpstory_title + "</a> <br/></span><span>(" + "<a href=\""+ gpstory_link +"\"><img src=\"webpage_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
         break;
       default:
-        html_reg += "      <span class=\"gpstory_title\"><a href=\"javascript:getGPSbyStoryID("+ gpstory_story_id +")\">" + gpstory_title + "</a> <br/></span><span>(" + "<a href=\""+ gpstory_link +"\"><img src=\"webpage_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
+        html_reg += "      <span class=\"gpstory_title\"><a href=\"javascript:getLandmarksByStoryID("+ gpstory_story_id +")\">" + gpstory_title + "</a> <br/></span><span>(" + "<a href=\""+ gpstory_link +"\"><img src=\"webpage_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
   }
     html_reg += "      </div>";
 
@@ -292,220 +235,6 @@ mymap.addLayer(markers);
     });
     */
 }
-function refreshGMap(locations) {
-    map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 8,
-        center: {
-            lat: 24.790078397806973,
-            lng: 121.07471724480152
-        },
-    });
-    const infowindow = new google.maps.InfoWindow({
-      content: "<h1>test</h1>",
-    });
-    // Create an array of alphabetical characters used to label the markers.
-    let labels = [];
-    for (location_id in locations){
-      //const labels = ["", "B1"];
-      labels.push(locations[location_id].name);
-    }
-    // Add some markers to the map.
-    // Note: The code uses the JavaScript Array.prototype.map() method to
-    // create an array of markers based on a given "locations" array.
-    // The map() method here has nothing to do with the Google Maps API.
-    markers = locations.map((location, i) => {
-        var marker = new google.maps.Marker({
-            position: location,
-            label: labels[i % labels.length],
-            title: 'test'
-        });
-        marker.addListener("click", () => {
-            //map.setZoom(8);
-            //map.setCenter(marker.getPosition());
-            infowindow.setContent(location.content + '<br/>' + '<a href=\"' + location.link + '\">link</a>');
-            infowindow.open(map, marker);
-            console.log(marker.getLabel());
-
-        });
-        return marker
-    });
-    // Add a marker clusterer to manage the markers.
-    markerCluster = new MarkerClusterer(map, markers, {
-        imagePath: "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
-    });
-    marker = new google.maps.Marker({
-      position: {lat:25.0489782,lng:121.5208181},
-    });
-    //markerCluster.addMarkers(marker, true);
-
-    google.maps.event.addListener(markerCluster, 'clusterclick', function(c) {
-        console.log('Number of managed markers in cluster: ' + c.getSize());
-        var m = c.getMarkers();
-        for (let i in m) {
-            //console.log(m[i].getLabel());
-            //console.log(m[i].getTitle());
-            //console.log(m[i].myObj.myKey);
-        }
-    });
-}
-function initMap() {
-  //mymap = L.map('map').setView([25.1130643, 121.5227629], 7);
-  //console.log('test');
-  var streets = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-  attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-  maxZoom: 18,
-  id: 'mapbox/streets-v11',
-  tileSize: 512,
-  zoomOffset: -1,
-  accessToken: 'pk.eyJ1IjoiaW9rc2VuZ3RhbiIsImEiOiJja3JkeTgxMHI1Z3B2MzFxcHM0NWo3cTEwIn0.kkcIlaMdiTpqqaCk6YpOgQ'
-  });
-  var markers = L.markerClusterGroup();
-  //var landmarks_layergroup = L.layerGroup();
-  locations.map(item => L.marker(new L.LatLng(item.lat, item.lng)))
-             //.forEach(item => mymap.addLayer(item));
-             .forEach(item => markers.addLayer(item));
-
-mymap = L.map('map', {
-  center: [25.1130643, 121.5227629],
-  zoom: 7,
-  layers: [streets]
-});
-
-mymap.on('zoomend', function() {
-    console.log('zoom');
-    console.log(this.getZoom()+' '+this.getCenter());
-});
-
-var baseMaps = {
-    "Streets": streets
-};
-p_control = L.control.layers(baseMaps);
-p_control.addTo(mymap);
-//p_control.removeFrom(mymap);
-
-/*
-var baseMaps = {
-    "Streets": streets
-};
-
-var overlayMaps = {
-    "Landmarks": markers
-};
-L.control.layers(baseMaps, overlayMaps).addTo(mymap);
-*/
-/*mymap.setLayoutProperty('country-label', 'text-field', [
-'get',
-'name_zh-Hant'
-]);
-*/
-
-//mymap.addLayer(markers);
-/*    map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 8,
-        center: {
-            lat: 24.790078397806973,
-            lng: 121.07471724480152
-        },
-    });
-    const infowindow = new google.maps.InfoWindow({
-      content: "<h1>test</h1>",
-    });
-    // Create an array of alphabetical characters used to label the markers.
-    const labels = ["一", "B1"];
-    // Add some markers to the map.
-    // Note: The code uses the JavaScript Array.prototype.map() method to
-    // create an array of markers based on a given "locations" array.
-    // The map() method here has nothing to do with the Google Maps API.
-    markers = locations.map((location, i) => {
-        var marker = new google.maps.Marker({
-            position: location,
-            label: labels[i % labels.length],
-            title: 'test'
-        });
-        marker.addListener("click", () => {
-            //map.setZoom(8);
-            //map.setCenter(marker.getPosition());
-            infowindow.setContent(marker.getLabel());
-            infowindow.open(map, marker);
-            console.log(marker.getLabel());
-
-        });
-        return marker
-    });
-    // Add a marker clusterer to manage the markers.
-    markerCluster = new MarkerClusterer(map, markers, {
-        imagePath: "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
-    });
-    marker = new google.maps.Marker({
-      position: {lat:25.0489782,lng:121.5208181},
-    });
-    //markerCluster.addMarkers(marker, true);
-
-    google.maps.event.addListener(markerCluster, 'clusterclick', function(c) {
-        console.log('Number of managed markers in cluster: ' + c.getSize());
-        var m = c.getMarkers();
-        for (let i in m) {
-            //console.log(m[i].getLabel());
-            //console.log(m[i].getTitle());
-            //console.log(m[i].myObj.myKey);
-        }
-    });
-    */
-}
-
-function initGMap() {
-    map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 8,
-        center: {
-            lat: 24.790078397806973,
-            lng: 121.07471724480152
-        },
-    });
-    const infowindow = new google.maps.InfoWindow({
-      content: "<h1>test</h1>",
-    });
-    // Create an array of alphabetical characters used to label the markers.
-    const labels = ["一", "B1"];
-    // Add some markers to the map.
-    // Note: The code uses the JavaScript Array.prototype.map() method to
-    // create an array of markers based on a given "locations" array.
-    // The map() method here has nothing to do with the Google Maps API.
-    markers = locations.map((location, i) => {
-        var marker = new google.maps.Marker({
-            position: location,
-            label: labels[i % labels.length],
-            title: 'test'
-        });
-        marker.addListener("click", () => {
-            //map.setZoom(8);
-            //map.setCenter(marker.getPosition());
-            infowindow.setContent(marker.getLabel());
-            infowindow.open(map, marker);
-            console.log(marker.getLabel());
-
-        });
-        return marker
-    });
-    // Add a marker clusterer to manage the markers.
-    markerCluster = new MarkerClusterer(map, markers, {
-        imagePath: "https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m",
-    });
-    marker = new google.maps.Marker({
-      position: {lat:25.0489782,lng:121.5208181},
-    });
-    //markerCluster.addMarkers(marker, true);
-
-    google.maps.event.addListener(markerCluster, 'clusterclick', function(c) {
-        console.log('Number of managed markers in cluster: ' + c.getSize());
-        var m = c.getMarkers();
-        for (let i in m) {
-            //console.log(m[i].getLabel());
-            //console.log(m[i].getTitle());
-            //console.log(m[i].myObj.myKey);
-        }
-    });
-}
-
 const locations = [{
         lat: 25.0682519,
         lng: 121.5922095

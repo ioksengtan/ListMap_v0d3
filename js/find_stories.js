@@ -689,7 +689,7 @@ function initMap() {
 
 
     mymap.on('moveend', function() {
-      $('#gpsstory_list_all').empty();
+      $('#DivStoriesList').empty();
         console.log('zoom');
         console.log(this.getZoom() + ' ' + this.getCenter() + ' ' + this.getBounds().getWest() + ' ' + this.getBounds().getEast() + ' ' + this.getBounds().getNorth() + ' ' + this.getBounds().getSouth());
         if (this.getZoom() > 12) {
@@ -706,7 +706,7 @@ function initMap() {
                 lng_west: west,
                 lng_east: east
             }, function(data) {
-                $('#gpsstory_list_all').empty();
+                $('#DivStoriesList').empty();
                 data_json = JSON.parse(data);
                 //console.log(data_json)
                 var gps_locations = [];
@@ -730,13 +730,13 @@ function initMap() {
                 }
                 console.log(landmarks);
                 for(story_id in landmarks){
-                  $('#gpsstory_list_all').append("<h1>" + story_id + "</h1>" + '<br/>');
+                  $('#DivStoriesList').append("<h1>" + story_id + "</h1>" + '<br/>');
                   for(i in landmarks[story_id]){
-                      $('#gpsstory_list_all').append(landmarks[story_id][i].name + '<br/>');
+                      $('#DivStoriesList').append(landmarks[story_id][i].name + '<br/>');
                   }
                 }
 
-                //$('#gpsstory_list_all').append(data_json.table[i].name + '<br/>');
+                //$('#DivStoriesList').append(data_json.table[i].name + '<br/>');
 
 
                 // onclickTitleShowMarker(gps_locations)
