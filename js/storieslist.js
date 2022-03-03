@@ -126,7 +126,7 @@ function getLandmarksByStoryID(story_id) {
     };
     $.get(appUrl, parameter, function(data) {
         console.log(data);
-
+		console.log(story_id);
         var data_json_landmarks_by_story = JSON.parse(data);
         dbg = data_json_landmarks_by_story;
         var gps_locations = [];
