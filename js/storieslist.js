@@ -36,6 +36,7 @@ function onPlayerReady(evt) {
     //alert("typeof(player.SeekTo) = " + typeof(player.seekTo));
 }
 function seekto(story_id, time) {
+   console.log('seekto');
     youtube_players[story_id].seekTo(time, true);
     //console.log('seekto:'+player+' '+time);
     //console.log('seekto:'+time);
@@ -119,6 +120,7 @@ function appendStoriesList(div_id_to_add, data_to_append, where_to_add, id_div) 
 }
 
 function getLandmarksByStoryID(story_id) {
+    console.log('getLandmarksByStoryID');
     parameter = {
         url: sheetsUrl,
         command: "getLandmarksByStory",
@@ -126,9 +128,12 @@ function getLandmarksByStoryID(story_id) {
     };
     $.get(appUrl, parameter, function(data) {
         console.log(data);
-		console.log(story_id);
+		      console.log(story_id);
+
+
         var data_json_landmarks_by_story = JSON.parse(data);
-        dbg = data_json_landmarks_by_story;
+
+        //dbg = data_json_landmarks_by_story;
         var gps_locations = [];
         content_reg = '';
         player_id = 'collapse_player_' + story_id;
@@ -163,8 +168,11 @@ function getLandmarksByStoryID(story_id) {
                     content_reg += '<iframe width="100%" height="315" src="' + StoriesDict[story_id].link + '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
                 }
                 break;
+            case 'facebook':
+                content_reg += StoriesDict[story_id].link;
+                break;
         }
-
+        if(data_json_landmarks_by_story.table.length!=0){
         content_reg += '<ul>'
         for (i in data_json_landmarks_by_story.table) {
             gps_locations.push({
@@ -201,6 +209,7 @@ function getLandmarksByStoryID(story_id) {
         }
 
         content_reg += '</ul>'
+        
         test_str = '#collapse_' + story_id;
         $('#collapse_ul_' + story_id).html(content_reg);
         UpdateMap(gps_locations, story_id);
@@ -221,7 +230,7 @@ function getLandmarksByStoryID(story_id) {
         let genInpt = document.getElementById(`genInput${story_id}`)
         genInpt.checked = true
         GotoStory(story_id, genInpt.checked)
-
+      }
     });
 
 

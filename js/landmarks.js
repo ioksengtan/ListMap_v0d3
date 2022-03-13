@@ -35,6 +35,7 @@ function addMarker() {
 }
 
 function getLandmarksByStoryID(story_id){
+  console.log('getLandmarksByStoryID');
   console.log(story_id);
   parameter = {
               url: sheetsUrl,

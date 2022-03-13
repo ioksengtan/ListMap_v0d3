@@ -239,7 +239,7 @@ function ShowHideCluster(location, input) {
 }
 function zoomto(loc = {'lat': -34.003646,'lng': 18.469909}, zoom = 16){
   //var loc = {'lat': -34.003646,'lng': 18.469909};
-
+  console.log('zoomto');
   mymap.flyTo(loc, 16, {
       animate: true,
       duration: 0.3
@@ -247,7 +247,7 @@ function zoomto(loc = {'lat': -34.003646,'lng': 18.469909}, zoom = 16){
 }
 
 function ZoomToGroup(input, coor) {
-
+    console.log('ZoomToGroup');
      input.forEach((input, i) => {
          if (input.checked === true) {
              let bound = coor.getBounds()
@@ -271,8 +271,10 @@ function ShowHideMarker(input, loc, opt) {
 }
 
 function SingleZoom(name, loc) {
+    console.log('SingleZoom');
     name.addEventListener('click', () => {
-        mymap.flyTo(loc._latlng, 16, {
+
+        mymap.flyTo(loc._latlng, 18, {
             animate: true,
             duration: 0.3
         })
@@ -280,7 +282,7 @@ function SingleZoom(name, loc) {
 }
 
 function ZoomToGroup(coor) {
-
+    console.log('ZoomToGroup');
     var markers = L.markerClusterGroup();
     //var landmarks_layergroup = L.layerGroup();
 
