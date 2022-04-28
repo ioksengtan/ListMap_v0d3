@@ -1,4 +1,9 @@
 //$.getScript('http://www.youtube.com/iframe_api');
+
+var appUrl = 'https://script.google.com/macros/s/AKfycby-gL9w_PIzt4TDnqfpErNP1YTck93p4j7z1FTpt52bCkryg5Iu/exec';
+var sheetsUrl = 'https://docs.google.com/spreadsheets/d/1GNvkC8t3xua_ibN2GnnXJi-MXasuX5SXb4y1G6idFSc/edit#gid=1023127248';
+//https://docs.google.com/spreadsheets/d/1GNvkC8t3xua_ibN2GnnXJi-MXasuX5SXb4y1G6idFSc/edit?usp=sharing
+var sheetName = 'landmarks';
 var scriptUrl = 'https:\/\/www.youtube.com\/s\/player\/87b9576a\/www-widgetapi.vflset\/www-widgetapi.js';
 try {
     var ttPolicy = window.trustedTypes.createPolicy("youtube-widget-api", {
@@ -53,6 +58,8 @@ var youtube_players = {}
 var player;
 
 function onYouTubePlayerAPIReady() {
+
+
     /*
       player = new YT.Player('player', {
         height: '390',
@@ -66,6 +73,288 @@ function onYouTubePlayerAPIReady() {
 
       });
       */
+}
+
+function update_db(){
+/*
+  var landmarks_json = [
+    {
+      name:"test name",
+      flags:"test flags",
+      address:"test address",
+      notes:"test notes",
+      lat_lng:"23, 12",
+      link:"2:3"
+    },
+    {
+      name:"test name 2",
+      flags:"test flags 2",
+      address:"test address 2",
+      notes:"test notes 2",
+      lat_lng:"1, 2",
+      link:"1:30"
+    }
+  ];
+*/
+  var landmarks_json = [];
+
+  for (let [key, value] of Object.entries(StoriesView)){
+    tmp = {
+      name:"",
+      flags:"",
+      address:"",
+      notes:"",
+      lat_lng:"",
+      link:"0:0"
+    }
+    for (let [landmark_key, landmark_value] of Object.entries(value)){
+        tmp[landmark_key] = landmark_value;
+    }
+    landmarks_json.push(tmp);
+  }
+
+  //console.log(landmarks_json);
+  var videoId = window.location.search.split('?')[1].split('=')[1];
+  var parameter = {
+         url: sheetsUrl,
+        command:"new_story",
+        name: youtube_title,
+        types :"youtube",
+        link :"https://www.youtube.com/watch?v="+videoId,
+        landmarks:JSON.stringify(landmarks_json)
+
+      }
+      //console.log(parameter);
+/*
+      var parameter = {
+        url: sheetsUrl,
+        name: sheetName,
+        command: "getRecentStories",
+
+      };
+*/
+
+        $.post(appUrl, parameter, function(data) {
+            console.log(data);
+        });
+
+}
+
+
+function dragElement(elmnt) {
+  console.log('drag');
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+
+  if (document.getElementById(elmnt.id + "header")) {
+    // if present, the header is where you move the DIV from:
+    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+
+
+  } else {
+    // otherwise, move the DIV from anywhere inside the DIV:
+    elmnt.onmousedown = dragMouseDown;
+  }
+
+  document.getElementById("collapse_ul_0").onmousedown = dragMouseDown;
+  document.getElementById("youtube_window").onmousedown = dragMouseDown;
+
+  function dragMouseDown(e) {
+    console.log('dragMouseDown');
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+  }
+
+  function closeDragElement() {
+    // stop moving when mouse button is released:
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+$(document).ready(
+  /*
+  setTimeout(function(){
+      getLandmarksByStoryID(164);
+  },1000);
+  */
+
+
+    function() {
+      dragElement(document.getElementById("mydiv"));
+      dragElement(document.getElementById("youtube_window"));
+        //getLandmarksByStoryID(164);
+      var videoId = window.location.search.split('?')[1].split('=')[1];
+      var appYoutube = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id='+videoId+'&key=AIzaSyCsiStpIlMr_0RhLo9gvJ_gUjjpCRvPXmk'
+
+      console.log(appYoutube);
+      $.get(appYoutube, function(data) {
+        tmp = data;
+        youtube_title = data.items[0].snippet.title
+          $('#heading_0').html(youtube_title);
+
+      })
+
+      var editor = CodeMirror.fromTextArea(document.getElementById("text-input"), {
+        lineNumbers: true,
+    		lineWrapping: true
+      });
+      editor.setSize(null, 300)
+      editor.on("change", function(cm, change) {
+            doc = editor.getDoc();
+            gui_content_update();
+        });
+        var editor_gmap = CodeMirror.fromTextArea(document.getElementById("text-input-gmap"), {
+          lineNumbers: true,
+      		lineWrapping: true
+        });
+        editor_gmap.setSize(null, 30)
+        editor_gmap.on("change", function(cm, change) {
+              var doc_gmap = editor_gmap.getDoc();
+              console.log(doc_gmap);
+              var tmp2 = doc_gmap.getValue().split('@')[1].split('/')[0].split(',');
+              tmp2.pop();
+
+              $('#text-view-gmap').html(tmp2.join());
+          });
+      setTimeout(function(){
+          getLandmarksByStoryID(0);
+      },1000);
+    }
+
+    //getLandmarksByStoryID(164);
+
+  );
+
+var markers = [];
+
+  function gui_content_update() {
+      //preview.innerHTML = "";
+      content = doc.getValue();
+      //console.log(content);
+      StoriesView = str2view(content);
+      //console.log(StoriesView);
+      html_reg = '';
+      html_reg += '<ul>';
+
+      for (i in markers){
+        mymap.removeLayer(markers[i]);
+      }
+
+      for (let [key, value] of Object.entries(StoriesView)){
+
+        html_reg += '<li>' + StoriesView[key].name ;
+        if ('lat_lng' in StoriesView[key]){
+          var lat = StoriesView[key].lat_lng.split(',')[0];
+          var lng = StoriesView[key].lat_lng.split(',')[1];
+
+          markers.push(L.marker([lat, lng]).addTo(mymap).bindPopup(StoriesView[key].name).openPopup());
+
+          html_reg += '<a href=\"javascript:flyto(' + lat + ',' + lng + ')\">('+lat+lng+')</a>';
+        }else{
+          html_reg += '(NaN, NaN)';
+        }
+        if ('link' in StoriesView[key]){
+            var mm = parseInt(StoriesView[key].link.split(':')[0]);
+            var nn = parseInt(StoriesView[key].link.split(':')[1]);
+            var ss = mm * 60 + nn;
+            html_reg += '<a href=\"javascript:seekto(' + 0 + ',' + ss + ')\">(t=' + mm + 'm' +nn + 's)</a>';
+        }else{
+          html_reg += '(t=' + 'NaN' + 'm' + 'NaN' + 's)';
+        }
+
+
+
+        html_reg += '</li>'
+      }
+      html_reg += '</ul>';
+      $('#text-view').html(html_reg);
+      //[ListMdppObject, ListDiv] = mdpp2ListDiv(content);
+/*
+      ListDiv2StaticDisplay(ListMdppObject, ListDiv, $('#preview'));
+      for (var i = 0; i < ListMdppObject.length; i++) {
+          DynamicDisplay(ListMdppObject, ListDiv, i);
+      }
+      //$('#preview').html(html_content);
+      var preview_height = $('#preview').height();
+      if (preview_height < 500) preview_height = 500;
+
+      $('.AutoHeight').height(preview_height);
+      $('img').width('70%');
+      */
+  }
+  function seekto(story_id, time) {
+      console.log('seekto');
+      youtube_players[story_id].seekTo(time, true);
+      //console.log('seekto:'+player+' '+time);
+      //console.log('seekto:'+time);
+      //player.seekTo(60, true);
+
+  }
+
+function flyto(lat, lng){
+  mymap.flyTo(L.latLng(lat, lng), 18, {
+      animate: true,
+      duration: 0.7
+  })
+
+}
+
+function str2view(content){
+  var cmd = content.split('\n');
+  var StoriesView = {};
+  var reg = {};
+  var curr_id = -1;
+  for(i=0;i<cmd.length;i++){
+
+    //console.log('cmd:'+cmd[i]);
+    trim_cmd = cmd[i].trim();
+    if(trim_cmd == '') {
+      //console.log('continue');
+      continue;
+    } else if(!isNaN(parseInt(trim_cmd))){ //int
+      if(Object.keys(reg).length != 0){
+        //console.log('store to view');
+        StoriesView[curr_id] = reg;
+        //console.log(StoriesView);
+        reg = {};
+        curr_id = parseInt(trim_cmd);
+      } else{
+        curr_id = parseInt(trim_cmd);
+      }
+    }else{
+      var cmd_list = cmd[i].split(' ');
+      var header = cmd_list[0];
+      //console.log(cmd_list);
+      cmd_list.shift();
+      var content = cmd_list.join(' ');
+      reg[header] = content;
+      //console.log('store to reg');
+    }
+  }//end of for
+  if (Object.keys(reg).length != 0){
+    StoriesView[curr_id] = reg;
+    reg = {}
+    //console.log('store last reg to view');
+  }
+  return StoriesView;
 }
 
 function onPlayerStateChange(evt) {
@@ -175,34 +464,33 @@ function appendStoriesList(div_id_to_add, data_to_append, where_to_add, id_div) 
 
 function getLandmarksByStoryID(story_id) {
     console.log('getLandmarksByStoryID');
+    //console.log(story_id);
     parameter = {
         url: sheetsUrl,
         command: "getLandmarksByStory",
         story_id: story_id
     };
-    $.get(appUrl, parameter, function(data) {
-        console.log(data);
-        console.log(story_id);
+    //$.get(appUrl, parameter, function(data) {
+
+        //console.log(story_id);
 
 
-        var data_json_landmarks_by_story = JSON.parse(data);
+        //var data_json_landmarks_by_story = JSON.parse(data);
 
         //dbg = data_json_landmarks_by_story;
         var gps_locations = [];
         content_reg = '';
         player_id = 'collapse_player_' + story_id;
-        switch (StoriesDict[story_id].type) {
-            case 'podcast':
-                if (typeof StoriesDict[story_id].media_key != 'undefined') {
-                    content_reg += '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/' + StoriesDict[story_id].media_key + '?utm_source=generator\" width=\"100%\" height=\"232\" frameBorder=\"0\" allowfullscreen=\"\" allow=\"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture\"></iframe>'
-                }
-                break;
+        var videoId = window.location.search.split('?')[1].split('=')[1];
+//        https://www.googleapis.com/youtube/v3/videos?part=snippet&id=nMBYrQgK4pY&key=AIzaSyCsiStpIlMr_0RhLo9gvJ_gUjjpCRvPXmk
+        console.log(videoId);
+        switch ('youtube') {
             case 'youtube':
-                if (typeof StoriesDict[story_id].media_key != 'undefined') {
+                if (true) {
                     youtube_players[story_id] = new YT.Player(player_id, {
                         height: '390',
                         width: '640',
-                        videoId: StoriesDict[story_id].media_key,
+                        videoId: videoId,
                         playerVars: {
                             'start': 0,
                             'autoplay': 0,
@@ -217,52 +505,9 @@ function getLandmarksByStoryID(story_id) {
                     //content_reg += '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + StoriesDict[story_id].media_key	+ '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
                 }
                 break;
-            case 'webpage':
-                if (typeof StoriesDict[story_id].link != 'undefined') {
-                    content_reg += '<iframe width="100%" height="315" src="' + StoriesDict[story_id].link + '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
-                }
-                break;
-            case 'facebook':
-                content_reg += StoriesDict[story_id].link;
-                break;
         }
-        if (data_json_landmarks_by_story.table.length != 0) {
-            content_reg += '<ul>'
-            for (i in data_json_landmarks_by_story.table) {
-                gps_locations.push({
-                    lat: data_json_landmarks_by_story.table[i].lat,
-                    lng: data_json_landmarks_by_story.table[i].lng,
-                    name: data_json_landmarks_by_story.table[i].name,
-                    notes: data_json_landmarks_by_story.table[i].notes,
-                    link: data_json_landmarks_by_story.table[i].link,
-                    landmark_id: data_json_landmarks_by_story.table[i].landmark_id,
-                })
-                content_reg += `<li style="cursor:pointer" class="checkboxLandmark"><input class="chilInput${story_id}" id="${data_json.table[i].landmark_id}" type="checkbox"> <a class="singleZoom">`
-                content_reg += data_json_landmarks_by_story.table[i].name + '</a>';
-                //content_reg += '<a href=\"javascript:seekto(' + youtube_players[story_id] +','+data_json.table[i].link + ')\">('+ data_json.table[i].link +')</a>'
-                if (data_json_landmarks_by_story.table[i].link == '') {
-                    content_reg += '<a href=\"javascript:seekto(' + story_id + ',' + data_json_landmarks_by_story.table[i].link + ')\">' + '</a>'
-                } else {
-                    var video_seconds = data_json_landmarks_by_story.table[i].link;
-                    video_mm = Math.floor(video_seconds / 60);
-                    video_ss = video_seconds - video_mm * 60;
-                    switch (StoriesDict[story_id].type) {
-                        case 'youtube':
-                            content_reg += '<a href=\"javascript:seekto(' + story_id + ',' + data_json_landmarks_by_story.table[i].link + ')\">(t=' + video_mm + 'm' + video_ss + 's)</a>'
-                            break;
-                        case 'podcast':
-                            content_reg += '(t=' + video_mm + 'm' + video_ss + 's)';
-                            break;
-                        default:
-                            content_reg += '(t=' + video_mm + 'm' + video_ss + 's)';
-                    }
-                }
-                //content_reg += '<a href=\"javascript:add_to_favorite(' + data_json_landmarks_by_story.table[i].landmark_id + ')\">(add)</a>'
-                content_reg += '</li>'
-
-            }
-
-            content_reg += '</ul>'
+        //if (data_json_landmarks_by_story.table.length != 0) {
+        if (true) {
             //console.log(content_reg)
             test_str = '#collapse_' + story_id;
             $('#collapse_ul_' + story_id).html(content_reg);
@@ -285,7 +530,6 @@ function getLandmarksByStoryID(story_id) {
             genInpt.checked = true
             GotoStory(story_id, genInpt.checked)
         }
-    });
 
 
 }
