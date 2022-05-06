@@ -1,5 +1,4 @@
 //$.getScript('http://www.youtube.com/iframe_api');
-
 var appUrl = 'https://script.google.com/macros/s/AKfycby-gL9w_PIzt4TDnqfpErNP1YTck93p4j7z1FTpt52bCkryg5Iu/exec';
 var sheetsUrl = 'https://docs.google.com/spreadsheets/d/1GNvkC8t3xua_ibN2GnnXJi-MXasuX5SXb4y1G6idFSc/edit#gid=1023127248';
 //https://docs.google.com/spreadsheets/d/1GNvkC8t3xua_ibN2GnnXJi-MXasuX5SXb4y1G6idFSc/edit?usp=sharing
@@ -75,286 +74,318 @@ function onYouTubePlayerAPIReady() {
       */
 }
 
-function update_db(){
-/*
-  var landmarks_json = [
-    {
-      name:"test name",
-      flags:"test flags",
-      address:"test address",
-      notes:"test notes",
-      lat_lng:"23, 12",
-      link:"2:3"
-    },
-    {
-      name:"test name 2",
-      flags:"test flags 2",
-      address:"test address 2",
-      notes:"test notes 2",
-      lat_lng:"1, 2",
-      link:"1:30"
-    }
-  ];
-*/
-  var landmarks_json = [];
+function update_db() {
+    /*
+      var landmarks_json = [
+        {
+          name:"test name",
+          flags:"test flags",
+          address:"test address",
+          notes:"test notes",
+          lat_lng:"23, 12",
+          link:"2:3"
+        },
+        {
+          name:"test name 2",
+          flags:"test flags 2",
+          address:"test address 2",
+          notes:"test notes 2",
+          lat_lng:"1, 2",
+          link:"1:30"
+        }
+      ];
+    */
+    var landmarks_json = [];
 
-  for (let [key, value] of Object.entries(StoriesView)){
-    tmp = {
-      name:"",
-      flags:"",
-      address:"",
-      notes:"",
-      lat_lng:"",
-      link:"0:0"
+    for (let [key, value] of Object.entries(StoriesView)) {
+        tmp = {
+            name: "",
+            flags: "",
+            address: "",
+            notes: "",
+            lat_lng: "",
+            link: "0:0"
+        }
+        for (let [landmark_key, landmark_value] of Object.entries(value)) {
+            tmp[landmark_key] = landmark_value;
+        }
+        landmarks_json.push(tmp);
     }
-    for (let [landmark_key, landmark_value] of Object.entries(value)){
-        tmp[landmark_key] = landmark_value;
-    }
-    landmarks_json.push(tmp);
-  }
 
-  //console.log(landmarks_json);
-  var videoId = window.location.search.split('?')[1].split('=')[1];
-  var parameter = {
-         url: sheetsUrl,
-        command:"new_story",
-        name: youtube_title,
-        types :"youtube",
-        link :"https://www.youtube.com/watch?v="+videoId,
-        landmarks:JSON.stringify(landmarks_json)
-
-      }
-      //console.log(parameter);
-/*
-      var parameter = {
+    //console.log(landmarks_json);
+    var videoId = window.location.search.split('?')[1].split('=')[1];
+    var parameter = {
         url: sheetsUrl,
-        name: sheetName,
-        command: "getRecentStories",
+        command: "new_story",
+        name: youtube_title,
+        types: "youtube",
+        link: "https://www.youtube.com/watch?v=" + videoId,
+        landmarks: JSON.stringify(landmarks_json),
+        author: youtube_channel
+    }
+    //console.log(parameter);
+    /*
+          var parameter = {
+            url: sheetsUrl,
+            name: sheetName,
+            command: "getRecentStories",
 
-      };
-*/
+          };
+    */
 
-        $.post(appUrl, parameter, function(data) {
-            console.log(data);
-        });
+    $.post(appUrl, parameter, function(data) {
+        console.log(data);
+    });
 
 }
 
+function utility() {
+    if (utility_display) {
+        utility_display = false;
+        $('#utility').hide();
+    } else {
+        utility_display = true;
+        $('#utility').show();
+    }
+}
 
 function dragElement(elmnt) {
-  console.log('drag');
-  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    console.log('drag');
+    var pos1 = 0,
+        pos2 = 0,
+        pos3 = 0,
+        pos4 = 0;
 
-  if (document.getElementById(elmnt.id + "header")) {
-    // if present, the header is where you move the DIV from:
-    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+    if (document.getElementById(elmnt.id + "header")) {
+        // if present, the header is where you move the DIV from:
+        document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
 
 
-  } else {
-    // otherwise, move the DIV from anywhere inside the DIV:
-    elmnt.onmousedown = dragMouseDown;
-  }
+    } else {
+        // otherwise, move the DIV from anywhere inside the DIV:
+        elmnt.onmousedown = dragMouseDown;
+    }
 
-  document.getElementById("collapse_ul_0").onmousedown = dragMouseDown;
-  document.getElementById("youtube_window").onmousedown = dragMouseDown;
+    document.getElementById("collapse_ul_0").onmousedown = dragMouseDown;
+    document.getElementById("youtube_window").onmousedown = dragMouseDown;
 
-  function dragMouseDown(e) {
-    console.log('dragMouseDown');
-    e = e || window.event;
-    e.preventDefault();
-    // get the mouse cursor position at startup:
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    document.onmouseup = closeDragElement;
-    // call a function whenever the cursor moves:
-    document.onmousemove = elementDrag;
-  }
+    function dragMouseDown(e) {
+        console.log('dragMouseDown');
+        e = e || window.event;
+        e.preventDefault();
+        // get the mouse cursor position at startup:
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        // call a function whenever the cursor moves:
+        document.onmousemove = elementDrag;
+    }
 
-  function elementDrag(e) {
-    e = e || window.event;
-    e.preventDefault();
-    // calculate the new cursor position:
-    pos1 = pos3 - e.clientX;
-    pos2 = pos4 - e.clientY;
-    pos3 = e.clientX;
-    pos4 = e.clientY;
-    // set the element's new position:
-    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-  }
+    function elementDrag(e) {
+        e = e || window.event;
+        e.preventDefault();
+        // calculate the new cursor position:
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        // set the element's new position:
+        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+    }
 
-  function closeDragElement() {
-    // stop moving when mouse button is released:
-    document.onmouseup = null;
-    document.onmousemove = null;
-  }
+    function closeDragElement() {
+        // stop moving when mouse button is released:
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
 }
+var utility_display = false;
 $(document).ready(
-  /*
-  setTimeout(function(){
-      getLandmarksByStoryID(164);
-  },1000);
-  */
+    /*
+    setTimeout(function(){
+        getLandmarksByStoryID(164);
+    },1000);
+    */
 
 
     function() {
-      dragElement(document.getElementById("mydiv"));
-      dragElement(document.getElementById("youtube_window"));
+
+
+        $('#utility').hide()
+        dragElement(document.getElementById("mydiv"));
+        dragElement(document.getElementById("youtube_window"));
         //getLandmarksByStoryID(164);
-      var videoId = window.location.search.split('?')[1].split('=')[1];
-      var appYoutube = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id='+videoId+'&key=AIzaSyCsiStpIlMr_0RhLo9gvJ_gUjjpCRvPXmk'
+        var videoId = window.location.search.split('?')[1].split('=')[1];
+        var appYoutube = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + videoId + '&key=AIzaSyCsiStpIlMr_0RhLo9gvJ_gUjjpCRvPXmk'
 
-      console.log(appYoutube);
-      $.get(appYoutube, function(data) {
-        tmp = data;
-        youtube_title = data.items[0].snippet.title
-          $('#heading_0').html(youtube_title);
+        console.log(appYoutube);
+        $.get(appYoutube, function(data) {
+            tmp = data;
+            youtube_title = data.items[0].snippet.title;
+            youtube_channel = data.items[0].snippet.channelTitle;
+            $('#heading_0').html(youtube_title);
 
-      })
+        })
 
-      var editor = CodeMirror.fromTextArea(document.getElementById("text-input"), {
-        lineNumbers: true,
-    		lineWrapping: true
-      });
-      editor.setSize(null, 300)
-      editor.on("change", function(cm, change) {
+        var editor = CodeMirror.fromTextArea(document.getElementById("text-input"), {
+            lineNumbers: true,
+            lineWrapping: true
+        });
+        editor.setSize(null, 300)
+        editor.on("change", function(cm, change) {
             doc = editor.getDoc();
             gui_content_update();
         });
         var editor_gmap = CodeMirror.fromTextArea(document.getElementById("text-input-gmap"), {
-          lineNumbers: true,
-      		lineWrapping: true
+            lineNumbers: true,
+            lineWrapping: true
         });
         editor_gmap.setSize(null, 30)
         editor_gmap.on("change", function(cm, change) {
-              var doc_gmap = editor_gmap.getDoc();
-              console.log(doc_gmap);
-              var tmp2 = doc_gmap.getValue().split('@')[1].split('/')[0].split(',');
-              tmp2.pop();
+            var doc_gmap = editor_gmap.getDoc();
+            console.log(doc_gmap);
+            var tmp2 = doc_gmap.getValue().split('@')[1].split('/')[0].split(',');
+            tmp2.pop();
 
-              $('#text-view-gmap').html(tmp2.join());
-          });
-      setTimeout(function(){
-          getLandmarksByStoryID(0);
-      },1000);
+            $('#text-view-gmap').html(tmp2.join());
+        });
+
+        setTimeout(function() {
+            getLandmarksByStoryID(0);
+        }, 1000);
     }
 
     //getLandmarksByStoryID(164);
 
-  );
+);
 
 var markers = [];
 
-  function gui_content_update() {
-      //preview.innerHTML = "";
-      content = doc.getValue();
-      //console.log(content);
-      StoriesView = str2view(content);
-      //console.log(StoriesView);
-      html_reg = '';
-      html_reg += '<ul>';
+function gui_content_update() {
+    //preview.innerHTML = "";
+    content = doc.getValue();
+    //console.log(content);
+    StoriesView = str2view(content);
+    //console.log(StoriesView);
+    html_reg = '';
+    html_reg += '<ul>';
 
-      for (i in markers){
+    for (i in markers) {
         mymap.removeLayer(markers[i]);
-      }
+    }
 
-      for (let [key, value] of Object.entries(StoriesView)){
+    for (let [key, value] of Object.entries(StoriesView)) {
 
-        html_reg += '<li>' + StoriesView[key].name ;
-        if ('lat_lng' in StoriesView[key]){
-          var lat = StoriesView[key].lat_lng.split(',')[0];
-          var lng = StoriesView[key].lat_lng.split(',')[1];
+        html_reg += '<li>' + StoriesView[key].name;
+        if ('lat_lng' in StoriesView[key]) {
+            var lat = StoriesView[key].lat_lng.split(',')[0];
+            var lng = StoriesView[key].lat_lng.split(',')[1];
 
-          markers.push(L.marker([lat, lng]).addTo(mymap).bindPopup(StoriesView[key].name).openPopup());
+            markers.push(L.marker([lat, lng]).addTo(mymap).bindPopup(StoriesView[key].name).openPopup());
 
-          html_reg += '<a href=\"javascript:flyto(' + lat + ',' + lng + ')\">('+lat+lng+')</a>';
-        }else{
-          html_reg += '(NaN, NaN)';
+            html_reg += '<a href=\"javascript:flyto(' + lat + ',' + lng + ')\">(' + lat + lng + ')</a>';
+        } else {
+            html_reg += '(NaN, NaN)';
         }
-        if ('link' in StoriesView[key]){
+        if ('link' in StoriesView[key]) {
             var mm = parseInt(StoriesView[key].link.split(':')[0]);
             var nn = parseInt(StoriesView[key].link.split(':')[1]);
             var ss = mm * 60 + nn;
-            html_reg += '<a href=\"javascript:seekto(' + 0 + ',' + ss + ')\">(t=' + mm + 'm' +nn + 's)</a>';
-        }else{
-          html_reg += '(t=' + 'NaN' + 'm' + 'NaN' + 's)';
+            html_reg += '<a href=\"javascript:seekto(' + 0 + ',' + ss + ')\">(t=' + mm + 'm' + nn + 's)</a>';
+        } else {
+            html_reg += '(t=' + 'NaN' + 'm' + 'NaN' + 's)';
         }
 
 
 
         html_reg += '</li>'
-      }
-      html_reg += '</ul>';
-      $('#text-view').html(html_reg);
-      //[ListMdppObject, ListDiv] = mdpp2ListDiv(content);
-/*
-      ListDiv2StaticDisplay(ListMdppObject, ListDiv, $('#preview'));
-      for (var i = 0; i < ListMdppObject.length; i++) {
-          DynamicDisplay(ListMdppObject, ListDiv, i);
-      }
-      //$('#preview').html(html_content);
-      var preview_height = $('#preview').height();
-      if (preview_height < 500) preview_height = 500;
+    }
+    html_reg += '</ul>';
+    $('#text-view').html(html_reg);
+    //[ListMdppObject, ListDiv] = mdpp2ListDiv(content);
+    /*
+          ListDiv2StaticDisplay(ListMdppObject, ListDiv, $('#preview'));
+          for (var i = 0; i < ListMdppObject.length; i++) {
+              DynamicDisplay(ListMdppObject, ListDiv, i);
+          }
+          //$('#preview').html(html_content);
+          var preview_height = $('#preview').height();
+          if (preview_height < 500) preview_height = 500;
 
-      $('.AutoHeight').height(preview_height);
-      $('img').width('70%');
-      */
-  }
-  function seekto(story_id, time) {
-      console.log('seekto');
-      youtube_players[story_id].seekTo(time, true);
-      //console.log('seekto:'+player+' '+time);
-      //console.log('seekto:'+time);
-      //player.seekTo(60, true);
+          $('.AutoHeight').height(preview_height);
+          $('img').width('70%');
+          */
+}
 
-  }
-
-function flyto(lat, lng){
-  mymap.flyTo(L.latLng(lat, lng), 18, {
-      animate: true,
-      duration: 0.7
-  })
+function seekto(story_id, time) {
+    console.log('seekto');
+    youtube_players[story_id].seekTo(time, true);
+    //console.log('seekto:'+player+' '+time);
+    //console.log('seekto:'+time);
+    //player.seekTo(60, true);
 
 }
 
-function str2view(content){
-  var cmd = content.split('\n');
-  var StoriesView = {};
-  var reg = {};
-  var curr_id = -1;
-  for(i=0;i<cmd.length;i++){
 
-    //console.log('cmd:'+cmd[i]);
-    trim_cmd = cmd[i].trim();
-    if(trim_cmd == '') {
-      //console.log('continue');
-      continue;
-    } else if(!isNaN(parseInt(trim_cmd))){ //int
-      if(Object.keys(reg).length != 0){
-        //console.log('store to view');
-        StoriesView[curr_id] = reg;
-        //console.log(StoriesView);
-        reg = {};
-        curr_id = parseInt(trim_cmd);
-      } else{
-        curr_id = parseInt(trim_cmd);
-      }
-    }else{
-      var cmd_list = cmd[i].split(' ');
-      var header = cmd_list[0];
-      //console.log(cmd_list);
-      cmd_list.shift();
-      var content = cmd_list.join(' ');
-      reg[header] = content;
-      //console.log('store to reg');
+function utility_proc() {
+    var content = $('#text-input-utility').val().split('\n');
+    console.log(content);
+    var output_reg = '';
+    var cnt = 1;
+    for (i in content) {
+        if (content[i].trim() != '') {
+            output_reg += cnt + '\n';
+            output_reg += 'name ' + content[i] + '\n';
+            output_reg += 'notes\n';
+            output_reg += 'lat_lng 0,0\n';
+            output_reg += 'link 0:0\n\n'
+        }
+        //console.log(output_reg);
+        cnt += 1;
     }
-  }//end of for
-  if (Object.keys(reg).length != 0){
-    StoriesView[curr_id] = reg;
-    reg = {}
-    //console.log('store last reg to view');
-  }
-  return StoriesView;
+    console.log(output_reg);
+    $('#text-input-utility').val(output_reg);
+}
+
+function str2view(content) {
+    var cmd = content.split('\n');
+    var StoriesView = {};
+    var reg = {};
+    var curr_id = -1;
+    for (i = 0; i < cmd.length; i++) {
+
+        //console.log('cmd:'+cmd[i]);
+        trim_cmd = cmd[i].trim();
+        if (trim_cmd == '') {
+            //console.log('continue');
+            continue;
+        } else if (!isNaN(parseInt(trim_cmd))) { //int
+            if (Object.keys(reg).length != 0) {
+                //console.log('store to view');
+                StoriesView[curr_id] = reg;
+                //console.log(StoriesView);
+                reg = {};
+                curr_id = parseInt(trim_cmd);
+            } else {
+                curr_id = parseInt(trim_cmd);
+            }
+        } else {
+            var cmd_list = cmd[i].split(' ');
+            var header = cmd_list[0];
+            //console.log(cmd_list);
+            cmd_list.shift();
+            var content = cmd_list.join(' ');
+            reg[header] = content;
+            //console.log('store to reg');
+        }
+    } //end of for
+    if (Object.keys(reg).length != 0) {
+        StoriesView[curr_id] = reg;
+        reg = {}
+        //console.log('store last reg to view');
+    }
+    return StoriesView;
 }
 
 function onPlayerStateChange(evt) {
@@ -472,64 +503,64 @@ function getLandmarksByStoryID(story_id) {
     };
     //$.get(appUrl, parameter, function(data) {
 
-        //console.log(story_id);
+    //console.log(story_id);
 
 
-        //var data_json_landmarks_by_story = JSON.parse(data);
+    //var data_json_landmarks_by_story = JSON.parse(data);
 
-        //dbg = data_json_landmarks_by_story;
-        var gps_locations = [];
-        content_reg = '';
-        player_id = 'collapse_player_' + story_id;
-        var videoId = window.location.search.split('?')[1].split('=')[1];
-//        https://www.googleapis.com/youtube/v3/videos?part=snippet&id=nMBYrQgK4pY&key=AIzaSyCsiStpIlMr_0RhLo9gvJ_gUjjpCRvPXmk
-        console.log(videoId);
-        switch ('youtube') {
-            case 'youtube':
-                if (true) {
-                    youtube_players[story_id] = new YT.Player(player_id, {
-                        height: '390',
-                        width: '640',
-                        videoId: videoId,
-                        playerVars: {
-                            'start': 0,
-                            'autoplay': 0,
-                            'controls': 1
-                        },
-                        events: {
-                            'onReady': onPlayerReady,
-                            'onStateChange': onPlayerStateChange,
-                        }
+    //dbg = data_json_landmarks_by_story;
+    var gps_locations = [];
+    content_reg = '';
+    player_id = 'collapse_player_' + story_id;
+    var videoId = window.location.search.split('?')[1].split('=')[1];
+    //        https://www.googleapis.com/youtube/v3/videos?part=snippet&id=nMBYrQgK4pY&key=AIzaSyCsiStpIlMr_0RhLo9gvJ_gUjjpCRvPXmk
+    console.log(videoId);
+    switch ('youtube') {
+        case 'youtube':
+            if (true) {
+                youtube_players[story_id] = new YT.Player(player_id, {
+                    height: '390',
+                    width: '640',
+                    videoId: videoId,
+                    playerVars: {
+                        'start': 0,
+                        'autoplay': 0,
+                        'controls': 1
+                    },
+                    events: {
+                        'onReady': onPlayerReady,
+                        'onStateChange': onPlayerStateChange,
+                    }
 
-                    });
-                    //content_reg += '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + StoriesDict[story_id].media_key	+ '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
-                }
-                break;
-        }
-        //if (data_json_landmarks_by_story.table.length != 0) {
-        if (true) {
-            //console.log(content_reg)
-            test_str = '#collapse_' + story_id;
-            $('#collapse_ul_' + story_id).html(content_reg);
-            UpdateMap(gps_locations, story_id);
-
-            let markerIcon = document.querySelectorAll('.leaflet-marker-icon')
-            let markerShadow = document.querySelectorAll('.leaflet-marker-shadow')
-
-            if (gps_locations.length != markerIcon.length) {
-                for (let i = 0; i < (markerShadow.length - gps_locations.length); i++) {
-                    markerIcon[i].remove()
-                    markerShadow[i].remove()
-                }
+                });
+                //content_reg += '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + StoriesDict[story_id].media_key	+ '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
             }
-            let main_input = document.querySelectorAll('.groupinput').checked = true
+            break;
+    }
+    //if (data_json_landmarks_by_story.table.length != 0) {
+    if (true) {
+        //console.log(content_reg)
+        test_str = '#collapse_' + story_id;
+        $('#collapse_ul_' + story_id).html(content_reg);
+        UpdateMap(gps_locations, story_id);
 
-            // document.getElementById(`collapse_${story_id}`).classList.add("show");
+        let markerIcon = document.querySelectorAll('.leaflet-marker-icon')
+        let markerShadow = document.querySelectorAll('.leaflet-marker-shadow')
 
-            let genInpt = document.getElementById(`genInput${story_id}`)
-            genInpt.checked = true
-            GotoStory(story_id, genInpt.checked)
+        if (gps_locations.length != markerIcon.length) {
+            for (let i = 0; i < (markerShadow.length - gps_locations.length); i++) {
+                markerIcon[i].remove()
+                markerShadow[i].remove()
+            }
         }
+        let main_input = document.querySelectorAll('.groupinput').checked = true
+
+        // document.getElementById(`collapse_${story_id}`).classList.add("show");
+
+        let genInpt = document.getElementById(`genInput${story_id}`)
+        genInpt.checked = true
+        GotoStory(story_id, genInpt.checked)
+    }
 
 
 }

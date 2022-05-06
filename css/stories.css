@@ -1,5 +1,23 @@
 /* Always set the map height explicitly to define the size of the div
  * element that contains the map. */
+
+ .accordion-heading .accordion-toggle.collapsed {
+       background-color:red; /* accordion background color */
+}
+
+#DivStoriesList {
+    width:80%;
+}
+
+#TagList {
+    width:11%;
+    background-color:#EEEEEE;
+    right:0;
+    position: absolute;
+    z-index:999;
+    overflow:auto
+}
+
  .navbar {
      position: relative;
      display: flex;

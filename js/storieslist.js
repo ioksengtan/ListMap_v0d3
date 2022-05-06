@@ -112,7 +112,7 @@ function appendStoriesList(div_id_to_add, data_to_append, where_to_add, id_div) 
     html_reg = '';
     html_reg += '<div class=\"accordion\" id=\"accordionExample\" >';
     html_reg += '   <div class=\"accordion-item\" ">';
-    html_reg += '     <h2 class=\"accordion-header\" id=\"heading_' + myapp_story_id + '\" style="padding:10px;font-size:16px">';
+    html_reg += '     <h2 class=\"accordion-header\" id=\"heading_' + myapp_story_id + '\" style="padding:10px;font-size:14px">';
     html_reg += '       <button style="width:50px;float:right;height:100%;padding:0;background:white;box-shadow:none" class=\"accordion-button\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse_' + myapp_story_id + '\" aria-expanded=\"true\" aria-controls=\"collapse_' + myapp_story_id + '\">';
     html_reg += '       </button>';
 

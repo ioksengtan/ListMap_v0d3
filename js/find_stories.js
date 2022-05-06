@@ -303,16 +303,19 @@ function addmyappList(div_id_to_add, data_to_append, where_to_add, id_div) {
     */
 }
 
+var global_markers;
 
 function addStoriesToLayer(locations) {
+    //mymap.removeLayer(global_markers);
     var markers = L.markerClusterGroup();
     locations.map(item => L.marker(new L.LatLng(item.lat, item.lng)))
         .forEach((marker,i) => {
-          markers.addLayer(marker)
+          markers.addLayer(marker);
           marker.bindPopup("<b>"+ locations[i].name +"</b><br>" + locations[i].notes).openPopup();
           }
         );
-    mymap.addLayer(markers)
+    global_markers = markers;
+    mymap.addLayer(global_markers)
 }
 
 // function ZoomToGroup(input, coor) {
@@ -341,7 +344,7 @@ function ShowHideMarker(input, loc, opt) {
 
 function SingleZoom(name, loc) {
     name.addEventListener('click', () => {
-      
+
         mymap.flyTo(loc._latlng, 16, {
             animate: true,
             duration: 0.3
@@ -709,7 +712,7 @@ function initMap() {
             }, function(data) {
                 $('#DivStoriesList').empty();
                 data_json = JSON.parse(data);
-                //console.log(data_json)
+                console.log(data_json)
                 var gps_locations = [];
                 var landmarks = {};
                 for (i in data_json.table){
@@ -720,8 +723,8 @@ function initMap() {
                       landmarks[data_json.table[i].story_id].push(data_json.table[i]);
                     }
                     gps_locations.push({
-                        lat: data_json.table[i].lat,
-                        lng: data_json.table[i].lng,
+                        lat: data_json.table[i].lat_lng.split(',')[0],
+                        lng: data_json.table[i].lat_lng.split(',')[1],
                         name: data_json.table[i].name,
                         content: data_json.table[i].content,
                         link: data_json.table[i].link,
@@ -731,10 +734,16 @@ function initMap() {
                 }
                 console.log(landmarks);
                 for(story_id in landmarks){
-                  $('#DivStoriesList').append("<h1>" + story_id + "</h1>" + '<br/>');
+                  $('#DivStoriesList').append("<b>" + data_json.table_stories[story_id] + "</b>" + '<br/>');
                   for(i in landmarks[story_id]){
-                      $('#DivStoriesList').append(landmarks[story_id][i].name + '<br/>');
+                      var html_reg = '';
+                      //html_reg+= "<a href=\"javascript:flyto(" + landmarks[story_id][i].lat_lng.split(',')[0] +", "+landmarks[story_id][i].lat_lng.split(',')[1]+")>"+landmarks[story_id][i].name+"</a>"
+                      //$('#DivStoriesList').append(html_reg + '<br/>');
+                      html_reg += "<a href=\"javascript:flyto("+ landmarks[story_id][i].lat_lng.split(',')[0] +","+ landmarks[story_id][i].lat_lng.split(',')[1] +")\">"
+                      html_reg += landmarks[story_id][i].name + '</a><br/>';
+                      $('#DivStoriesList').append(html_reg);
                   }
+                  $('#DivStoriesList').append("<br/>");
                 }
 
                 //$('#DivStoriesList').append(data_json.table[i].name + '<br/>');

@@ -1,6 +1,12 @@
 const locations = []
 
+function flyto(lat, lng){
+  mymap.flyTo(L.latLng(lat, lng), 18, {
+      animate: true,
+      duration: 0.7
+  })
 
+}
 
 
 function GetCluster(story_id) {
@@ -74,7 +80,9 @@ function initMap() {
     mymap.on('zoomend', function() {
         console.log('zoom to:' + 'level(' + this.getZoom() + ') ' + this.getCenter());
     });
-
+    mymap.on('click', function(e) {
+        console.log("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
+    });
     var baseMaps = {
         "Streets": streets
     };
@@ -293,6 +301,7 @@ function ZoomToGroup(coor) {
         });
 
     let bound = markers.getBounds()
+
     mymap.fitBounds(bound)
 
     // ZoomToGroup(markers)
