@@ -1,64 +1,9 @@
 /* Always set the map height explicitly to define the size of the div
  * element that contains the map. */
-
- .accordion-heading .accordion-toggle.collapsed {
-       background-color:red; /* accordion background color */
+#maptest {
+  z-index:1000;
 }
-.accordion-item {
-    background-color: #FFF;
-    border: 0px solid rgba(0,0,0,.125);
-}
-#DivStoriesList {
-    width:70%;
-}
-.seekto {
-  text-decoration:none;
-  font-size:14px;
-  padding-left:5px;
-
-}
-.seekto:hover {
-  background-color: #EEEEEE;
-}
-
-.singleZoom {
-  text-decoration:none;
-  font-size:14px;
-}
-
-.singleZoom:hover{
-  background-color: #EEEEEE;
-}
-
-.story_title:hover{
-  background-color: #EEEEEE;
-
-}
-
-#TagList {
-    width:15%;
-    background-color:#FCFCFC;
-    right:30px;
-    position: absolute;
-    z-index:999;
-    overflow:auto;
-    font-size:14px;
-    padding-top:10px;
-
-}
-
-#TagList ul {
-  list-style-type: none;
-}
-
-#TagList a {
-  text-decoration:none;
-  color: black;
-}
-
-#TagList a:hover {
-  background-color:#EEEEEE;
-}
+#map2 { width: 80%; height: 80%; }
 
  .navbar {
      position: relative;
@@ -72,21 +17,19 @@
 .gpstory_article img{
 	width:100%;
 }
-.accordion-header img{
+.accordion-item img{
 	width:30px;
 }
-
+#geostory_blog img{
+	//width:80%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}
 #map {
   height: 90%;
   width: 50%;
 }
-
-
-.accordion-collapse img {
-  width: auto;
-  max-height: 600px;
-}
-
 
 #maplist {
   background-color:white;

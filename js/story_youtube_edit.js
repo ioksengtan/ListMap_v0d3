@@ -121,7 +121,8 @@ function update_db() {
         types: "youtube",
         link: "https://www.youtube.com/watch?v=" + videoId,
         landmarks: JSON.stringify(landmarks_json),
-        author: youtube_channel
+        author: youtube_channel,
+        tags:$('#text-input-tags').val()
     }
     //console.log(parameter);
     /*
@@ -135,6 +136,7 @@ function update_db() {
 
     $.post(appUrl, parameter, function(data) {
         console.log(data);
+        window.location.replace("stories.html");
     });
 
 }
@@ -281,7 +283,14 @@ function gui_content_update() {
         if ('lat_lng' in StoriesView[key]) {
             var lat = StoriesView[key].lat_lng.split(',')[0];
             var lng = StoriesView[key].lat_lng.split(',')[1];
+            //https://www.google.com/maps/place/%E6%96%B0%E7%AB%B9%E8%87%BA%E5%A4%A7%E5%88%86%E9%99%A2%E6%96%B0%E7%AB%B9%E9%86%AB%E9%99%A2/@24.8158818,120.9806239,15z/data=!4m2!3m1!1s0x0:0x92e23500cc39e11e?sa=X&ved=2ahUKEwj6--ve9NH3AhXumFYBHXSIBFgQ_BJ6BAheEAU
+            /*
+            if('@' in  StoriesView[key].lat_lng){
 
+            }else{
+
+            }
+            */
             markers.push(L.marker([lat, lng]).addTo(mymap).bindPopup(StoriesView[key].name).openPopup());
 
             html_reg += '<a href=\"javascript:flyto(' + lat + ',' + lng + ')\">(' + lat + lng + ')</a>';

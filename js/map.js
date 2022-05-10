@@ -367,3 +367,111 @@ function refreshGMap(locations) {
 
     });
 }
+
+function getStoriesByAuthor(author){
+  $('#DivStoriesList').empty();
+  var parameter = {
+    url: sheetsUrl,
+    name: sheetName,
+    command: "sql_getStoriesByAuthor",
+    author:author
+  };
+      $.get(appUrl, parameter, function(data) {
+
+          console.log(data);
+          data_array = JSON.parse(data);
+          for (i in data_array) {
+              //console.log(i + ',' +data_json.table[i]);
+              if(i==0){
+
+              }else{
+                data_json.table[i] = {
+                  'title': data_array[i][0],
+                  'author': data_array[i][4],
+                  'types':data_array[i][2],
+                  'link':data_array[i][3],
+                  'story_id':data_array[i][1]
+                }
+                appendStoriesList(DivStoriesList, data_json.table[i], 'prepend');
+              }
+
+              switch(data_json.table[i].types){
+                case 'podcast':
+                  StoriesDict[data_json.table[i].story_id] = {
+                      'type': data_json.table[i].types,
+                      'media_key': data_json.table[i].link,
+                      'link': data_json.table[i].link,
+                  };
+                  break;
+                case 'youtube':
+                  StoriesDict[data_json.table[i].story_id] = {
+                      'type': data_json.table[i].types,
+                      'media_key': data_json.table[i].link.split('v=')[1],
+                      'link': data_json.table[i].link,
+                  };
+                  break;
+                  default:
+                  StoriesDict[data_json.table[i].story_id] = {
+                      'type': data_json.table[i].types,
+                      'media_key': data_json.table[i].link,
+                      'link': data_json.table[i].link,
+                  };
+              }
+
+          }
+        });
+}
+
+function getStoriesByTag(tag){
+  $('#DivStoriesList').empty();
+  var parameter = {
+    url: sheetsUrl,
+    name: sheetName,
+    command: "sql_getStoriesByTag",
+    tag:tag
+  };
+      $.get(appUrl, parameter, function(data) {
+
+          console.log(data);
+          data_array = JSON.parse(data);
+          for (i in data_array) {
+              //console.log(i + ',' +data_json.table[i]);
+              if(i==0){
+
+              }else{
+                data_json.table[i] = {
+                  'title': data_array[i][0],
+                  'author': data_array[i][4],
+                  'types':data_array[i][2],
+                  'link':data_array[i][3],
+                  'story_id':data_array[i][1]
+                }
+                appendStoriesList(DivStoriesList, data_json.table[i], 'prepend');
+              }
+
+              switch(data_json.table[i].types){
+                case 'podcast':
+                  StoriesDict[data_json.table[i].story_id] = {
+                      'type': data_json.table[i].types,
+                      'media_key': data_json.table[i].link,
+                      'link': data_json.table[i].link,
+                  };
+                  break;
+                case 'youtube':
+                  StoriesDict[data_json.table[i].story_id] = {
+                      'type': data_json.table[i].types,
+                      'media_key': data_json.table[i].link.split('v=')[1],
+                      'link': data_json.table[i].link,
+                  };
+                  break;
+                  default:
+                  StoriesDict[data_json.table[i].story_id] = {
+                      'type': data_json.table[i].types,
+                      'media_key': data_json.table[i].link,
+                      'link': data_json.table[i].link,
+                  };
+              }
+
+          }
+        });
+}

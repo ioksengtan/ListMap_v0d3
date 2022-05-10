@@ -143,17 +143,12 @@
                     </div>
                  </div>
 
-                 <div style="width:100%">
 
-                 <textarea class="form-control" id="text-input-gmap" oninput=this.editor.update()
-                 style="width:100%" rows="1"></textarea>
-                 </div>
-                 <div id="text-view-gmap" style="width:100%">
-                    (lat,lng)
-                 </div>
 
                  <div style="width:100%">
                    <a href="javascript:utility()">utility</a> | <a href=""> | [template]</a> | <a href="">[view]</a> | <a href="javascript:update_db()">[upload]</a>
+
+                   <textarea class="form-control" id="text-input-tags" oninput=this.editor.update() style="width:100%" rows="1">tags</textarea>
 
                  <textarea class="AutoHeight form-control" id="text-input" oninput=this.editor.update()
                  style="width:100%" rows="5">
@@ -166,8 +161,15 @@ link 0:0
 
                </textarea>
                  </div>
-                 <div id="text-view" style="width:100%">
+                 <p></p>
+                 <div id="text-view" style="width:100%"></div>
+                 <div style="width:100%">
 
+                 <textarea class="form-control" id="text-input-gmap" oninput=this.editor.update()
+                 style="width:100%" rows="1"></textarea>
+                 </div>
+                 <div id="text-view-gmap" style="width:100%">
+                    (lat,lng)
                  </div>
 				<div class="accordion" id="accordionExample" >
 				   <div class="accordion-item">

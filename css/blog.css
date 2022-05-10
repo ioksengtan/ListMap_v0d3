@@ -15,11 +15,20 @@
 .accordion-item img{
 	width:30px;
 }
-#geostory_blog img{
-	//width:80%;
+#geostory_blog p{
+        width:80%;
     display: block;
     margin-left: auto;
-    margin-right: auto	
+    margin-right: auto;
+    padding-bottom: 20px;
+}
+#geostory_blog img{
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width:80%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto
 }
 #map {
   height: 90%;

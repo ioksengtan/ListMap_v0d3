@@ -54,8 +54,10 @@ function update_db(){
         types :"webpage",
         link :doc_webpage,
         landmarks:JSON.stringify(landmarks_json),
-        author: curr_author
+        author: curr_author,
+        tags:$('#text-input-tags').val()
       }
+
       //console.log(parameter);
 /*
       var parameter = {
@@ -68,6 +70,7 @@ function update_db(){
 
         $.post(appUrl, parameter, function(data) {
             console.log(data);
+              window.location.replace("stories.html");
         });
 
 }

@@ -11,15 +11,15 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
-   <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-   <script src="https://unpkg.com/vue-i18n@8.27.0/dist/vue-i18n.js"></script>
+<script src='https://unpkg.com/vue/dist/vue.js'></script>
+<script src="https://unpkg.com/vue-i18n@8"></script>
       <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
       <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
       <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 	<script src="js/leaflet.geometryutil.js"></script>
 	<script src="js/leaflet-arrowheads.js"></script>
-	  <link rel="stylesheet" href="css/image.css">
+	  <link rel="stylesheet" href="css/story_image_edit.css">
 
 	<script src="js/language.js"></script>
   <script src="js/map.js"></script>
@@ -28,7 +28,7 @@
 		<script src="js/variable_engine.js"></script>
 		<script src="js/mdppParser.js"></script>
 		<script src="js/mdpp.js"></script>
-		<script src="js/image.js"></script>
+		<script src="js/story_image_edit.js"></script>
    </head>
    <body>
 
@@ -104,24 +104,31 @@
 <script type="text/javascript">
 
 //var bounds = [[0, 0], [3229, 4725]];
-var bounds = [[0, 0], [503, 700]];
+//var bounds = [[0, 0], [503, 700]];
+var img = new Image();
+img.onload = function() {
+  //alert(this.width + 'x' + this.height);
+  var bounds = [[0, 0], [this.width, this.height]];
+  var map2 = L.map('map2', {
+  	crs: L.CRS.Simple,
+  	maxZoom: 1,
+  	minZoom: -4,
+  	maxBounds: bounds
+  });
+  //L.imageOverlay('img/image0.png', bounds).addTo(map2);
+  L.imageOverlay('https://i.imgur.com/x3Wf4tF.jpg', bounds).addTo(map2);
+  map2.fitBounds(bounds);
+  map2.on('zoomend', function() {
+      console.log('zoom to:' + 'level(' + this.getZoom() + ') ' + this.getCenter());
+  });
+  map2.on('click', function(e) {
+      console.log("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
+  });
+}
+img.src = 'https://i.imgur.com/x3Wf4tF.jpg';
 
+//var bounds = [[0, 0], [5087, 6274]];
 
-var map2 = L.map('map2', {
-	crs: L.CRS.Simple,
-	maxZoom: 0,
-	minZoom: -4,
-	maxBounds: bounds
-});
-//L.imageOverlay('img/image0.png', bounds).addTo(map2);
-L.imageOverlay('img/map_kyushu.jpg', bounds).addTo(map2);
-map2.fitBounds(bounds);
-map2.on('zoomend', function() {
-    console.log('zoom to:' + 'level(' + this.getZoom() + ') ' + this.getCenter());
-});
-map2.on('click', function(e) {
-    console.log("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
-});
 </script>
 			   </div>
             </div>
