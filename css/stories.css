@@ -11,6 +11,10 @@
 #DivStoriesList {
     width:70%;
 }
+
+#text-input-story {
+  width:70%
+}
 .seekto {
   text-decoration:none;
   font-size:14px;

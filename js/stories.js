@@ -15,7 +15,44 @@ $(document).ready(
         new Vue({
             i18n
         }).$mount('#dropdown')
+        $('#text-input-story').keydown(function(e) {
+            if(e.which == 13) {
+                // Enter was pressed. Run your code.
+                story_content = $('#text-input-story').val().trim();
+                //$('#text-input-story').val("");
+                $(this).val('').focus();
+                console.log(story_content);
+                data_to_append = {
+                }
+                if(story_content.includes('www.youtube.com')){
+                  data_to_append.types = 'youtube';
+                  data_to_append.title = 'get youtube title by API'
+                  appendStoriesList(DivStoriesList, data_to_append, 'prepend')
+                }else if(story_content.includes('www.facebook.com')){
+                  data_to_append.types = 'facebook';
+                  data_to_append.title = 'user defined title';
+                  appendStoriesList(DivStoriesList, data_to_append, 'prepend')
+                }else{
+                  data_to_append.types = '';
+                  data_to_append.title = story_content;
+                  appendStoriesList(DivStoriesList, data_to_append, 'prepend')
+                }
 
+                /*
+                myapp_what = data_to_append.what;
+                myapp_where = data_to_append.where;
+                myapp_title = data_to_append.title;
+                myapp_link = data_to_append.link;
+                myapp_avatar = data_to_append.avatar;
+                myapp_author = data_to_append.author;
+                myapp_tags = data_to_append.tags;
+                myapp_thumbnail = data_to_append.thumbnail;
+                myapp_story_id = data_to_append.story_id;
+                myapp_types = data_to_append.types;
+                */
+
+            }
+        });
 		var parameter = {
 			url: sheetsUrl,
 			name: sheetName,
