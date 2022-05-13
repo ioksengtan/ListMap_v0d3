@@ -75,73 +75,69 @@ function onYouTubePlayerAPIReady() {
 }
 
 function update_db() {
-    console.log('update_db');
-    landmarks_new_json = [];
-    landmarks_to_update_json = {};
-    for (let [key, value] of Object.entries(StoriesView.new)) {
-        //console.log(key)
-        var tmp = {
+    /*
+      var landmarks_json = [
+        {
+          name:"test name",
+          flags:"test flags",
+          address:"test address",
+          notes:"test notes",
+          lat_lng:"23, 12",
+          link:"2:3"
+        },
+        {
+          name:"test name 2",
+          flags:"test flags 2",
+          address:"test address 2",
+          notes:"test notes 2",
+          lat_lng:"1, 2",
+          link:"1:30"
+        }
+      ];
+    */
+    var landmarks_json = [];
+
+    for (let [key, value] of Object.entries(StoriesView)) {
+        tmp = {
             name: "",
-            tags: "",
+            flags: "",
             address: "",
             notes: "",
             lat_lng: "",
-            link: "0:0",
-            is_delete:""
+            link: "0:0"
         }
         for (let [landmark_key, landmark_value] of Object.entries(value)) {
             tmp[landmark_key] = landmark_value;
         }
-        console.log(tmp);
-        landmarks_new_json.push(tmp);
-    }
-    //for (let [key, value] of Object.entries(StoriesView.to_update)) {
-    for (i in StoriesView.to_update){
-        var tmp = {
-            name: "",
-            tags: "",
-            address: "",
-            notes: "",
-            lat_lng: "",
-            link: "0:0",
-            is_delete:""
-        }
-        for(var landmark_key in StoriesView.to_update[i]){
-        //for (let [landmark_key, landmark_value] of StoriesView.to_update[i]) {
-            tmp[landmark_key] = StoriesView.to_update[i][landmark_key];
-        }
-        //landmarks_new_json.push(tmp);
-        landmarks_to_update_json[i] = tmp;
+        landmarks_json.push(tmp);
     }
 
     //console.log(landmarks_json);
-    //var videoId = window.location.search.split('?')[1].split('=')[1];
-    var current = new Date();
+    var videoId = window.location.search.split('?')[1].split('=')[1];
     var parameter = {
         url: sheetsUrl,
-        command: "update_story_landmarks",
+        command: "new_story",
         name: youtube_title,
         types: "youtube",
-        link: "https://www.youtube.com/watch?v=" + video_id,
-        story_id: curr_story_id,
-        landmarks_new: JSON.stringify(landmarks_new_json),
-        landmarks_to_update: JSON.stringify(landmarks_to_update_json),
+        link: "https://www.youtube.com/watch?v=" + videoId,
+        landmarks: JSON.stringify(landmarks_json),
         author: youtube_channel,
-        tags:$('#text-input-tags').val(),
-        update_time_stamp:current.toString(),
-        is_delete:0
-        //gpstory:
+        tags:$('#text-input-tags').val()
     }
-
-
-
     //console.log(parameter);
+    /*
+          var parameter = {
+            url: sheetsUrl,
+            name: sheetName,
+            command: "getRecentStories",
+
+          };
+    */
 
     $.post(appUrl, parameter, function(data) {
         console.log(data);
         window.location.replace("stories.html");
     });
-
 
 }
 
@@ -248,7 +244,7 @@ $(document).ready(
                 command: "get_story_and_landmarks_by_story_id",
                 story_id: query.split('=')[1]
             }
-              curr_story_id = query.split('=')[1];
+
               $.get(appUrl, parameter, function(data) {
                    data_json = JSON.parse(data);
                   console.log(data);
@@ -263,21 +259,20 @@ $(document).ready(
 
 
                   for(var i in data_json.landmarks){
-                      //console.log(i);
+                      console.log(i);
                       if(i != 0) {
                       var name = data_json.landmarks[i][0];
                       var notes = data_json.landmarks[i][3];
                       var lat_lng = data_json.landmarks[i][5];
-                      var landmark_id = data_json.landmarks[i][9];
                       var link = data_json.landmarks[i][8];
                       mm = Math.floor(parseInt(link)/60);
                       ss = parseInt(link)%60;
-                      output_reg+= landmark_id + '\nname ' + name + '\nnotes ' + notes + '\nlat_lng ' + lat_lng + '\nlink ' + mm + ':' + ss + '\n\n';
+                      output_reg+= i + '\nname ' + name + '\nnotes ' + notes + '\nlat_lng ' + lat_lng + '\nlink ' + mm + ':' + ss + '\n\n';
                     }
                   }
                   //$('#text-input').val(output_reg);
                   editor.getDoc().setValue(output_reg);
-                  //console.log(output_reg);
+                  console.log(output_reg);
                   getLandmarksByStoryID(0);
 
 
@@ -341,12 +336,12 @@ function gui_content_update() {
         mymap.removeLayer(markers[i]);
     }
 
-    for (let [key, value] of Object.entries(StoriesView.to_update)) {
+    for (let [key, value] of Object.entries(StoriesView)) {
 
-        html_reg += '<li>' + StoriesView.to_update[key].name;
-        if ('lat_lng' in StoriesView.to_update[key]) {
-            var lat = StoriesView.to_update[key].lat_lng.split(',')[0];
-            var lng = StoriesView.to_update[key].lat_lng.split(',')[1];
+        html_reg += '<li>' + StoriesView[key].name;
+        if ('lat_lng' in StoriesView[key]) {
+            var lat = StoriesView[key].lat_lng.split(',')[0];
+            var lng = StoriesView[key].lat_lng.split(',')[1];
             //https://www.google.com/maps/place/%E6%96%B0%E7%AB%B9%E8%87%BA%E5%A4%A7%E5%88%86%E9%99%A2%E6%96%B0%E7%AB%B9%E9%86%AB%E9%99%A2/@24.8158818,120.9806239,15z/data=!4m2!3m1!1s0x0:0x92e23500cc39e11e?sa=X&ved=2ahUKEwj6--ve9NH3AhXumFYBHXSIBFgQ_BJ6BAheEAU
             /*
             if('@' in  StoriesView[key].lat_lng){
@@ -355,15 +350,15 @@ function gui_content_update() {
 
             }
             */
-            markers.push(L.marker([lat, lng]).addTo(mymap).bindPopup(StoriesView.to_update[key].name).openPopup());
+            markers.push(L.marker([lat, lng]).addTo(mymap).bindPopup(StoriesView[key].name).openPopup());
 
             html_reg += '<a href=\"javascript:flyto(' + lat + ',' + lng + ')\">(' + lat + ',' + lng + ')</a>';
         } else {
             html_reg += '(NaN, NaN)';
         }
-        if ('link' in StoriesView.to_update[key]) {
-            var mm = parseInt(StoriesView.to_update[key].link.split(':')[0]);
-            var nn = parseInt(StoriesView.to_update[key].link.split(':')[1]);
+        if ('link' in StoriesView[key]) {
+            var mm = parseInt(StoriesView[key].link.split(':')[0]);
+            var nn = parseInt(StoriesView[key].link.split(':')[1]);
             var ss = mm * 60 + nn;
             html_reg += '<a href=\"javascript:seekto(' + 0 + ',' + ss + ')\">(t=' + mm + 'm' + nn + 's)</a>';
         } else {
@@ -376,7 +371,19 @@ function gui_content_update() {
     }
     html_reg += '</ul>';
     $('#text-view').html(html_reg);
+    //[ListMdppObject, ListDiv] = mdpp2ListDiv(content);
+    /*
+          ListDiv2StaticDisplay(ListMdppObject, ListDiv, $('#preview'));
+          for (var i = 0; i < ListMdppObject.length; i++) {
+              DynamicDisplay(ListMdppObject, ListDiv, i);
+          }
+          //$('#preview').html(html_content);
+          var preview_height = $('#preview').height();
+          if (preview_height < 500) preview_height = 500;
 
+          $('.AutoHeight').height(preview_height);
+          $('img').width('70%');
+          */
 }
 
 function seekto(story_id, time) {
@@ -396,7 +403,8 @@ function utility_proc() {
     var cnt = 1;
     for (i in content) {
         if (content[i].trim() != '') {
-            output_reg += cnt + '\n';
+            //output_reg += cnt + '\n';
+            output_reg += '#\n';
             output_reg += 'name ' + content[i] + '\n';
             output_reg += 'notes\n';
             output_reg += 'lat_lng 0,0\n';
@@ -412,70 +420,40 @@ function utility_proc() {
 function str2view(content) {
     var cmd = content.split('\n');
     var StoriesView = {};
-    StoriesView.to_update = {};
-    StoriesView.new = [];
-    var reg_to_update = {};
-    var reg_new = {}
-    var curr_reg = 'reg_new';
+    var reg = {};
+    var curr_id = 0;
     for (i = 0; i < cmd.length; i++) {
+
         //console.log('cmd:'+cmd[i]);
         trim_cmd = cmd[i].trim();
         if (trim_cmd == '') {
             //console.log('continue');
             continue;
-        } else if (trim_cmd == '#') { // new landmark
-            curr_reg = 'reg_new';
-            if (Object.keys(reg_new).length != 0) {
-                StoriesView.new.push(reg_new);
-                reg_new = {};
-                //console.log('Push to StoriesView.new')
-            } else if (Object.keys(reg_to_update).length != 0) {
-                StoriesView.to_update[curr_story_id] = reg_to_update;
-                reg_to_update = {};
-                //console.log('save to StoriesView.to_update')
+        } else if (trim_cmd == '#'/*!isNaN(parseInt(trim_cmd))*/) { //int
+            if (Object.keys(reg).length != 0) {
+                //console.log('store to view');
+                StoriesView[curr_id] = reg;
+                //console.log(StoriesView);
+                reg = {};
+                //curr_id = parseInt(trim_cmd);
+            } else {
+                //curr_id = parseInt(trim_cmd);
             }
-
-        } else if (!isNaN(parseInt(trim_cmd))) { //current landmark
-            curr_reg = 'reg_to_update';
-            if (Object.keys(reg_new).length != 0) {
-                StoriesView.new.push(reg_new);
-                reg_new = {};
-                //console.log('Push to StoriesView.new')
-            }else if (Object.keys(reg_to_update).length != 0) {
-                StoriesView.to_update[curr_story_id] = reg_to_update;
-                reg_to_update = {};
-                //console.log('save to StoriesView.to_update')
-            }
-            var curr_story_id = parseInt(trim_cmd);
-        } else { // attribute value
+            curr_id += 1;
+        } else {
             var cmd_list = cmd[i].split(' ');
             var header = cmd_list[0];
             //console.log(cmd_list);
             cmd_list.shift();
             var content = cmd_list.join(' ');
-            switch(curr_reg){
-              case 'reg_new':
-                reg_new[header] = content;
-                reg = reg_new;
-                break;
-              case 'reg_to_update':
-                reg_to_update[header] = content;
-                reg = reg_to_update
-                break;
-            }
+            reg[header] = content;
             //console.log('store to reg');
-            //console.log(reg);
         }
     } //end of for
-    if (Object.keys(reg_new).length != 0) {
-        StoriesView.new.push(reg_new);
-        reg_new = {}
-        //console.log('store last reg_new to view');
-    }
-    if (Object.keys(reg_to_update).length != 0) {
-      StoriesView.to_update[curr_story_id] = reg_to_update;
-      reg_to_update = {}
-      //console.log('store last reg_to_update to view');
+    if (Object.keys(reg).length != 0) {
+        StoriesView[curr_id] = reg;
+        reg = {}
+        //console.log('store last reg to view');
     }
     return StoriesView;
 }

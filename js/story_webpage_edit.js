@@ -170,8 +170,9 @@ $(document).ready(
         editor_gmap.setSize(null, 30)
         editor_gmap.on("change", function(cm, change) {
               var doc_gmap = editor_gmap.getDoc();
-              console.log(doc_gmap);
+              console.log(doc_gmap.getValue());
               var tmp2 = doc_gmap.getValue().split('@')[1].split('/')[0].split(',');
+              console.log(tmp2);
               tmp2.pop();
 
               $('#text-view-gmap').html(tmp2.join());
