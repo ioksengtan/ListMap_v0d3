@@ -78,7 +78,7 @@ function update_db() {
     console.log('update_db');
     landmarks_new_json = [];
     landmarks_to_update_json = {};
-    for (let [key, value] of Object.entries(StoriesView.new)) {
+    for (let [key, value] of Object.entries(LandmarkdView.new)) {
         //console.log(key)
         var tmp = {
             name: "",
@@ -95,8 +95,8 @@ function update_db() {
         console.log(tmp);
         landmarks_new_json.push(tmp);
     }
-    //for (let [key, value] of Object.entries(StoriesView.to_update)) {
-    for (i in StoriesView.to_update){
+    //for (let [key, value] of Object.entries(LandmarkdView.to_update)) {
+    for (i in LandmarkdView.to_update){
         var tmp = {
             name: "",
             tags: "",
@@ -106,9 +106,9 @@ function update_db() {
             link: "0:0",
             is_delete:""
         }
-        for(var landmark_key in StoriesView.to_update[i]){
-        //for (let [landmark_key, landmark_value] of StoriesView.to_update[i]) {
-            tmp[landmark_key] = StoriesView.to_update[i][landmark_key];
+        for(var landmark_key in LandmarkdView.to_update[i]){
+        //for (let [landmark_key, landmark_value] of LandmarkdView.to_update[i]) {
+            tmp[landmark_key] = LandmarkdView.to_update[i][landmark_key];
         }
         //landmarks_new_json.push(tmp);
         landmarks_to_update_json[i] = tmp;
@@ -128,7 +128,7 @@ function update_db() {
         landmarks_to_update: JSON.stringify(landmarks_to_update_json),
         author: youtube_channel,
         tags:$('#text-input-tags').val(),
-        update_time_stamp:current.toString(),
+        update_timestamp:current.toString(),
         is_delete:0
         //gpstory:
     }
@@ -300,7 +300,7 @@ $(document).ready(
         editor.setSize(null, 300)
         editor.on("change", function(cm, change) {
             doc = editor.getDoc();
-            gui_content_update();
+            text_input_on_change();
         });
         var editor_gmap = CodeMirror.fromTextArea(document.getElementById("text-input-gmap"), {
             lineNumbers: true,
@@ -328,12 +328,12 @@ $(document).ready(
 
 var markers = [];
 
-function gui_content_update() {
+function text_input_on_change() {
     //preview.innerHTML = "";
     content = doc.getValue();
     //console.log(content);
-    StoriesView = str2view(content);
-    //console.log(StoriesView);
+    LandmarkdView = str2view(content);
+    //console.log(LandmarkdView);
     html_reg = '';
     html_reg += '<ul>';
 
@@ -341,29 +341,22 @@ function gui_content_update() {
         mymap.removeLayer(markers[i]);
     }
 
-    for (let [key, value] of Object.entries(StoriesView.to_update)) {
+    for (let [key, value] of Object.entries(LandmarkdView.to_update)) {
 
-        html_reg += '<li>' + StoriesView.to_update[key].name;
-        if ('lat_lng' in StoriesView.to_update[key]) {
-            var lat = StoriesView.to_update[key].lat_lng.split(',')[0];
-            var lng = StoriesView.to_update[key].lat_lng.split(',')[1];
-            //https://www.google.com/maps/place/%E6%96%B0%E7%AB%B9%E8%87%BA%E5%A4%A7%E5%88%86%E9%99%A2%E6%96%B0%E7%AB%B9%E9%86%AB%E9%99%A2/@24.8158818,120.9806239,15z/data=!4m2!3m1!1s0x0:0x92e23500cc39e11e?sa=X&ved=2ahUKEwj6--ve9NH3AhXumFYBHXSIBFgQ_BJ6BAheEAU
-            /*
-            if('@' in  StoriesView[key].lat_lng){
+        html_reg += '<li>' + LandmarkdView.to_update[key].name;
+        if ('lat_lng' in LandmarkdView.to_update[key]) {
+            var lat = LandmarkdView.to_update[key].lat_lng.split(',')[0];
+            var lng = LandmarkdView.to_update[key].lat_lng.split(',')[1];
 
-            }else{
-
-            }
-            */
-            markers.push(L.marker([lat, lng]).addTo(mymap).bindPopup(StoriesView.to_update[key].name).openPopup());
+            markers.push(L.marker([lat, lng]).addTo(mymap).bindPopup(LandmarkdView.to_update[key].name).openPopup());
 
             html_reg += '<a href=\"javascript:flyto(' + lat + ',' + lng + ')\">(' + lat + ',' + lng + ')</a>';
         } else {
             html_reg += '(NaN, NaN)';
         }
-        if ('link' in StoriesView.to_update[key]) {
-            var mm = parseInt(StoriesView.to_update[key].link.split(':')[0]);
-            var nn = parseInt(StoriesView.to_update[key].link.split(':')[1]);
+        if ('link' in LandmarkdView.to_update[key]) {
+            var mm = parseInt(LandmarkdView.to_update[key].link.split(':')[0]);
+            var nn = parseInt(LandmarkdView.to_update[key].link.split(':')[1]);
             var ss = mm * 60 + nn;
             html_reg += '<a href=\"javascript:seekto(' + 0 + ',' + ss + ')\">(t=' + mm + 'm' + nn + 's)</a>';
         } else {
@@ -373,6 +366,31 @@ function gui_content_update() {
 
 
         html_reg += '</li>'
+    }
+    for(var i in LandmarkdView.new){
+              html_reg += '<li>' + LandmarkdView.new[i].name;
+              if ('lat_lng' in LandmarkdView.new[i]) {
+                  var lat = LandmarkdView.new[i].lat_lng.split(',')[0];
+                  var lng = LandmarkdView.new[i].lat_lng.split(',')[1];
+
+                  markers.push(L.marker([lat, lng]).addTo(mymap).bindPopup(LandmarkdView.new[i].name).openPopup());
+
+                  html_reg += '<a href=\"javascript:flyto(' + lat + ',' + lng + ')\">(' + lat + ',' + lng + ')</a>';
+              } else {
+                  html_reg += '(NaN, NaN)';
+              }
+              if ('link' in LandmarkdView.new[i]) {
+                  var mm = parseInt(LandmarkdView.new[i].link.split(':')[0]);
+                  var nn = parseInt(LandmarkdView.new[i].link.split(':')[1]);
+                  var ss = mm * 60 + nn;
+                  html_reg += '<a href=\"javascript:seekto(' + 0 + ',' + ss + ')\">(t=' + mm + 'm' + nn + 's)</a>';
+              } else {
+                  html_reg += '(t=' + 'NaN' + 'm' + 'NaN' + 's)';
+              }
+
+
+
+              html_reg += '</li>'
     }
     html_reg += '</ul>';
     $('#text-view').html(html_reg);
@@ -396,7 +414,8 @@ function utility_proc() {
     var cnt = 1;
     for (i in content) {
         if (content[i].trim() != '') {
-            output_reg += cnt + '\n';
+            //output_reg += cnt + '\n';
+            output_reg += '#\n';
             output_reg += 'name ' + content[i] + '\n';
             output_reg += 'notes\n';
             output_reg += 'lat_lng 0,0\n';
@@ -411,9 +430,9 @@ function utility_proc() {
 
 function str2view(content) {
     var cmd = content.split('\n');
-    var StoriesView = {};
-    StoriesView.to_update = {};
-    StoriesView.new = [];
+    var LandmarkdView = {};
+    LandmarkdView.to_update = {};
+    LandmarkdView.new = [];
     var reg_to_update = {};
     var reg_new = {}
     var curr_reg = 'reg_new';
@@ -426,25 +445,25 @@ function str2view(content) {
         } else if (trim_cmd == '#') { // new landmark
             curr_reg = 'reg_new';
             if (Object.keys(reg_new).length != 0) {
-                StoriesView.new.push(reg_new);
+                LandmarkdView.new.push(reg_new);
                 reg_new = {};
-                //console.log('Push to StoriesView.new')
+                //console.log('Push to LandmarkdView.new')
             } else if (Object.keys(reg_to_update).length != 0) {
-                StoriesView.to_update[curr_story_id] = reg_to_update;
+                LandmarkdView.to_update[curr_story_id] = reg_to_update;
                 reg_to_update = {};
-                //console.log('save to StoriesView.to_update')
+                //console.log('save to LandmarkdView.to_update')
             }
 
         } else if (!isNaN(parseInt(trim_cmd))) { //current landmark
             curr_reg = 'reg_to_update';
             if (Object.keys(reg_new).length != 0) {
-                StoriesView.new.push(reg_new);
+                LandmarkdView.new.push(reg_new);
                 reg_new = {};
-                //console.log('Push to StoriesView.new')
+                //console.log('Push to LandmarkdView.new')
             }else if (Object.keys(reg_to_update).length != 0) {
-                StoriesView.to_update[curr_story_id] = reg_to_update;
+                LandmarkdView.to_update[curr_story_id] = reg_to_update;
                 reg_to_update = {};
-                //console.log('save to StoriesView.to_update')
+                //console.log('save to LandmarkdView.to_update')
             }
             var curr_story_id = parseInt(trim_cmd);
         } else { // attribute value
@@ -468,16 +487,16 @@ function str2view(content) {
         }
     } //end of for
     if (Object.keys(reg_new).length != 0) {
-        StoriesView.new.push(reg_new);
+        LandmarkdView.new.push(reg_new);
         reg_new = {}
         //console.log('store last reg_new to view');
     }
     if (Object.keys(reg_to_update).length != 0) {
-      StoriesView.to_update[curr_story_id] = reg_to_update;
+      LandmarkdView.to_update[curr_story_id] = reg_to_update;
       reg_to_update = {}
       //console.log('store last reg_to_update to view');
     }
-    return StoriesView;
+    return LandmarkdView;
 }
 
 function onPlayerStateChange(evt) {

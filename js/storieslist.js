@@ -121,12 +121,12 @@ function appendStoriesList(div_id_to_add, data_to_append, where_to_add, id_div) 
             html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> ' + '<img class="list_type_icon" src=img/podcast_icon.png>' + ' <a style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:getLandmarksByStoryID(' + myapp_story_id + ')\">' + myapp_title + '</a> <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a>';
             break;
         case 'youtube':
-            html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> ' + '<img class="list_type_icon" src=img/youtube_icon.png>' + ' <a style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:getLandmarksByStoryID(' + myapp_story_id + ')\">' + myapp_title + '</a> <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a><a href=\"story_youtube_edit.html?story_id='+myapp_story_id+'  \">(edit)</a>';
+            html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> ' + '<img class="list_type_icon" src=img/youtube_icon.png>' + ' <a style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:getLandmarksByStoryID(' + myapp_story_id + ')\">' + myapp_title + '</a> <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a><a href=\"story_edit.html?story_id='+myapp_story_id+'  \">(edit)</a>';
             //html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> '  + '<a class="story_title" style="color:#0d6efd;text-decoration:none;cursor:pointer;" onclick=\"javascript:getLandmarksByStoryID(' + myapp_story_id + ')\">' + myapp_title + '</a>'+ '<b>youtube</b>'+' <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a> <a href=\"story_youtube_edit.html?story_id='+myapp_story_id+'  \">(edit)</a>';
             break;
         case 'webpage':
             //html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> ' + '' + ' <a class="story_title" style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:getLandmarksByStoryID(' + myapp_story_id + ')\">' + myapp_title + '</a>'+ '<b>webpage</b>'+' <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a>';
-            html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> ' + '<img class="list_type_icon" src=img/webpage_icon.png>' + ' <a style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:getLandmarksByStoryID(' + myapp_story_id + ')\">' + myapp_title + '</a>'+ '<b>webpage</b>'+' <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a>';
+            html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> ' + '<img class="list_type_icon" src=img/webpage_icon.png>' + ' <a style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:getLandmarksByStoryID(' + myapp_story_id + ')\">' + myapp_title + '</a>'+ '<b>webpage</b>'+' <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a><a href=\"story_edit.html?story_id='+myapp_story_id+'  \">(edit)</a>';
             break;
         case 'facebook':
             html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> ' + '<img class="list_type_icon" src=img/facebook_icon.png>' + ' <a style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:getLandmarksByStoryID(' + myapp_story_id + ')\">' + myapp_title + '</a> <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a>';
@@ -192,7 +192,9 @@ function getLandmarksByStoryID(story_id) {
         command: "getLandmarksByStory",
         story_id: story_id
     };
+    $('#status').html('processing...')
     $.get(appUrl, parameter, function(data) {
+        $('#status').html('')
         console.log(data);
         console.log(story_id);
 

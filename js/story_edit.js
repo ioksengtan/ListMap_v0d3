@@ -75,69 +75,78 @@ function onYouTubePlayerAPIReady() {
 }
 
 function update_db() {
-    /*
-      var landmarks_json = [
-        {
-          name:"test name",
-          flags:"test flags",
-          address:"test address",
-          notes:"test notes",
-          lat_lng:"23, 12",
-          link:"2:3"
-        },
-        {
-          name:"test name 2",
-          flags:"test flags 2",
-          address:"test address 2",
-          notes:"test notes 2",
-          lat_lng:"1, 2",
-          link:"1:30"
-        }
-      ];
-    */
-    var landmarks_json = [];
-
-    for (let [key, value] of Object.entries(LandmarkdView)) {
-        tmp = {
+    console.log('update_db');
+    landmarks_new_json = [];
+    landmarks_to_update_json = {};
+    for (let [key, value] of Object.entries(LandmarkdView.new)) {
+        //console.log(key)
+        var tmp = {
             name: "",
-            flags: "",
+            tags: "",
             address: "",
             notes: "",
             lat_lng: "",
-            link: "0:0"
+            link: "0:0",
+            is_delete: ""
         }
         for (let [landmark_key, landmark_value] of Object.entries(value)) {
             tmp[landmark_key] = landmark_value;
         }
-        landmarks_json.push(tmp);
+        console.log(tmp);
+        landmarks_new_json.push(tmp);
+    }
+    //for (let [key, value] of Object.entries(LandmarkdView.to_update)) {
+    for (i in LandmarkdView.to_update) {
+        var tmp = {
+            name: "",
+            tags: "",
+            address: "",
+            notes: "",
+            lat_lng: "",
+            link: "0:0",
+            is_delete: ""
+        }
+        for (var landmark_key in LandmarkdView.to_update[i]) {
+            //for (let [landmark_key, landmark_value] of LandmarkdView.to_update[i]) {
+            tmp[landmark_key] = LandmarkdView.to_update[i][landmark_key];
+        }
+        //landmarks_new_json.push(tmp);
+        landmarks_to_update_json[i] = tmp;
     }
 
     //console.log(landmarks_json);
-    var videoId = window.location.search.split('?')[1].split('=')[1];
+    //var videoId = window.location.search.split('?')[1].split('=')[1];
+    var current = new Date();
     var parameter = {
         url: sheetsUrl,
-        command: "new_story",
-        name: youtube_title,
-        types: "youtube",
-        link: "https://www.youtube.com/watch?v=" + videoId,
-        landmarks: JSON.stringify(landmarks_json),
-        author: youtube_channel,
-        tags:$('#text-input-tags').val()
+        command: "update_story_landmarks",
+        name: story_title,
+        //types: "youtube",
+        types: story_type,
+        //link: "https://www.youtube.com/watch?v=" + video_id,
+        link: story_link,
+        story_id: curr_story_id,
+        landmarks_new: JSON.stringify(landmarks_new_json),
+        landmarks_to_update: JSON.stringify(landmarks_to_update_json),
+        //author: youtube_channel,
+        author: story_author,
+        tags: $('#text-input-tags').val(),
+        update_timestamp: current.toString(),
+        is_delete: $('#text-input-is-delete').val(),
+        //gpstory:
     }
+    //debug = parameter;
+
+
+
     //console.log(parameter);
-    /*
-          var parameter = {
-            url: sheetsUrl,
-            name: sheetName,
-            command: "getRecentStories",
-
-          };
-    */
-
+    $('#status').html('processing...')
     $.post(appUrl, parameter, function(data) {
+        $('#status').html('')
         console.log(data);
         window.location.replace("stories.html");
     });
+
 
 }
 
@@ -169,7 +178,7 @@ function dragElement(elmnt) {
     }
 
     document.getElementById("collapse_ul_0").onmousedown = dragMouseDown;
-    document.getElementById("youtube_window").onmousedown = dragMouseDown;
+    document.getElementById("story_link_preview").onmousedown = dragMouseDown;
 
     function dragMouseDown(e) {
         console.log('dragMouseDown');
@@ -203,6 +212,7 @@ function dragElement(elmnt) {
     }
 }
 var utility_display = false;
+var story_link_preview_display = false;
 $(document).ready(
     /*
     setTimeout(function(){
@@ -212,77 +222,110 @@ $(document).ready(
 
 
     function() {
-
-
+        story_is_delete = "";
+        $('#webpage_id').hide();
         $('#utility').hide()
         dragElement(document.getElementById("mydiv"));
-        dragElement(document.getElementById("youtube_window"));
+        dragElement(document.getElementById("story_link_preview"));
         //getLandmarksByStoryID(164);
         var query = window.location.search.split('?')[1];
-        if(query.includes('&')){
-          alert('error: only one argument in query is supported');
-        }else{
-          var cmd = query.split('=')[0];
-          switch(cmd){
-            case 'yt_id':
-              var videoId = window.location.search.split('?')[1].split('=')[1];
-              video_id = videoId;
-              var appYoutube = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + videoId + '&key=AIzaSyCsiStpIlMr_0RhLo9gvJ_gUjjpCRvPXmk'
-              $.get(appYoutube, function(data) {
-                  tmp = data;
-                  youtube_title = data.items[0].snippet.title;
-                  youtube_channel = data.items[0].snippet.channelTitle;
-                  youtube_published = data.items[0].snippet.publishedAt;
-                  youtube_description = data.items[0].snippet.description;
-                  $('#heading_0').html(youtube_title);
-                  getLandmarksByStoryID(0);
-              })
-              break;
-            case 'story_id':
-            var parameter = {
-                url: sheetsUrl,
-                command: "get_story_and_landmarks_by_story_id",
-                story_id: query.split('=')[1]
-            }
-
-              $.get(appUrl, parameter, function(data) {
-                   data_json = JSON.parse(data);
-                  console.log(data);
-                  var link = data_json.story[1][3];
-                  video_id = link.split('=')[1];
-                  tags = data_json.story[1][5];
-                  youtube_title = data_json.story[1][0];
-                  youtube_channel = data_json.story[1][4];
-                  $('#text-input-tags').val(tags);
-                  $('#heading_0').html(youtube_title);
-                  output_reg = '';
-
-
-                  for(var i in data_json.landmarks){
-                      console.log(i);
-                      if(i != 0) {
-                      var name = data_json.landmarks[i][0];
-                      var notes = data_json.landmarks[i][3];
-                      var lat_lng = data_json.landmarks[i][5];
-                      var link = data_json.landmarks[i][8];
-                      mm = Math.floor(parseInt(link)/60);
-                      ss = parseInt(link)%60;
-                      output_reg+= i + '\nname ' + name + '\nnotes ' + notes + '\nlat_lng ' + lat_lng + '\nlink ' + mm + ':' + ss + '\n\n';
+        if (query.includes('&')) {
+            alert('error: only one argument in query is supported');
+        } else {
+            var cmd = query.split('=')[0];
+            switch (cmd) {
+                case 'yt_id':
+                    var videoId = window.location.search.split('?')[1].split('=')[1];
+                    video_id = videoId;
+                    var appYoutube = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + videoId + '&key=AIzaSyCsiStpIlMr_0RhLo9gvJ_gUjjpCRvPXmk'
+                    $('#status').html('processing...')
+                    $.get(appYoutube, function(data) {
+                        $('#status').html('')
+                        tmp = data;
+                        story_title = data.items[0].snippet.title;
+                        story_author = data.items[0].snippet.channelTitle;
+                        youtube_published = data.items[0].snippet.publishedAt;
+                        youtube_description = data.items[0].snippet.description;
+                        //$('#heading_0').html(story_title);
+                        $('#text-input-title').val(story_title);
+                        //getLandmarksByStoryID(0);
+                    })
+                    break;
+                case 'story_id':
+                    console.log('story_id');
+                    var parameter = {
+                        url: sheetsUrl,
+                        command: "get_story_and_landmarks_by_story_id",
+                        story_id: query.split('=')[1]
                     }
-                  }
-                  //$('#text-input').val(output_reg);
-                  editor.getDoc().setValue(output_reg);
-                  console.log(output_reg);
-                  getLandmarksByStoryID(0);
+                    curr_story_id = query.split('=')[1];
+                    $('#status').html('processing...')
+                    $.get(appUrl, parameter, function(data) {
+                        $('#status').html('')
+                        data_json = JSON.parse(data);
+                        console.log(data);
+                        var link = data_json.story[1][3];
+                        story_link = data_json.story[1][3];
+                        story_type = data_json.story[1][2];
+                        video_id = link.split('=')[1];
+                        tags = data_json.story[1][5];
+                        story_title = data_json.story[1][0];
+                        story_author = data_json.story[1][4];
+                        story_is_delete = data_json.story[1][8];
+                        $('#text-input-tags').val(tags);
+                        //$('#heading_0').html(story_title);
+                        $('#text-input-title').val(story_title);
+                        $('#text-input-is-delete').val(story_is_delete);
+                        switch(story_type){
+                          case 'youtube':
+                            $('#text-input-title').attr('readonly','readonly');
+                            break;
+                        }
+                        output_reg = '';
 
 
-              });
+                        for (var i in data_json.landmarks) {
+                            //console.log(i);
+                            if (i != 0) {
+                                var name = data_json.landmarks[i][0];
+                                var notes = data_json.landmarks[i][3];
+                                var lat_lng = data_json.landmarks[i][5];
+                                var landmark_id = data_json.landmarks[i][9];
+                                var is_delete = data_json.landmarks[i][6];
+                                var link = data_json.landmarks[i][8];
+                                mm = Math.floor(parseInt(link) / 60);
+                                ss = parseInt(link) % 60;
+                                if(is_delete){
+                                   output_reg += landmark_id + '\nname ' + name + '\nnotes ' + notes + '\nlat_lng ' + lat_lng + '\nlink ' + mm + ':' + ss + '\nis_delete 1' + '\n';
+                                }else{
+                                   output_reg += landmark_id + '\nname ' + name + '\nnotes ' + notes + '\nlat_lng ' + lat_lng + '\nlink ' + mm + ':' + ss + '\n\n';
+                                }
+                            }
+                        }
+                        //$('#text-input').val(output_reg);
+                        editor.getDoc().setValue(output_reg);
+                        //console.log(output_reg);
+                        switch (story_type) {
+                            case 'youtube':
+                                $('#webpage_id').hide();
+                                getLandmarksByStoryID(0);
+                                break;
+                            case 'webpage':
+                                console.log('webpage');
+                                $('#webpage_id').show();
+                                $('#webpage_id').attr('src', story_link);
+                                break;
+                        }
+                        //getLandmarksByStoryID(0);
 
-              break;
-            default:
-              alert(cmd + " is not supported!");
 
-          }
+                    });
+
+                    break;
+                default:
+                    alert(cmd + " is not supported!");
+
+            }
         }
 
         console.log(appYoutube);
@@ -321,8 +364,20 @@ $(document).ready(
 
 );
 
-var markers = [];
 
+
+var markers = [];
+function preview_link(){
+  console.log('preview_link');
+  if (story_link_preview_display) {
+      story_link_preview_display = false;
+      $('#story_link_preview').hide()
+  } else {
+      story_link_preview_display = true;
+      $('#story_link_preview').show();
+  }
+
+}
 function text_input_on_change() {
     //preview.innerHTML = "";
     content = doc.getValue();
@@ -336,33 +391,51 @@ function text_input_on_change() {
         mymap.removeLayer(markers[i]);
     }
 
-    for (let [key, value] of Object.entries(LandmarkdView)) {
+    for (let [key, value] of Object.entries(LandmarkdView.to_update)) {
 
-        html_reg += '<li>' + LandmarkdView[key].name;
-        if ('lat_lng' in LandmarkdView[key]) {
-            var lat = LandmarkdView[key].lat_lng.split(',')[0];
-            var lng = LandmarkdView[key].lat_lng.split(',')[1];
-            //https://www.google.com/maps/place/%E6%96%B0%E7%AB%B9%E8%87%BA%E5%A4%A7%E5%88%86%E9%99%A2%E6%96%B0%E7%AB%B9%E9%86%AB%E9%99%A2/@24.8158818,120.9806239,15z/data=!4m2!3m1!1s0x0:0x92e23500cc39e11e?sa=X&ved=2ahUKEwj6--ve9NH3AhXumFYBHXSIBFgQ_BJ6BAheEAU
-            /*
-            if('@' in  LandmarkdView[key].lat_lng){
+        html_reg += '<li>' + LandmarkdView.to_update[key].name;
+        if ('lat_lng' in LandmarkdView.to_update[key]) {
+            var lat = LandmarkdView.to_update[key].lat_lng.split(',')[0];
+            var lng = LandmarkdView.to_update[key].lat_lng.split(',')[1];
 
-            }else{
-
-            }
-            */
-            markers.push(L.marker([lat, lng]).addTo(mymap).bindPopup(LandmarkdView[key].name).openPopup());
+            markers.push(L.marker([lat, lng]).addTo(mymap).bindPopup(LandmarkdView.to_update[key].name).openPopup());
 
             html_reg += '<a href=\"javascript:flyto(' + lat + ',' + lng + ')\">(' + lat + ',' + lng + ')</a>';
         } else {
             html_reg += '(NaN, NaN)';
         }
-        if ('link' in LandmarkdView[key]) {
-            var mm = parseInt(LandmarkdView[key].link.split(':')[0]);
-            var nn = parseInt(LandmarkdView[key].link.split(':')[1]);
+        if ('link' in LandmarkdView.to_update[key] & story_type == 'youtube') {
+            var mm = parseInt(LandmarkdView.to_update[key].link.split(':')[0]);
+            var nn = parseInt(LandmarkdView.to_update[key].link.split(':')[1]);
             var ss = mm * 60 + nn;
             html_reg += '<a href=\"javascript:seekto(' + 0 + ',' + ss + ')\">(t=' + mm + 'm' + nn + 's)</a>';
         } else {
-            html_reg += '(t=' + 'NaN' + 'm' + 'NaN' + 's)';
+            //html_reg += '(t=' + 'NaN' + 'm' + 'NaN' + 's)';
+        }
+
+
+
+        html_reg += '</li>'
+    }
+    for (var i in LandmarkdView.new) {
+        html_reg += '<li>' + LandmarkdView.new[i].name;
+        if ('lat_lng' in LandmarkdView.new[i]) {
+            var lat = LandmarkdView.new[i].lat_lng.split(',')[0];
+            var lng = LandmarkdView.new[i].lat_lng.split(',')[1];
+
+            markers.push(L.marker([lat, lng]).addTo(mymap).bindPopup(LandmarkdView.new[i].name).openPopup());
+
+            html_reg += '<a href=\"javascript:flyto(' + lat + ',' + lng + ')\">(' + lat + ',' + lng + ')</a>';
+        } else {
+            html_reg += '(NaN, NaN)';
+        }
+        if ('link' in LandmarkdView.new[i] & story_type == 'youtube') {
+            var mm = parseInt(LandmarkdView.new[i].link.split(':')[0]);
+            var nn = parseInt(LandmarkdView.new[i].link.split(':')[1]);
+            var ss = mm * 60 + nn;
+            html_reg += '<a href=\"javascript:seekto(' + 0 + ',' + ss + ')\">(t=' + mm + 'm' + nn + 's)</a>';
+        } else {
+            //html_reg += '(t=' + 'NaN' + 'm' + 'NaN' + 's)';
         }
 
 
@@ -371,19 +444,7 @@ function text_input_on_change() {
     }
     html_reg += '</ul>';
     $('#text-view').html(html_reg);
-    //[ListMdppObject, ListDiv] = mdpp2ListDiv(content);
-    /*
-          ListDiv2StaticDisplay(ListMdppObject, ListDiv, $('#preview'));
-          for (var i = 0; i < ListMdppObject.length; i++) {
-              DynamicDisplay(ListMdppObject, ListDiv, i);
-          }
-          //$('#preview').html(html_content);
-          var preview_height = $('#preview').height();
-          if (preview_height < 500) preview_height = 500;
 
-          $('.AutoHeight').height(preview_height);
-          $('img').width('70%');
-          */
 }
 
 function seekto(story_id, time) {
@@ -420,40 +481,70 @@ function utility_proc() {
 function str2view(content) {
     var cmd = content.split('\n');
     var LandmarkdView = {};
-    var reg = {};
-    var curr_id = 0;
+    LandmarkdView.to_update = {};
+    LandmarkdView.new = [];
+    var reg_to_update = {};
+    var reg_new = {}
+    var curr_reg = 'reg_new';
     for (i = 0; i < cmd.length; i++) {
-
         //console.log('cmd:'+cmd[i]);
         trim_cmd = cmd[i].trim();
         if (trim_cmd == '') {
             //console.log('continue');
             continue;
-        } else if (trim_cmd == '#'/*!isNaN(parseInt(trim_cmd))*/) { //int
-            if (Object.keys(reg).length != 0) {
-                //console.log('store to view');
-                LandmarkdView[curr_id] = reg;
-                //console.log(LandmarkdView);
-                reg = {};
-                //curr_id = parseInt(trim_cmd);
-            } else {
-                //curr_id = parseInt(trim_cmd);
+        } else if (trim_cmd == '#') { // new landmark
+            curr_reg = 'reg_new';
+            if (Object.keys(reg_new).length != 0) {
+                LandmarkdView.new.push(reg_new);
+                reg_new = {};
+                //console.log('Push to LandmarkdView.new')
+            } else if (Object.keys(reg_to_update).length != 0) {
+                LandmarkdView.to_update[curr_story_id] = reg_to_update;
+                reg_to_update = {};
+                //console.log('save to LandmarkdView.to_update')
             }
-            curr_id += 1;
-        } else {
+
+        } else if (!isNaN(parseInt(trim_cmd))) { //current landmark
+            curr_reg = 'reg_to_update';
+            if (Object.keys(reg_new).length != 0) {
+                LandmarkdView.new.push(reg_new);
+                reg_new = {};
+                //console.log('Push to LandmarkdView.new')
+            } else if (Object.keys(reg_to_update).length != 0) {
+                LandmarkdView.to_update[curr_story_id] = reg_to_update;
+                reg_to_update = {};
+                //console.log('save to LandmarkdView.to_update')
+            }
+            var curr_story_id = parseInt(trim_cmd);
+        } else { // attribute value
             var cmd_list = cmd[i].split(' ');
             var header = cmd_list[0];
             //console.log(cmd_list);
             cmd_list.shift();
             var content = cmd_list.join(' ');
-            reg[header] = content;
+            switch (curr_reg) {
+                case 'reg_new':
+                    reg_new[header] = content;
+                    reg = reg_new;
+                    break;
+                case 'reg_to_update':
+                    reg_to_update[header] = content;
+                    reg = reg_to_update
+                    break;
+            }
             //console.log('store to reg');
+            //console.log(reg);
         }
     } //end of for
-    if (Object.keys(reg).length != 0) {
-        LandmarkdView[curr_id] = reg;
-        reg = {}
-        //console.log('store last reg to view');
+    if (Object.keys(reg_new).length != 0) {
+        LandmarkdView.new.push(reg_new);
+        reg_new = {}
+        //console.log('store last reg_new to view');
+    }
+    if (Object.keys(reg_to_update).length != 0) {
+        LandmarkdView.to_update[curr_story_id] = reg_to_update;
+        reg_to_update = {}
+        //console.log('store last reg_to_update to view');
     }
     return LandmarkdView;
 }
@@ -561,22 +652,22 @@ function appendStoriesList(div_id_to_add, data_to_append, where_to_add, id_div) 
     */
 }
 
-function YoutubePlayerRender(video_id){
-  youtube_players[0] = new YT.Player('collapse_player_0', {
-      height: '390',
-      width: '640',
-      videoId: video_id,
-      playerVars: {
-          'start': 0,
-          'autoplay': 0,
-          'controls': 1
-      },
-      events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange,
-      }
+function YoutubePlayerRender(video_id) {
+    youtube_players[0] = new YT.Player('collapse_player_0', {
+        height: '390',
+        width: '640',
+        videoId: video_id,
+        playerVars: {
+            'start': 0,
+            'autoplay': 0,
+            'controls': 1
+        },
+        events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange,
+        }
 
-  });
+    });
 }
 
 function getLandmarksByStoryID(story_id) {

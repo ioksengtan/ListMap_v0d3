@@ -38,20 +38,22 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                 <!--
                   <li class="nav-item">
                      <a class="nav-link active" aria-current="page" href="#">Home</a>
                   </li>
+                -->
                   <li class="nav-item">
                      <a class="nav-link" href="blog.html">Blog</a>
                   </li>
                   <li class="nav-item">
-                     <a class="nav-link" href="stories.html">Latest Stories</a>
-                  </li>
-                  <li class="nav-item">
-                     <a class="nav-link" href="find_stories.html">Find Stories</a>
+                     <a class="nav-link" href="find_stories.html">地圖找點</a>
                   </li>
                   <li class="nav-item">
                      <a class="nav-link" href="about.html">about</a>
+                  </li>
+                  <li class="nav-item" >
+                     <a class="nav-link" href="about.html" id="status">status</a>
                   </li>
                   <!--
                   <li class="nav-item dropdown">
@@ -81,15 +83,12 @@
 <div class="dropdown" id='dropdown'>
   <button class="dropbtn">+</button>
   <div class="dropdown-content">
-    <a href="story_youtube_new.html?yt_id=lF-8WT2MEzU">youtube</a>
+    <a href="story_youtube_edit.html?yt_id=lF-8WT2MEzU">youtube</a>
     <a href="story_webpage_edit.html" target="_blank">webpage</a>
     <a href="story_image_edit.html" target="_blank">image</a>
   </div>
 </div>
-               <form class="d-flex">
-                  <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                  <button class="btn btn-outline-success" type="submit">Search</button>
-               </form>
+
                <ul class="navbar-nav ml-auto ">
                   <li class="nav-item avatar">
                      <a class="nav-link p-0" href="#">
@@ -102,8 +101,10 @@
          </div>
       </nav>
       <div id="TagList">
+        <textarea class="form-control" id="text-input-search" style="width:90%" rows="1"></textarea>
+        <button onclick="search_by_keyword()">Search</button>
          <ul>
-
+            <li><a href="javascript:get_stories_deleted()">delete</a></li>
          </ul>
       </div>
       <div class="containe-fluid" style="height:100%; width:100%;">
@@ -128,6 +129,8 @@
 <div style="width:70%">
    <textarea class="form-control" id="text-input-story" style="width:99%" rows="2"></textarea>
 </div>
+               <div id="DivStoriesListQuery" class="col"> </div>
+
 
                <div id="DivStoriesList" class="col"> </div>
 

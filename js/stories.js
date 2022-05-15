@@ -24,10 +24,48 @@ $(document).ready(
                 console.log(story_content);
                 data_to_append = {
                 }
-                if(story_content.includes('www.youtube.com')){
-                  data_to_append.types = 'youtube';
-                  data_to_append.title = 'get youtube title by API'
-                  appendStoriesList(DivStoriesList, data_to_append, 'prepend')
+                if(story_content.includes('@select')){
+                  $('#DivStoriesListQuery').html("");
+                  var data_to_append = {}
+                  data_to_append.title = story_content;
+                  data_to_append.types = '';
+                  appendStoriesList(DivStoriesListQuery, data_to_append, 'prepend')
+                }else if(story_content.includes('www.youtube.com')){
+                  videoId = story_content.split("&")[0].split("=")[1];//https://www.youtube.com/watch?v=dtXONHulWcA&bls
+                  var appYoutube = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + videoId + '&key=AIzaSyCsiStpIlMr_0RhLo9gvJ_gUjjpCRvPXmk'
+                  $('#status').html('processing...')
+                  $.get(appYoutube, function(data) {
+                      $('#status').html('');
+                      //tmp = data;
+                      youtube_title = data.items[0].snippet.title;
+                      youtube_channel = data.items[0].snippet.channelTitle;
+                      youtube_published = data.items[0].snippet.publishedAt;
+                      youtube_description = data.items[0].snippet.description;
+                      //$('#heading_0').html(youtube_title);
+                      //getLandmarksByStoryID(0);
+                      data_to_append.types = 'youtube';
+                      data_to_append.title = youtube_title
+
+                      var parameter = {
+                          url: sheetsUrl,
+                          command: "new_story",
+                          name: youtube_title,
+                          types: "youtube",
+                          link: "https://www.youtube.com/watch?v=" + videoId,
+                          //landmarks: JSON.stringify(landmarks_json),
+                          author: youtube_channel,
+                          tags:''
+                      }
+                      $('#status').html('processing...')
+                      $.post(appUrl, parameter, function(data) {
+                          $('#status').html('');
+                          console.log(data);
+                          data_to_append.story_id = data;
+                          appendStoriesList(DivStoriesList, data_to_append, 'prepend')
+                      });
+
+                  })
+
                 }else if(story_content.includes('www.facebook.com')){
                   data_to_append.types = 'facebook';
                   data_to_append.title = 'user defined title';
@@ -58,20 +96,21 @@ $(document).ready(
 			name: sheetName,
 			command: "getRecentStories",
 		};
+        $('#status').html('processing...')
         $.get(appUrl, parameter, function(data) {
-
+            $('#status').html('')
             console.log(data);
             data_json = JSON.parse(data);
             $('#TagList ul').append("<b>authors</b>");
             for (i in data_json.table_authors){
               //console.log(data_json.table_authors[i].tag);
-              $('#TagList ul').append('<li>@<a href=\"javascript:getStoriesByAuthor(\'' + data_json.table_authors[i].tag +'\')\">'+ data_json.table_authors[i].tag +'</a></li>')
+              $('#TagList ul').append('<li>@<a href=\"javascript:get_stories_by_author(\'' + data_json.table_authors[i].tag +'\')\">'+ data_json.table_authors[i].tag +'</a></li>')
             }
             for (i in data_json.table_tags){
               if(i == 0){
                 $('#TagList ul').append("<b>tags</b>");
               }else {
-                $('#TagList ul').append('<li>#<a href=\"javascript:getStoriesByTag(\'' + data_json.table_tags[i] +'\')\">'+ data_json.table_tags[i] +'</a></li>')
+                $('#TagList ul').append('<li>#<a href=\"javascript:get_stories_by_tag(\'' + data_json.table_tags[i] +'\')\">'+ data_json.table_tags[i] +'</a></li>')
               }
             }
             for (i in data_json.table) {
@@ -106,7 +145,11 @@ $(document).ready(
     });
 
 
-
+function search_by_keyword(){
+  console.log('search');
+  var keyword = $('#text-input-search').val();
+  get_stories_by_keyword(keyword);
+}
 
 
 

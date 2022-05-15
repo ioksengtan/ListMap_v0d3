@@ -1,75 +1,45 @@
 /* Always set the map height explicitly to define the size of the div
  * element that contains the map. */
+ #status {
+   color:red;
+ }
+ #mydiv {
+   position: absolute;
+   z-index: 999;
+   background-color: #f1f1f1;
+   border: 1px solid #d3d3d3;
+   text-align: center;
+   top:0px;
+   left:150px;
+ }
+#utility{
+  position: absolute;
+  z-index: 999;
+  right: 100px;
+  top: 100px;
+}
+ #mydivheader {
+   padding: 10px;
+   cursor: move;
+   z-index: 1000;
+   background-color: #2196F3;
+   color: #fff;
+ }
+ #collapse_player_0 {
+   position: absolute;
+   z-index: 500;
+   background-color: #f1f1f1;
+   border: 1px solid #d3d3d3;
+   text-align: center;
+ }
 
- .accordion-heading .accordion-toggle.collapsed {
-       background-color:red; /* accordion background color */
-}
-.accordion-item {
-    background-color: #FFF;
-    border: 0px solid rgba(0,0,0,.125);
-}
-#DivStoriesListQuery {
-    width:70%;
-}
-#DivStoriesList {
-    width:70%;
-}
-
-#text-input-story {
-  width:70%
-}
-#status {
-  color:red;
-}
-
-.seekto {
-  text-decoration:none;
-  font-size:14px;
-  padding-left:5px;
-
-}
-.seekto:hover {
-  background-color: #EEEEEE;
-}
-
-.singleZoom {
-  text-decoration:none;
-  font-size:14px;
-}
-
-.singleZoom:hover{
-  background-color: #EEEEEE;
-}
-
-.story_title:hover{
-  background-color: #EEEEEE;
-
-}
-
-#TagList {
-    width:15%;
-    background-color:#FCFCFC;
-    right:30px;
-    position: absolute;
-    z-index:999;
-    overflow:auto;
-    font-size:14px;
-    padding-top:10px;
-
-}
-
-#TagList ul {
-  list-style-type: none;
-}
-
-#TagList a {
-  text-decoration:none;
-  color: black;
-}
-
-#TagList a:hover {
-  background-color:#EEEEEE;
-}
+ #collapse_ul_0 {
+   padding: 10px;
+   cursor: move;
+   z-index: 501;
+   background-color: #2196F3;
+   color: #fff;
+ }
 
  .navbar {
      position: relative;
@@ -83,7 +53,7 @@
 .gpstory_article img{
 	width:100%;
 }
-.accordion-header img{
+.accordion-item img{
 	width:30px;
 }
 
@@ -91,13 +61,6 @@
   height: 90%;
   width: 50%;
 }
-
-
-.accordion-collapse img {
-  width: auto;
-  max-height: 600px;
-}
-
 
 #maplist {
   background-color:white;
@@ -272,7 +235,7 @@ margin-top:10px;
   background-color: #f9f9f9;
   min-width: 160px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1100;
+  z-index: 1;
 }
 
 /* Links inside the dropdown */

@@ -30,7 +30,7 @@ function update_db(){
 */
   var landmarks_json = [];
 
-  for (let [key, value] of Object.entries(StoriesView)){
+  for (let [key, value] of Object.entries(LandmarkdView)){
     tmp = {
       name:"",
       flags:"",
@@ -158,7 +158,7 @@ $(document).ready(
       editor.setSize(null, 300)
       editor.on("change", function(cm, change) {
             doc = editor.getDoc();
-            gui_content_update();
+            text_input_on_change();
         });
 
 
@@ -202,12 +202,12 @@ $(document).ready(
 
 var markers = [];
 
-  function gui_content_update() {
+  function text_input_on_change() {
       //preview.innerHTML = "";
       content = doc.getValue();
       //console.log(content);
-      StoriesView = str2view(content);
-      //console.log(StoriesView);
+      LandmarkdView = str2view(content);
+      //console.log(LandmarkdView);
       html_reg = '';
       html_reg += '<ul>';
 
@@ -215,22 +215,22 @@ var markers = [];
         mymap.removeLayer(markers[i]);
       }
 
-      for (let [key, value] of Object.entries(StoriesView)){
+      for (let [key, value] of Object.entries(LandmarkdView)){
 
-        html_reg += '<li>' + StoriesView[key].name ;
-        if ('lat_lng' in StoriesView[key]){
-          var lat = StoriesView[key].lat_lng.split(',')[0];
-          var lng = StoriesView[key].lat_lng.split(',')[1];
+        html_reg += '<li>' + LandmarkdView[key].name ;
+        if ('lat_lng' in LandmarkdView[key]){
+          var lat = LandmarkdView[key].lat_lng.split(',')[0];
+          var lng = LandmarkdView[key].lat_lng.split(',')[1];
 
-          markers.push(L.marker([lat, lng]).addTo(mymap).bindPopup(StoriesView[key].name).openPopup());
+          markers.push(L.marker([lat, lng]).addTo(mymap).bindPopup(LandmarkdView[key].name).openPopup());
 
           html_reg += '<a href=\"javascript:flyto(' + lat + ',' + lng + ')\">('+lat+lng+')</a>';
         }else{
           html_reg += '(NaN, NaN)';
         }
-        if ('link' in StoriesView[key]){
-            var mm = parseInt(StoriesView[key].link.split(':')[0]);
-            var nn = parseInt(StoriesView[key].link.split(':')[1]);
+        if ('link' in LandmarkdView[key]){
+            var mm = parseInt(LandmarkdView[key].link.split(':')[0]);
+            var nn = parseInt(LandmarkdView[key].link.split(':')[1]);
             var ss = mm * 60 + nn;
             html_reg += '<a href=\"javascript:seekto(' + 0 + ',' + ss + ')\">(t=' + mm + 'm' +nn + 's)</a>';
         }else{
@@ -295,7 +295,7 @@ function utility_proc(){
 
 function str2view(content){
   var cmd = content.split('\n');
-  var StoriesView = {};
+  var LandmarkdView = {};
   var reg = {};
   var curr_id = -1;
   for(i=0;i<cmd.length;i++){
@@ -308,8 +308,8 @@ function str2view(content){
     } else if(!isNaN(parseInt(trim_cmd))){ //int
       if(Object.keys(reg).length != 0){
         //console.log('store to view');
-        StoriesView[curr_id] = reg;
-        //console.log(StoriesView);
+        LandmarkdView[curr_id] = reg;
+        //console.log(LandmarkdView);
         reg = {};
         curr_id = parseInt(trim_cmd);
       } else{
@@ -336,11 +336,11 @@ function str2view(content){
     }
   }//end of for
   if (Object.keys(reg).length != 0){
-    StoriesView[curr_id] = reg;
+    LandmarkdView[curr_id] = reg;
     reg = {}
     //console.log('store last reg to view');
   }
-  return StoriesView;
+  return LandmarkdView;
 }
 
 function onPlayerStateChange(evt) {
