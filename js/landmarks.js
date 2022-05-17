@@ -81,7 +81,7 @@ function addGPStoryList(div_id_to_add, data_to_append, where_to_add){
     gpstory_tags = data_to_append.tags;
     gpstory_thumbnail = data_to_append.thumbnail;
     gpstory_story_id = data_to_append.story_id;
-    gpstory_types = data_to_append.types;
+    gpstory_type = data_to_append.type;
 
     html_reg = '';
     html_reg += "<div class=\"gpstory_list\">";
@@ -89,7 +89,7 @@ function addGPStoryList(div_id_to_add, data_to_append, where_to_add){
     html_reg += "      <div class=\"gpstory_source\">"+gpstory_what + " @ </span><span class=\"gpstory_location\">" + gpstory_where + "</div>";
     html_reg += "      <div class=\"gpstory_header\">";
     html_reg += "      <input type=\"checkbox\" aria-label=\"Checkbox for following text input\">";
-    switch(gpstory_types){
+    switch(gpstory_type){
       case 'youtube':
         html_reg += "      <span class=\"gpstory_title\"><a href=\"javascript:getLandmarksByStoryID("+ gpstory_story_id +")\">" + gpstory_title + "</a> <br/></span><span>(" + "<a href=\""+ gpstory_link +"\"><img src=\"youtube_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
         break;

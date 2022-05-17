@@ -105,7 +105,7 @@ function appendStoriesList(div_id_to_add, data_to_append, where_to_add, id_div) 
     myapp_tags = data_to_append.tags;
     myapp_thumbnail = data_to_append.thumbnail;
     myapp_story_id = data_to_append.story_id;
-    myapp_types = data_to_append.types;
+    myapp_type_ = data_to_append.type_;
 
     //html_reg = get_html_reg();
 
@@ -116,7 +116,7 @@ function appendStoriesList(div_id_to_add, data_to_append, where_to_add, id_div) 
     html_reg += '       <button style="width:30px;float:right;height:100%;padding:0;background:white;box-shadow:none" class=\"accordion-button\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse_' + myapp_story_id + '\" aria-expanded=\"true\" aria-controls=\"collapse_' + myapp_story_id + '\">';
     html_reg += '       </button>';
 
-    switch (myapp_types) {
+    switch (myapp_type_) {
         case 'podcast':
             html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> ' + '<img class="list_type_icon" src=img/podcast_icon.png>' + ' <a style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:getLandmarksByStoryID(' + myapp_story_id + ')\">' + myapp_title + '</a> <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a>';
             break;
@@ -129,7 +129,7 @@ function appendStoriesList(div_id_to_add, data_to_append, where_to_add, id_div) 
             html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> ' + '<img class="list_type_icon" src=img/webpage_icon.png>' + ' <a style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:getLandmarksByStoryID(' + myapp_story_id + ')\">' + myapp_title + '</a>'+ '<b>webpage</b>'+' <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a><a href=\"story_edit.html?story_id='+myapp_story_id+'  \">(edit)</a>';
             break;
         case 'facebook':
-            html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> ' + '<img class="list_type_icon" src=img/facebook_icon.png>' + ' <a style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:getLandmarksByStoryID(' + myapp_story_id + ')\">' + myapp_title + '</a> <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a>';
+            html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> ' + '<img class="list_type_icon" src=img/facebook_icon.png>' + ' <a style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:getLandmarksByStoryID(' + myapp_story_id + ')\">' + myapp_title + '</a> <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a></a><a href=\"story_edit.html?story_id='+myapp_story_id+'  \">(edit)</a>';
             break;
         case 'image':
             html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> ' + '' + ' <a class="story_title" style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:getLandmarksByStoryID(' + myapp_story_id + ')\">' + myapp_title + '</a> '+ '<b>image</b>'+'<a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a>';
@@ -145,14 +145,14 @@ function appendStoriesList(div_id_to_add, data_to_append, where_to_add, id_div) 
             html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> ' + '<img class="list_type_icon" src=img/book_icon.png>' + ' <a style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:getLandmarksByStoryID(' + myapp_story_id + ')\">' + myapp_title + '</a> <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a>';
             break;
         default:
-            html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> (type:' + myapp_types + ') <a style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:getLandmarksByStoryID(' + myapp_story_id + ')\">' + myapp_title + '</a> <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a>';
+            html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> (type:' + myapp_type_ + ') <a style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:getLandmarksByStoryID(' + myapp_story_id + ')\">' + myapp_title + '</a> <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a><a href=\"story_edit.html?story_id='+myapp_story_id+'  \">(edit)</a>';
     }
 
     html_reg += '     </h2>';
     html_reg += '     <div id=\"collapse_' + myapp_story_id + '\" class=\"accordion-collapse collapse\" aria-labelledby=\"heading_' + myapp_story_id + '\" data-bs-parent=\"#accordionExample\">';
     html_reg += '       <div class=\"accordion-body\">';
     html_reg += '       </div>';
-    switch (myapp_types) {
+    switch (myapp_type_) {
       case 'image':
         html_reg += "<div id='map_"+ myapp_story_id +"'>";
         html_reg += "<a href=\"image.html\" target=\"_blank\"><img src=\""+myapp_link+"\"/></a>";
@@ -199,13 +199,13 @@ function getLandmarksByStoryID(story_id) {
         console.log(story_id);
 
 
-        var data_json_landmarks_by_story = JSON.parse(data);
+        data_json_landmarks_by_story = JSON.parse(data);
 
         //dbg = data_json_landmarks_by_story;
         var gps_locations = [];
         content_reg = '';
         player_id = 'collapse_player_' + story_id;
-        switch (StoriesDict[story_id].type) {
+        switch (StoriesDict[story_id].type_) {
             case 'podcast':
                 if (typeof StoriesDict[story_id].media_key != 'undefined') {
                     content_reg += '<iframe style="border-radius:12px" src="https://open.spotify.com/embed/episode/' + StoriesDict[story_id].media_key + '?utm_source=generator\" width=\"100%\" height=\"232\" frameBorder=\"0\" allowfullscreen=\"\" allow=\"autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture\"></iframe>'
@@ -245,6 +245,7 @@ function getLandmarksByStoryID(story_id) {
         if (data_json_landmarks_by_story.table.length != 0) {
             content_reg += '<ul>'
             for (i in data_json_landmarks_by_story.table) {
+               //console.log(data_json_landmarks_by_story.table[i].landmark_id);
                 gps_locations.push({
                     lat: data_json_landmarks_by_story.table[i].lat,
                     lng: data_json_landmarks_by_story.table[i].lng,
@@ -253,7 +254,7 @@ function getLandmarksByStoryID(story_id) {
                     link: data_json_landmarks_by_story.table[i].link,
                     landmark_id: data_json_landmarks_by_story.table[i].landmark_id,
                 })
-                content_reg += `<li style="cursor:pointer" class="checkboxLandmark"><input class="chilInput${story_id}" id="${data_json.table[i].landmark_id}" type="checkbox"> <a class="singleZoom">`
+                content_reg += `<li style="cursor:pointer" class="checkboxLandmark"><input class="chilInput${story_id}" id="${data_json_landmarks_by_story.table[i].landmark_id}" type="checkbox"> <a class="singleZoom">`
                 content_reg += data_json_landmarks_by_story.table[i].name + '</a>';
                 //content_reg += '<a href=\"javascript:seekto(' + youtube_players[story_id] +','+data_json.table[i].link + ')\">('+ data_json.table[i].link +')</a>'
                 if (data_json_landmarks_by_story.table[i].link == '') {
@@ -262,7 +263,7 @@ function getLandmarksByStoryID(story_id) {
                     var video_seconds = data_json_landmarks_by_story.table[i].link;
                     video_mm = Math.floor(video_seconds / 60);
                     video_ss = video_seconds - video_mm * 60;
-                    switch (StoriesDict[story_id].type) {
+                    switch (StoriesDict[story_id].type_) {
                         case 'youtube':
                             content_reg += '<a class="seekto" href=\"javascript:seekto(' + story_id + ',' + data_json_landmarks_by_story.table[i].link + ')\">(' + video_mm + ':' + video_ss + ')</a>'
                             break;
@@ -300,6 +301,10 @@ function getLandmarksByStoryID(story_id) {
             let genInpt = document.getElementById(`genInput${story_id}`)
             genInpt.checked = true
             GotoStory(story_id, genInpt.checked)
+        }else{
+          $('#collapse_ul_' + story_id).html("there is no landmark in this story.");
+          let genInpt = document.getElementById(`genInput${story_id}`)
+          genInpt.checked = true
         }
     });
 

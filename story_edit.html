@@ -51,11 +51,11 @@
                 -->
 
                   <li class="nav-item">
-                     <a class="nav-link" href="find_stories.html">地圖找點</a>
+                     <a class="nav-link" href="find_stories.html">地圖探索</a>
                   </li>
                   <li class="nav-item">
                      <a class="nav-link" href="about.html">about</a>
-                  </li>                  
+                  </li>
                   <li class="nav-item" >
                      <a class="nav-link" href="about.html" id="status">status</a>
                   </li>
@@ -85,13 +85,7 @@
                   </div>
                </div>
                <div id="utility">
-                  <textarea rows="10" cols="50" id="text-input-utility" style="width:100%">力野茶陶所
-鹿港車埕玉渠宮
-米弎豆
-供腸老闆
-鹿港龍山寺
-富貴堂
-鹿港永樂酒店</textarea>
+                  <textarea rows="10" cols="50" id="text-input-utility" style="width:100%"></textarea>
                   <a href="javascript:utility_proc()">wizzard</a>
                   <div id="utility_view"></div>
                </div>
@@ -128,7 +122,7 @@
             <div class="col right" id="gpstory_main">
                <div id="DivStoriesList">
                  <a href="javascript:utility()">landmark utility</a> |  <a href="javascript:preview_link()"> | [preview link]</a> <!--| <a href="">[view]</a> --> | <a href="javascript:update_db()">[💾]</a>
-                 <p><b>title</b></p>
+
                  <!--
                   <div class="accordion" id="accordionExample" >
                      <div class="accordion-item">
@@ -139,34 +133,42 @@
                      </div>
                   </div>
                 -->
-                <textarea class="form-control" id="text-input-title" style="width:100%" rows="1"></textarea>
-                <p><b>is_delete</b></p>
-               <textarea class="form-control" id="text-input-is-delete" style="width:100%" rows="1"></textarea>
+                <p><div style="width:100px;display:inline"><b>title</b></div><textarea class="form-control" id="text-input-title" style="width:80%; display:inline; margin-right:5px" rows="1"></textarea></p>
+               <p><b>type</b><textarea class="form-control" id="text-input-type" style="width:80%;  display:inline" rows="1"></textarea><p>
+
+               <p><b>is_delete</b><textarea class="form-control" id="text-input-is-delete" style="width:80%;  display:inline" rows="1"></textarea></p>
+               <p><b>link</b><textarea class="form-control" id="text-input-link" style="width:80%;  display:inline" rows="1"></textarea></p>
+               <p><b>author</b><textarea class="form-control" id="text-input-author" style="width:80%; display:inline" rows="1"></textarea></p>
                   <div style="width:100%">
 
-                     <p><b>tags</b></p>
-                     <textarea class="form-control" id="text-input-tags" oninput=this.editor.update() style="width:100%" rows="1"></textarea>
+                     <p><b>tags</b>
+                     <textarea class="form-control" id="text-input-tags" oninput=this.editor.update() style="width:80%;display:inline" rows="1"></textarea></p>
                      <p><b>landmarks</b></p>
-                     <textarea class="AutoHeight form-control" id="text-input" oninput=this.editor.update()
+                     <textarea class="AutoHeight form-control"  id="text-input" oninput=this.editor.update()
                         style="width:100%" rows="5">
-                     1
-                     name
-                     notes
-                     lat_lng 23.4773674,120.459371
-                     link 0:0
+#
+name
+notes
+lat_lng
+link 0:0
                      </textarea>
+                     <p><b>gpstory</b></p>
+                     <textarea class="AutoHeight form-control"  id="text-input-gpstory" oninput=this.editor.update() style="width:100%" rows="5"></textarea>
                   </div>
                   <p></p>
                   <div id="text-view" style="width:100%"></div>
+                  <!--
                   <p><b>website address to lat,lng</b></p>
                   <div style="width:100%">
                      <textarea class="form-control" id="text-input-gmap" oninput=this.editor.update()
                         style="width:100%" rows="1"></textarea>
                   </div>
 
+
                   <div id="text-view-gmap" style="width:100%">
                      (lat,lng)
                   </div>
+                  -->
                   <div class="accordion" id="accordionExample" >
                      <div class="accordion-item">
                         <h2 class="accordion-header" id="heading_152" style="padding:10px;font-size:16px">       <button style="width:50px;float:right;height:100%;padding:0;background:white;box-shadow:none" class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_152" aria-expanded="true" aria-controls="collapse_152">       </button> Google Search

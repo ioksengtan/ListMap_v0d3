@@ -28,7 +28,7 @@ $(document).ready(
                   $('#DivStoriesListQuery').html("");
                   var data_to_append = {}
                   data_to_append.title = story_content;
-                  data_to_append.types = '';
+                  data_to_append.type_ = '';
                   appendStoriesList(DivStoriesListQuery, data_to_append, 'prepend')
                 }else if(story_content.includes('www.youtube.com')){
                   videoId = story_content.split("&")[0].split("=")[1];//https://www.youtube.com/watch?v=dtXONHulWcA&bls
@@ -43,14 +43,14 @@ $(document).ready(
                       youtube_description = data.items[0].snippet.description;
                       //$('#heading_0').html(youtube_title);
                       //getLandmarksByStoryID(0);
-                      data_to_append.types = 'youtube';
+                      data_to_append.type_ = 'youtube';
                       data_to_append.title = youtube_title
 
                       var parameter = {
                           url: sheetsUrl,
                           command: "new_story",
                           name: youtube_title,
-                          types: "youtube",
+                          type_: "youtube",
                           link: "https://www.youtube.com/watch?v=" + videoId,
                           //landmarks: JSON.stringify(landmarks_json),
                           author: youtube_channel,
@@ -67,13 +67,45 @@ $(document).ready(
                   })
 
                 }else if(story_content.includes('www.facebook.com')){
-                  data_to_append.types = 'facebook';
+                  data_to_append.type_ = 'facebook';
                   data_to_append.title = 'user defined title';
-                  appendStoriesList(DivStoriesList, data_to_append, 'prepend')
+                  $('#status').html('processing...')
+                  var parameter = {
+                      url: sheetsUrl,
+                      command: "new_story",
+                      name: data_to_append.title,
+                      type_: "facebook",
+                      link: story_content,
+                      author: "",
+                      tags:''
+                  }
+                  $('#status').html('processing...')
+                  $.post(appUrl, parameter, function(data) {
+                      $('#status').html('');
+                      console.log(data);
+                      appendStoriesList(DivStoriesList, data_to_append, 'prepend')
+                  });
+
                 }else{
-                  data_to_append.types = '';
+                  data_to_append.type_ = '';
                   data_to_append.title = story_content;
-                  appendStoriesList(DivStoriesList, data_to_append, 'prepend')
+                  $('#status').html('processing...')
+                  var parameter = {
+                      url: sheetsUrl,
+                      command: "new_story",
+                      name: data_to_append.title,
+                      type_: "",
+                      link: "",
+                      author: "",
+                      tags:''
+                  }
+                  $('#status').html('processing...')
+                  $.post(appUrl, parameter, function(data) {
+                      $('#status').html('');
+                      console.log(data);
+                      appendStoriesList(DivStoriesList, data_to_append, 'prepend')
+                  });
+
                 }
 
                 /*
@@ -86,7 +118,7 @@ $(document).ready(
                 myapp_tags = data_to_append.tags;
                 myapp_thumbnail = data_to_append.thumbnail;
                 myapp_story_id = data_to_append.story_id;
-                myapp_types = data_to_append.types;
+                myapp_type_ = data_to_append.type_;
                 */
 
             }
@@ -115,24 +147,24 @@ $(document).ready(
             }
             for (i in data_json.table) {
                 appendStoriesList(DivStoriesList, data_json.table[i], 'prepend')
-                switch(data_json.table[i].types){
+                switch(data_json.table[i].type_){
                   case 'podcast':
                     StoriesDict[data_json.table[i].story_id] = {
-                        'type': data_json.table[i].types,
+                        'type_': data_json.table[i].type_,
                         'media_key': data_json.table[i].link,
                         'link': data_json.table[i].link,
                     };
                     break;
                   case 'youtube':
                     StoriesDict[data_json.table[i].story_id] = {
-                        'type': data_json.table[i].types,
+                        'type_': data_json.table[i].type_,
                         'media_key': data_json.table[i].link.split('v=')[1],
                         'link': data_json.table[i].link,
                     };
                     break;
                     default:
                     StoriesDict[data_json.table[i].story_id] = {
-                        'type': data_json.table[i].types,
+                        'type_': data_json.table[i].type_,
                         'media_key': data_json.table[i].link,
                         'link': data_json.table[i].link,
                     };
