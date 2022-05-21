@@ -103,6 +103,7 @@ $(document).ready(
                   $.post(appUrl, parameter, function(data) {
                       $('#status').html('');
                       console.log(data);
+                      data_to_append.story_id = data;
                       appendStoriesList(DivStoriesList, data_to_append, 'prepend')
                   });
 

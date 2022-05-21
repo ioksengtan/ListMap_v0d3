@@ -296,13 +296,21 @@ $(document).ready(
                                 var lat_lng = data_json.landmarks[i][5];
                                 var landmark_id = data_json.landmarks[i][9];
                                 var is_delete = data_json.landmarks[i][6];
-                                var link = data_json.landmarks[i][8];
-                                mm = Math.floor(parseInt(link) / 60);
-                                ss = parseInt(link) % 60;
+                                var landmark_link = String(data_json.landmarks[i][8]);
+                                var num_landmark_links = landmark_link.split(',').length;
+                                var str_link = '';
+                                for(var landmark_link_i = 0; landmark_link_i<num_landmark_links; landmark_link_i++){
+                                  var link_in_seconds = landmark_link.split(',')[landmark_link_i];
+                                  var mm = Math.floor(parseInt(link_in_seconds) / 60);
+                                  var ss = parseInt(link_in_seconds) % 60;
+                                  str_link += mm + ':' + ss + ',';
+                                }
+                                str_link = str_link.slice(0,-1);
+
                                 if(is_delete){
-                                   output_reg += landmark_id + '\nname ' + name + '\ntags ' + landmark_tags + '\nnotes ' + notes + '\nlat_lng ' + lat_lng + '\nlink ' + mm + ':' + ss + '\nis_delete 1' + '\n';
+                                   output_reg += landmark_id + '\nname ' + name + '\ntags ' + landmark_tags + '\nnotes ' + notes + '\nlat_lng ' + lat_lng + '\nlink ' + str_link + '\nis_delete 1' + '\n';
                                 }else{
-                                   output_reg += landmark_id + '\nname ' + name + '\ntags ' + landmark_tags + '\nnotes ' + notes + '\nlat_lng ' + lat_lng + '\nlink ' + mm + ':' + ss + '\n\n';
+                                   output_reg += landmark_id + '\nname ' + name + '\ntags ' + landmark_tags + '\nnotes ' + notes + '\nlat_lng ' + lat_lng + '\nlink ' + str_link + '\n\n';
                                 }
                             }
                         }
@@ -414,7 +422,7 @@ function text_input_on_change() {
 
             html_reg += '<a href=\"javascript:flyto(' + lat + ',' + lng + ')\">(' + lat + ',' + lng + ')</a>';
         } else {
-            html_reg += '(NaN, NaN)';
+            html_reg += '(0, 0)';
         }
         if ('link' in LandmarkdView.to_update[key] & story_type_ == 'youtube') {
             var mm = parseInt(LandmarkdView.to_update[key].link.split(':')[0]);
@@ -439,7 +447,7 @@ function text_input_on_change() {
 
             html_reg += '<a href=\"javascript:flyto(' + lat + ',' + lng + ')\">(' + lat + ',' + lng + ')</a>';
         } else {
-            html_reg += '(NaN, NaN)';
+            html_reg += '(0, 0)';
         }
         if ('link' in LandmarkdView.new[i] & story_type_ == 'youtube') {
             var mm = parseInt(LandmarkdView.new[i].link.split(':')[0]);
@@ -534,11 +542,14 @@ function str2view(content) {
             //console.log(cmd_list);
             cmd_list.shift();
             var content = cmd_list.join(' ');
+            console.log(content);
+            debug = content;
             if(header == 'lat_lng'){
                 if(content.includes('www.google.com')){
-                  var lat = content.split('@')[1].split('/')[0].split(',')[0]
-                  var lng = content.split('@')[1].split('/')[0].split(',')[1]
+                  var lat = content.split('/@')[1].split('/')[0].split(',')[0]
+                  var lng = content.split('/@')[1].split('/')[0].split(',')[1]
                   content = lat + ',' + lng;
+                  console.log(content);
                 }
             }
             switch (curr_reg) {
