@@ -205,6 +205,7 @@ function getLandmarksByStoryID(story_id) {
         var gps_locations = [];
         content_reg = '';
         player_id = 'collapse_player_' + story_id;
+        console.log(StoriesDict[story_id].type_);
         switch (StoriesDict[story_id].type_) {
             case 'podcast':
                 if (typeof StoriesDict[story_id].media_key != 'undefined') {
@@ -213,6 +214,9 @@ function getLandmarksByStoryID(story_id) {
                 break;
             case 'youtube':
                 if (typeof StoriesDict[story_id].media_key != 'undefined') {
+                  console.log('enable youtube');
+                  console.log('story_id:' + story_id);
+                  console.log('player_id:' + player_id);
                     youtube_players[story_id] = new YT.Player(player_id, {
                         //height: '390',
                         width: '90%',
@@ -229,6 +233,7 @@ function getLandmarksByStoryID(story_id) {
 
                     });
                     //content_reg += '<iframe width="560" height="315" src="https://www.youtube.com/embed/' + StoriesDict[story_id].media_key	+ '" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>'
+
                 }
                 break;
             case 'webpage':

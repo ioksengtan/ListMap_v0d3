@@ -483,13 +483,24 @@ function utility_proc() {
     var output_reg = '';
     var cnt = 1;
     for (i in content) {
-        if (content[i].trim() != '') {
-            //output_reg += cnt + '\n';
+        if(content[i].includes(':')){
+          if(content[i].split(' ').length == 2 & !isNaN(content[i].split(' ')[0].split(':')[0]) & !isNaN(content[i].split(' ')[0].split(':')[1])){
             output_reg += '#\n';
-            output_reg += 'name ' + content[i] + '\n';
+            output_reg += 'name ' + content[i].split(' ')[1] + '\n';
             output_reg += 'notes\n';
             output_reg += 'lat_lng 0,0\n';
-            output_reg += 'link 0:0\n\n'
+            output_reg += 'link '+ content[i].split(' ')[0] +'\n\n'
+          }
+
+        }else{
+          if (content[i].trim() != '') {
+              //output_reg += cnt + '\n';
+              output_reg += '#\n';
+              output_reg += 'name ' + content[i] + '\n';
+              output_reg += 'notes\n';
+              output_reg += 'lat_lng 0,0\n';
+              output_reg += 'link 0:0\n\n'
+          }
         }
         //console.log(output_reg);
         cnt += 1;

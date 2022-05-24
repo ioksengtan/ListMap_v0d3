@@ -451,25 +451,25 @@ function get_stories_by_author(author){
                 }
                 appendStoriesList(DivStoriesList, data_json.table[i], 'prepend');
               }
-
+              console.log(data_json.table[i].type_);
               switch(data_json.table[i].type_){
                 case 'podcast':
                   StoriesDict[data_json.table[i].story_id] = {
-                      'type': data_json.table[i].type_,
+                      'type_': data_json.table[i].type_,
                       'media_key': data_json.table[i].link,
                       'link': data_json.table[i].link,
                   };
                   break;
                 case 'youtube':
                   StoriesDict[data_json.table[i].story_id] = {
-                      'type': data_json.table[i].type_,
+                      'type_': data_json.table[i].type_,
                       'media_key': data_json.table[i].link.split('v=')[1],
                       'link': data_json.table[i].link,
                   };
                   break;
                   default:
                   StoriesDict[data_json.table[i].story_id] = {
-                      'type': data_json.table[i].type_,
+                      'type_': data_json.table[i].type_,
                       'media_key': data_json.table[i].link,
                       'link': data_json.table[i].link,
                   };
@@ -509,21 +509,21 @@ function get_stories_by_tag(tag){
               switch(data_json.table[i].type_){
                 case 'podcast':
                   StoriesDict[data_json.table[i].story_id] = {
-                      'type': data_json.table[i].type_,
+                      'type_': data_json.table[i].type_,
                       'media_key': data_json.table[i].link,
                       'link': data_json.table[i].link,
                   };
                   break;
                 case 'youtube':
                   StoriesDict[data_json.table[i].story_id] = {
-                      'type': data_json.table[i].type_,
+                      'type_': data_json.table[i].type_,
                       'media_key': data_json.table[i].link.split('v=')[1],
                       'link': data_json.table[i].link,
                   };
                   break;
                   default:
                   StoriesDict[data_json.table[i].story_id] = {
-                      'type': data_json.table[i].type_,
+                      'type_': data_json.table[i].type_,
                       'media_key': data_json.table[i].link,
                       'link': data_json.table[i].link,
                   };
