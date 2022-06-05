@@ -695,8 +695,8 @@ function appendStoriesList(div_id_to_add, data_to_append, where_to_add, id_div) 
 
 function YoutubePlayerRender(video_id) {
     youtube_players[0] = new YT.Player('collapse_player_0', {
-        height: '390',
-        width: '640',
+        height: '600',
+        width: '900',
         videoId: video_id,
         playerVars: {
             'start': 0,
