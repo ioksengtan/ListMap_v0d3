@@ -18,7 +18,7 @@ $(document).ready(
             data_json = JSON.parse(data);
 
             for (i in data_json.table) {
-                appendStoriesList(DivStoriesList, data_json.table[i], 'prepend')
+                append_stories_list(DivStoriesList, data_json.table[i], 'prepend')
             }
 
 
@@ -28,7 +28,7 @@ $(document).ready(
 
 
 
-function appendStoriesList(div_id_to_add, data_to_append, where_to_add, id_div) {
+function append_stories_list(div_id_to_add, data_to_append, where_to_add, id_div) {
     //console.log(data_to_append);
     myapp_what = data_to_append.what;
     myapp_where = data_to_append.where;
@@ -49,7 +49,7 @@ function appendStoriesList(div_id_to_add, data_to_append, where_to_add, id_div) 
     html_reg += '     <h2 class=\"accordion-header\" id=\"heading_' + myapp_story_id + '\" style="padding:10px;font-size:16px">';
     html_reg += '       <button style="width:50px;float:right;height:100%;padding:0;background:white;box-shadow:none" class=\"accordion-button\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse_' + myapp_story_id + '\" aria-expanded=\"true\" aria-controls=\"collapse_' + myapp_story_id + '\">';
     html_reg += '       </button>';
-    html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> (type:' + myapp_type + ') <a style="color:#0d6efd;text-decoration:underline;cursor:pointer" onclick=\"javascript:getLandmarksByStoryID(' + myapp_story_id + ')\">' + myapp_title + '</a> <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a>';
+    html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> (type:' + myapp_type + ') <a style="color:#0d6efd;text-decoration:underline;cursor:pointer" onclick=\"javascript:get_landmarks_by_story_id(' + myapp_story_id + ')\">' + myapp_title + '</a> <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a>';
     html_reg += '     </h2>';
     html_reg += '     <div id=\"collapse_' + myapp_story_id + '\" class=\"accordion-collapse collapse\" aria-labelledby=\"heading_' + myapp_story_id + '\" data-bs-parent=\"#accordionExample\">';
     html_reg += '       <div class=\"accordion-body\">';

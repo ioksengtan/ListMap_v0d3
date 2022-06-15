@@ -29,7 +29,7 @@ $(document).ready(
                   var data_to_append = {}
                   data_to_append.title = story_content;
                   data_to_append.type_ = '';
-                  appendStoriesList(DivStoriesListQuery, data_to_append, 'prepend')
+                  append_stories_list(DivStoriesListQuery, data_to_append, 'prepend')
                 }else if(story_content.includes('www.youtube.com')){
                   videoId = story_content.split("&")[0].split("=")[1];//https://www.youtube.com/watch?v=dtXONHulWcA&bls
                   var appYoutube = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + videoId + '&key=AIzaSyCsiStpIlMr_0RhLo9gvJ_gUjjpCRvPXmk'
@@ -42,7 +42,7 @@ $(document).ready(
                       youtube_published = data.items[0].snippet.publishedAt;
                       youtube_description = data.items[0].snippet.description;
                       //$('#heading_0').html(youtube_title);
-                      //getLandmarksByStoryID(0);
+                      //get_landmarks_by_story_id(0);
                       data_to_append.type_ = 'youtube';
                       data_to_append.title = youtube_title
 
@@ -61,7 +61,7 @@ $(document).ready(
                           $('#status').html('');
                           console.log(data);
                           data_to_append.story_id = data;
-                          appendStoriesList(DivStoriesList, data_to_append, 'prepend')
+                          append_stories_list(DivStoriesList, data_to_append, 'prepend')
                       });
 
                   })
@@ -83,7 +83,7 @@ $(document).ready(
                   $.post(appUrl, parameter, function(data) {
                       $('#status').html('');
                       console.log(data);
-                      appendStoriesList(DivStoriesList, data_to_append, 'prepend')
+                      append_stories_list(DivStoriesList, data_to_append, 'prepend')
                   });
 
                 }else{
@@ -104,7 +104,7 @@ $(document).ready(
                       $('#status').html('');
                       console.log(data);
                       data_to_append.story_id = data;
-                      appendStoriesList(DivStoriesList, data_to_append, 'prepend')
+                      append_stories_list(DivStoriesList, data_to_append, 'prepend')
                   });
 
                 }
@@ -147,7 +147,7 @@ $(document).ready(
               }
             }
             for (i in data_json.table) {
-                appendStoriesList(DivStoriesList, data_json.table[i], 'prepend')
+                append_stories_list(DivStoriesList, data_json.table[i], 'prepend')
                 switch(data_json.table[i].type_){
                   case 'podcast':
                     StoriesDict[data_json.table[i].story_id] = {

@@ -35,7 +35,7 @@ new Vue({ i18n }).$mount('#dropdown')
             data_json = JSON.parse(data);
 
             for (i in data_json.table) {
-                appendStoriesList(DivStoriesList, data_json.table[i], 'prepend')
+                append_stories_list(DivStoriesList, data_json.table[i], 'prepend')
             }
 
 

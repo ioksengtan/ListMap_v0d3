@@ -6,7 +6,7 @@ var sheetName = 'landmarks';
 parameter = {
             url: sheetsUrl,
             name: sheetName,
-            //command:"getLandmarksByStory",
+            //command:"get_landmarks_by_story_id",
             command:"getRecentStories",
             //story_id:"1"
         };
@@ -34,13 +34,13 @@ function addMarker() {
   markerCluster.addMarkers(marker, true);
 }
 
-function getLandmarksByStoryID(story_id){
-  console.log('getLandmarksByStoryID');
+function get_landmarks_by_story_id(story_id){
+  console.log('get_landmarks_by_story_id');
   console.log(story_id);
   parameter = {
               url: sheetsUrl,
-              //command:"getLandmarksByStory",
-              command:"getLandmarksByStory",
+              //command:"get_landmarks_by_story_id",
+              command:"get_landmarks_by_story_id",
               story_id: story_id
           };
   $.get(appUrl, parameter, function(data) {
@@ -91,16 +91,16 @@ function addGPStoryList(div_id_to_add, data_to_append, where_to_add){
     html_reg += "      <input type=\"checkbox\" aria-label=\"Checkbox for following text input\">";
     switch(gpstory_type){
       case 'youtube':
-        html_reg += "      <span class=\"gpstory_title\"><a href=\"javascript:getLandmarksByStoryID("+ gpstory_story_id +")\">" + gpstory_title + "</a> <br/></span><span>(" + "<a href=\""+ gpstory_link +"\"><img src=\"youtube_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
+        html_reg += "      <span class=\"gpstory_title\"><a href=\"javascript:get_landmarks_by_story_id("+ gpstory_story_id +")\">" + gpstory_title + "</a> <br/></span><span>(" + "<a href=\""+ gpstory_link +"\"><img src=\"youtube_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
         break;
       case 'book':
-        html_reg += "      <span class=\"gpstory_title\"><a href=\"javascript:getLandmarksByStoryID("+ gpstory_story_id +")\">" + gpstory_title + "</a> <br/></span><span>(" + "<a href=\""+ gpstory_link +"\"><img src=\"book_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
+        html_reg += "      <span class=\"gpstory_title\"><a href=\"javascript:get_landmarks_by_story_id("+ gpstory_story_id +")\">" + gpstory_title + "</a> <br/></span><span>(" + "<a href=\""+ gpstory_link +"\"><img src=\"book_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
         break;
       case 'blog':
-        html_reg += "      <span class=\"gpstory_title\"><a href=\"javascript:getLandmarksByStoryID("+ gpstory_story_id +")\">" + gpstory_title + "</a> <br/></span><span>(" + "<a href=\""+ gpstory_link +"\"><img src=\"webpage_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
+        html_reg += "      <span class=\"gpstory_title\"><a href=\"javascript:get_landmarks_by_story_id("+ gpstory_story_id +")\">" + gpstory_title + "</a> <br/></span><span>(" + "<a href=\""+ gpstory_link +"\"><img src=\"webpage_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
         break;
       default:
-        html_reg += "      <span class=\"gpstory_title\"><a href=\"javascript:getLandmarksByStoryID("+ gpstory_story_id +")\">" + gpstory_title + "</a> <br/></span><span>(" + "<a href=\""+ gpstory_link +"\"><img src=\"webpage_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
+        html_reg += "      <span class=\"gpstory_title\"><a href=\"javascript:get_landmarks_by_story_id("+ gpstory_story_id +")\">" + gpstory_title + "</a> <br/></span><span>(" + "<a href=\""+ gpstory_link +"\"><img src=\"webpage_icon.png\"/></a>" +")(<a href=\"\"><img src=\"add_list.png\"/></a>)</span>";
   }
     html_reg += "      </div>";
 

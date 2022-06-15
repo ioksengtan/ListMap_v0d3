@@ -7,13 +7,34 @@ function flyto(lat, lng){
   })
 
 }
+var map_is_home = false;
+var home_gps_lat = 22.630114
+var home_gps_lng = 120.313253
+var reg_gps_lat = 0
+var reg_gps_lng = 0
+function gohome(){
+  if(map_is_home){
+    zoomto(loc = {'lat': reg_gps_lat,'lng': reg_gps_lng}, zoom = mymap.getZoom())
+    map_is_home = false;
+  }else{
+    reg_gps_lat = mymap.getCenter().lat;
+    reg_gps_lng = mymap.getCenter().lng;
+    zoomto(loc = {'lat': home_gps_lat,'lng': home_gps_lng}, zoom =  mymap.getZoom())
+    map_is_home = true;
+  }
 
+}
+
+function set_as_reference(){
+  home_gps_lat = mymap.getCenter().lat;
+  home_gps_lng = mymap.getCenter().lng;
+}
 
 function GetCluster(story_id) {
     parameter = {
         url: sheetsUrl,
-        //command:"getLandmarksByStory",
-        command: "getLandmarksByStory",
+        //command:"get_landmarks_by_story_id",
+        command: "get_landmarks_by_story_id",
         story_id: story_id
     };
     $.get(appUrl, parameter, function(data) {
@@ -87,7 +108,51 @@ function initMap() {
         "Streets": streets
     };
     p_control = L.control.layers(baseMaps);
+    var cost_underground = 12.55,
+        cost_above_ground = 17.89,
+        html = [
+            '<table>',
+            ' <tr><td class="cost_label">Cost Above Ground:</td><td class="cost_value">${total_above_ground}</td></tr>',
+            ' <tr><td class="cost_label">Cost Underground:</td><td class="cost_value">${total_underground}</td></tr>',
+            '</table>'
+        ].join(''),
+        numberWithCommas = function(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        };
+    var Ruler = L.Control.LinearMeasurement.extend({
+        layerSelected: function(e){
 
+            /* cost should be in feet */
+
+            var distance = e.total.scalar;
+
+            if(e.total.unit === 'mi'){
+                distance *= e.sub_unit;
+
+            } else if(e.total.unit === 'km'){
+                distance *= 3280.84;
+
+            } else if(e.total.unit === 'm'){
+                distance *= 3.28084;
+            }
+
+            var data = {
+                total_above_ground: numberWithCommas(L.Util.formatNum(cost_above_ground * distance, 2)),
+                total_underground: numberWithCommas(L.Util.formatNum(cost_underground * distance, 2))
+            };
+
+            var content = L.Util.template(html, data),
+                popup = L.popup().setContent(content);
+
+            //e.total_label.bindPopup(popup, { offset: [45, 0] });
+            //e.total_label.openPopup();
+        }
+    });
+
+    mymap.addControl(new Ruler({
+      unitSystem: 'metric',
+      color: '#FF0080'
+    }));
 
 }
 
@@ -248,7 +313,7 @@ function ShowHideCluster(location, input) {
 function zoomto(loc = {'lat': -34.003646,'lng': 18.469909}, zoom = 16){
   //var loc = {'lat': -34.003646,'lng': 18.469909};
   console.log('zoomto');
-  mymap.flyTo(loc, 16, {
+  mymap.flyTo(loc, zoom, {
       animate: true,
       duration: 0.3
   })

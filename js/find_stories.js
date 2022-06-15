@@ -5,7 +5,7 @@ var sheetName = 'landmarks';
 parameter = {
     url: sheetsUrl,
     name: sheetName,
-    //command:"getLandmarksByStory",
+    //command:"get_landmarks_by_story_id",
     command: "getRecentStories",
     //story_id:"1"
 };
@@ -66,8 +66,8 @@ function getGPSbyStoryID(story_id) {
     // console.log(point)
     parameter = {
         url: sheetsUrl,
-        //command:"getLandmarksByStory",
-        command: "getLandmarksByStory",
+        //command:"get_landmarks_by_story_id",
+        command: "get_landmarks_by_story_id",
         story_id: story_id
     };
     $.get(appUrl, parameter, function(data) {
@@ -134,8 +134,8 @@ function getGPSbyStoryID2(story_id) {
     // console.log(point)
     parameter = {
         url: sheetsUrl,
-        //command:"getLandmarksByStory",
-        command: "getLandmarksByStory",
+        //command:"get_landmarks_by_story_id",
+        command: "get_landmarks_by_story_id",
         story_id: story_id
     };
     $.get(appUrl, parameter, function(data) {
@@ -194,8 +194,8 @@ function ZoomByStoryID(story_id) {
     // console.log(point)
     parameter = {
         url: sheetsUrl,
-        //command:"getLandmarksByStory",
-        command: "getLandmarksByStory",
+        //command:"get_landmarks_by_story_id",
+        command: "get_landmarks_by_story_id",
         story_id: story_id
     };
     $.get(appUrl, parameter, function(data) {
@@ -245,8 +245,8 @@ function ZoomByStoryID(story_id) {
 
 // parameter = {
 //     url: sheetsUrl,
-//     //command:"getLandmarksByStory",
-//     command: "getLandmarksByStory",
+//     //command:"get_landmarks_by_story_id",
+//     command: "get_landmarks_by_story_id",
 //     story_id: 2
 // };
 // $.get(appUrl, parameter, function (data) {
@@ -394,8 +394,8 @@ function onclickTitleShowMarker(location) {
 function GetCluster(story_id) {
     parameter = {
         url: sheetsUrl,
-        //command:"getLandmarksByStory",
-        command: "getLandmarksByStory",
+        //command:"get_landmarks_by_story_id",
+        command: "get_landmarks_by_story_id",
         story_id: story_id
     };
     $.get(appUrl, parameter, function(data) {

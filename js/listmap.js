@@ -24,7 +24,7 @@ function get_stories_by_keyword(keyword){
                   'link':data_array[i][3],
                   'story_id':data_array[i][1]
                 }
-                appendStoriesList(DivStoriesList, data_json.table[i], 'prepend');
+                append_stories_list(DivStoriesList, data_json.table[i], 'prepend');
               }
 
               switch(data_json.table[i].type_){
@@ -79,7 +79,7 @@ function get_stories_by_author(author){
                   'link':data_array[i][3],
                   'story_id':data_array[i][1]
                 }
-                appendStoriesList(DivStoriesList, data_json.table[i], 'prepend');
+                append_stories_list(DivStoriesList, data_json.table[i], 'prepend');
               }
               console.log(data_json.table[i].type_);
               switch(data_json.table[i].type_){
@@ -133,7 +133,7 @@ function get_stories_by_tag(tag){
                   'link':data_array[i][3],
                   'story_id':data_array[i][1]
                 }
-                appendStoriesList(DivStoriesList, data_json.table[i], 'prepend');
+                append_stories_list(DivStoriesList, data_json.table[i], 'prepend');
               }
 
               switch(data_json.table[i].type_){
