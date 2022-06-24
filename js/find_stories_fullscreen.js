@@ -304,20 +304,20 @@ function addmyappList(div_id_to_add, data_to_append, where_to_add, id_div) {
 }
 
 var global_markers;
-/*
 function addStoriesToLayer(locations) {
     //mymap.removeLayer(global_markers);
+    console.log(locations);
     var markers = L.markerClusterGroup();
     locations.map(item => L.marker(new L.LatLng(item.lat, item.lng)))
         .forEach((marker,i) => {
           markers.addLayer(marker);
-          marker.bindPopup("<b>"+ locations[i].name +"</b><br>" + locations[i].notes).openPopup();
+          marker.bindPopup("<b>"+ locations[i].name +"</b><br>" + locations[i].notes + "<br>" + "<a href=\"stories.html?story_id=" + locations[i].story_id + "\" target=\"__blank\">"+ data_json.table_stories[locations[i].story_id] +"</a>").openPopup();
           }
         );
     global_markers = markers;
     mymap.addLayer(global_markers)
 }
-*/
+
 // function ZoomToGroup(input, coor) {
 
 //     input.forEach((input, i) => {
@@ -390,7 +390,7 @@ function onclickTitleShowMarker(location) {
 
     mymap.addLayer(markers)
 }
-
+var gps_locations;
 function GetCluster(story_id) {
     parameter = {
         url: sheetsUrl,
@@ -402,7 +402,7 @@ function GetCluster(story_id) {
 
         var data_json = JSON.parse(data);
         console.log(data_json);
-        var gps_locations = [];
+        gps_locations = [];
 
         for (i in data_json.table) {
             gps_locations.push({
@@ -730,9 +730,11 @@ function initMap() {
                         link: data_json.table[i].link,
                         landmark_id: data_json.table[i].landmark_id,
                         notes: data_json.table[i].notes,
+                        story_id: data_json.table[i].story_id,
                     })
                 }
                 console.log(landmarks);
+                /*
                 for(story_id in landmarks){
                   $('#DivStoriesList').append("<b>" + data_json.table_stories[story_id] + "</b>" + '<br/>');
                   for(i in landmarks[story_id]){
@@ -746,12 +748,14 @@ function initMap() {
                   $('#DivStoriesList').append("<br/>");
                 }
 
+                */
+
                 //$('#DivStoriesList').append(data_json.table[i].name + '<br/>');
 
 
                 // onclickTitleShowMarker(gps_locations)
-                addStoriesToLayer(gps_locations)
 
+                addStoriesToLayer(gps_locations)
 
             })
         }
