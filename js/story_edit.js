@@ -476,27 +476,36 @@ function seekto(story_id, time) {
 
 }
 
-
+wizzard_content = '';
 function utility_proc() {
-    var content = $('#text-input-utility').val().split('\n');
-    console.log(content);
+    wizzard_content = $('#text-input-utility').val().split('\n');
+    //console.log(wizzard_content);
     var output_reg = '';
     var cnt = 1;
-    for (i in content) {
-        if(content[i].includes(':')){
-          if(content[i].split(' ').length == 2 & !isNaN(content[i].split(' ')[0].split(':')[0]) & !isNaN(content[i].split(' ')[0].split(':')[1])){
+    for (i in wizzard_content) {
+        //console.log(wizzard_content[i]);
+        if(wizzard_content[i] == '') {
+          //console.log('skip');
+          continue;
+        }
+        if(wizzard_content[i].includes(':')){
+          //console.log('timestamp name')
+          if(wizzard_content[i].split(/\s+/).length >= 2 & !isNaN(wizzard_content[i].split(' ')[0].split(':')[0]) & !isNaN(wizzard_content[i].split(' ')[0].split(':')[1])){
+            var input_list = wizzard_content[i].split(/\s+/);
+            var timestamp = input_list.shift();
             output_reg += '#\n';
-            output_reg += 'name ' + content[i].split(' ')[1] + '\n';
+            output_reg += 'name ' + input_list.join(' ') + '\n';
             output_reg += 'notes\n';
             output_reg += 'lat_lng 0,0\n';
-            output_reg += 'link '+ content[i].split(' ')[0] +'\n\n'
+            output_reg += 'link '+ timestamp +'\n\n'
           }
 
         }else{
-          if (content[i].trim() != '') {
+          //console.log('name');
+          if (wizzard_content[i].trim() != '') {
               //output_reg += cnt + '\n';
               output_reg += '#\n';
-              output_reg += 'name ' + content[i] + '\n';
+              output_reg += 'name ' + wizzard_content[i] + '\n';
               output_reg += 'notes\n';
               output_reg += 'lat_lng 0,0\n';
               output_reg += 'link 0:0\n\n'

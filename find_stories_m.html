@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Mobile tutorial - Leaflet</title>
+
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+			<script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
+<link rel="stylesheet" href="css/find_stories_m.css">
+<script src="js/find_stories_m.js"></script>
+	<style>body { padding: 0; margin: 0; } #map { height: 100%; width: 100vw; }</style>
+</head>
+<body>
+
+<div id='map'></div>
+
+<script>
+var mymap = L.map('map').fitWorld();
+
+var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(mymap);
+
+//var markers = L.markerClusterGroup();
+
+function onLocationFound(e) {
+	var radius = e.accuracy / 2;
+
+	//var locationMarker = L.marker(e.latlng).addTo(mymap)
+	//	.bindPopup('You are within ' + radius + ' meters from this point').openPopup();
+
+	//var locationCircle = L.circle(e.latlng, radius).addTo(mymap);
+}
+
+function onLocationError(e) {
+	alert(e.message);
+}
+
+mymap.on('locationerror', onLocationError);
+mymap.on('locationfound', onLocationFound);
+mymap.locate({setView: true, maxZoom: 16});
+var appUrl = 'https://script.google.com/macros/s/AKfycby-gL9w_PIzt4TDnqfpErNP1YTck93p4j7z1FTpt52bCkryg5Iu/exec';
+var sheetsUrl = 'https://docs.google.com/spreadsheets/d/1GNvkC8t3xua_ibN2GnnXJi-MXasuX5SXb4y1G6idFSc/edit#gid=1023127248';
+
+var sheetName = 'landmarks';
+
+parameter = {
+    url: sheetsUrl,
+    name: sheetName,
+    command: "getRecentStories",
+};
+function addStoriesToLayer(locations) {
+    //mymap.removeLayer(global_markers);
+    var markers = L.markerClusterGroup();
+    locations.map(item => L.marker(new L.LatLng(item.lat, item.lng)))
+        .forEach((marker,i) => {
+          markers.addLayer(marker);
+          marker.bindPopup("<b>"+ locations[i].name +"</b><br>" + locations[i].notes).openPopup();
+          }
+        );
+    global_markers = markers;
+    mymap.addLayer(global_markers)
+}
+mymap.on('moveend', function() {
+		console.log('zoom');
+		console.log(this.getZoom() + ' ' + this.getCenter() + ' ' + this.getBounds().getWest() + ' ' + this.getBounds().getEast() + ' ' + this.getBounds().getNorth() + ' ' + this.getBounds().getSouth());
+		if (this.getZoom() > 12) {
+				west = this.getBounds().getWest();
+				north = this.getBounds().getNorth();
+				east = this.getBounds().getEast();
+				south = this.getBounds().getSouth();
+				$.get(appUrl, {
+						url: sheetsUrl,
+						name: sheetName,
+						command: "getGPSByZone",
+						lat_south: south,
+						lat_north: north,
+						lng_west: west,
+						lng_east: east
+				}, function(data) {
+
+						data_json = JSON.parse(data);
+						console.log(data_json)
+						var gps_locations = [];
+						var landmarks = {};
+						for (i in data_json.table){
+								if(typeof(landmarks[data_json.table[i].story_id])=="undefined"){
+									landmarks[data_json.table[i].story_id] = [];
+									landmarks[data_json.table[i].story_id].push(data_json.table[i]);
+								}else{
+									landmarks[data_json.table[i].story_id].push(data_json.table[i]);
+								}
+								gps_locations.push({
+										lat: data_json.table[i].lat_lng.split(',')[0],
+										lng: data_json.table[i].lat_lng.split(',')[1],
+										name: data_json.table[i].name,
+										content: data_json.table[i].content,
+										link: data_json.table[i].link,
+										landmark_id: data_json.table[i].landmark_id,
+										notes: data_json.table[i].notes,
+								})
+						}
+						console.log(landmarks);
+						for(story_id in landmarks){
+							//$('#DivStoriesList').append("<b>" + data_json.table_stories[story_id] + "</b>" + '<br/>');
+							for(i in landmarks[story_id]){
+									var html_reg = '';
+									//html_reg+= "<a href=\"javascript:flyto(" + landmarks[story_id][i].lat_lng.split(',')[0] +", "+landmarks[story_id][i].lat_lng.split(',')[1]+")>"+landmarks[story_id][i].name+"</a>"
+									//$('#DivStoriesList').append(html_reg + '<br/>');
+									html_reg += "<a href=\"javascript:flyto("+ landmarks[story_id][i].lat_lng.split(',')[0] +","+ landmarks[story_id][i].lat_lng.split(',')[1] +")\">"
+									html_reg += landmarks[story_id][i].name + '</a><br/>';
+									//$('#DivStoriesList').append(html_reg);
+							}
+							//$('#DivStoriesList').append("<br/>");
+						}
+
+						//$('#DivStoriesList').append(data_json.table[i].name + '<br/>');
+
+
+						// onclickTitleShowMarker(gps_locations)
+						addStoriesToLayer(gps_locations)
+
+
+				})
+		}
+});
+</script>
+
+
+
+</body>
+</html>

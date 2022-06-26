@@ -1,5 +1,12 @@
 /* Always set the map height explicitly to define the size of the div
  * element that contains the map. */
+#gpstory_main {
+  width:20%;
+  //background-color:red;
+}
+.nav-link img {
+  width:50px;
+}
 
  .accordion-heading .accordion-toggle.collapsed {
        background-color:red; /* accordion background color */
@@ -48,7 +55,10 @@
 
 #TagList {
     width:15%;
-    background-color:#FCFCFC;
+    //background-color:yellow;
+    //display:none;
+
+//    background-color:#FCFCFC;
     right:30px;
     position: absolute;
     z-index:999;
