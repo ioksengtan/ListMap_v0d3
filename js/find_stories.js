@@ -304,7 +304,7 @@ function addmyappList(div_id_to_add, data_to_append, where_to_add, id_div) {
 }
 
 var global_markers;
-/*
+
 function addStoriesToLayer(locations) {
     //mymap.removeLayer(global_markers);
     var markers = L.markerClusterGroup();
@@ -317,7 +317,7 @@ function addStoriesToLayer(locations) {
     global_markers = markers;
     mymap.addLayer(global_markers)
 }
-*/
+
 // function ZoomToGroup(input, coor) {
 
 //     input.forEach((input, i) => {
