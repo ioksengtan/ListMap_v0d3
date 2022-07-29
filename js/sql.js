@@ -1,5 +1,5 @@
-var appUrl = 'https://script.google.com/macros/s/AKfycbzhDvz7kG2ghPV6xGdaFJLR2KboY4YUgaMouqauq3e13FGrkPx2/exec';
-var sheetsUrl = 'https://docs.google.com/spreadsheets/d/1Hy041ZoEGjRsVox03E55oGL8CMcHOXeuL0kqRcN1QV4/edit#gid=0';
+var appUrl = 'https://script.google.com/macros/s/AKfycbx1bqAa5nG7JA6mt0Xf0Im3CUYFLVtSymiFgpn3/exec';
+var sheetsUrl = 'https://docs.google.com/spreadsheets/d/1kzMM_-o1G-rf6eAWLm8HMy6JGfz2HxP05H3TcB_k3Zk/edit#gid=1264616887';
 //https://docs.google.com/spreadsheets/d/1GNvkC8t3xua_ibN2GnnXJi-MXasuX5SXb4y1G6idFSc/edit?usp=sharing
 var sheetName = 'data';
 
