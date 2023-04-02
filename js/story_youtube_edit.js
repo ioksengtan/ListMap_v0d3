@@ -1,6 +1,6 @@
 //$.getScript('http://www.youtube.com/iframe_api');
-var appUrl = 'https://script.google.com/macros/s/AKfycbx1bqAa5nG7JA6mt0Xf0Im3CUYFLVtSymiFgpn3/exec';
-var sheetsUrl = 'https://docs.google.com/spreadsheets/d/1kzMM_-o1G-rf6eAWLm8HMy6JGfz2HxP05H3TcB_k3Zk/edit#gid=1264616887';
+var appUrl = 'https://script.google.com/macros/s/AKfycby-gL9w_PIzt4TDnqfpErNP1YTck93p4j7z1FTpt52bCkryg5Iu/exec';
+var sheetsUrl = 'https://docs.google.com/spreadsheets/d/1GNvkC8t3xua_ibN2GnnXJi-MXasuX5SXb4y1G6idFSc/edit#gid=1023127248';
 //https://docs.google.com/spreadsheets/d/1GNvkC8t3xua_ibN2GnnXJi-MXasuX5SXb4y1G6idFSc/edit?usp=sharing
 var sheetName = 'landmarks';
 var scriptUrl = 'https:\/\/www.youtube.com\/s\/player\/87b9576a\/www-widgetapi.vflset\/www-widgetapi.js';

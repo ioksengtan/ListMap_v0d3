@@ -53,6 +53,7 @@ var youtube_players = {}
 var player;
 
 function onYouTubePlayerAPIReady() {
+    console.log('function:'+arguments.callee.name);
     /*
       player = new YT.Player('player', {
         height: '390',
@@ -69,6 +70,7 @@ function onYouTubePlayerAPIReady() {
 }
 
 function onPlayerStateChange(evt) {
+    console.log('function:'+arguments.callee.name);
     if (evt.data == 1) {
         // this will seek to a certain point when video starts
         // but you're better off using 'start' parameter
@@ -77,7 +79,7 @@ function onPlayerStateChange(evt) {
 }
 
 function onPlayerReady(evt) {
-
+    console.log('function:'+arguments.callee.name);
     // doesn't work here
     // player.seekTo(30);
 
@@ -86,7 +88,7 @@ function onPlayerReady(evt) {
 }
 
 function seekto(story_id, time) {
-    console.log('seekto');
+    console.log('function:'+arguments.callee.name);
     youtube_players[story_id].seekTo(time, true);
     //console.log('seekto:'+player+' '+time);
     //console.log('seekto:'+time);
@@ -94,8 +96,15 @@ function seekto(story_id, time) {
 
 }
 
-function append_stories_list(div_id_to_add, data_to_append, where_to_add, id_div) {
-    //console.log(data_to_append);
+function pop_menu(story_id){
+    console.log('function:'+arguments.callee.name);
+    console.log(story_id);
+    var popup = document.getElementById("myPopup_"+story_id);
+    popup.classList.toggle("show");
+}
+
+function append_stories_list(div_id_to_add, data_to_append, where_to_add) {
+    console.log('function:'+arguments.callee.name);
     myapp_what = data_to_append.what;
     myapp_where = data_to_append.where;
     myapp_title = data_to_append.title;
@@ -116,13 +125,15 @@ function append_stories_list(div_id_to_add, data_to_append, where_to_add, id_div
     html_reg += '     <h2 class=\"accordion-header\" id=\"heading_' + myapp_story_id + '\" style="padding:10px;font-size:14px">';
     html_reg += '       <button style="width:30px;float:right;height:100%;padding:0;background:white;box-shadow:none" class=\"accordion-button\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse_' + myapp_story_id + '\" aria-expanded=\"true\" aria-controls=\"collapse_' + myapp_story_id + '\">';
     html_reg += '       </button>';
+    html_reg += '<div class="popup" onclick="pop_menu('+myapp_story_id+')"><i class=\'fas fa-share-alt\'></i><div class="popuptext" id="myPopup_'+myapp_story_id+'"><a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a><a href=\"story_edit.html?story_id=' + myapp_story_id + '  \">(edit)</a></div></div>';
 
     switch (myapp_type_) {
         case 'podcast':
             html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> ' + '<img class="list_type_icon" src=img/podcast_icon.png>' + ' <a style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:get_landmarks_by_story_id(' + myapp_story_id + ')\">' + myapp_title + '</a> <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a>';
             break;
         case 'youtube':
-            html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> ' + '<img class="list_type_icon" src=img/youtube_icon.png>' + ' <a style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:get_landmarks_by_story_id(' + myapp_story_id + ')\">' + myapp_title + '</a> <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a><a href=\"story_edit.html?story_id=' + myapp_story_id + '  \">(edit)</a>';
+            //html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> ' + '<img class="list_type_icon" src=img/youtube_icon.png>' + ' <a style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:get_landmarks_by_story_id(' + myapp_story_id + ')\">' + myapp_title + '</a> <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a><a href=\"story_edit.html?story_id=' + myapp_story_id + '  \">(edit)</a>';
+            html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> ' + '<img class="list_type_icon" src=img/youtube_icon.png>' + ' <a style="color:#0d6efd;text-decoration:none;cursor:pointer" onclick=\"javascript:get_landmarks_by_story_id(' + myapp_story_id + ')\">' + myapp_title + '</a> ';
             //html_reg += '           <input id=\"genInput' + myapp_story_id + '\" class="groupinput" type=\"checkbox\"> '  + '<a class="story_title" style="color:#0d6efd;text-decoration:none;cursor:pointer;" onclick=\"javascript:get_landmarks_by_story_id(' + myapp_story_id + ')\">' + myapp_title + '</a>'+ '<b>youtube</b>'+' <a href=\"javascript:spec_func(' + myapp_story_id + ')\">(add)</a> <a href=\"story_youtube_edit.html?story_id='+myapp_story_id+'  \">(edit)</a>';
             break;
         case 'webpage':
@@ -173,8 +184,11 @@ function append_stories_list(div_id_to_add, data_to_append, where_to_add, id_div
 
     //console.log(html_reg);
     if (where_to_add == 'prepend') {
+        console.log('prepend')
         $(div_id_to_add).prepend(html_reg);
-    } else if (where_to_ad == 'append') {
+    } else if (where_to_add == 'append') {
+      console.log('append')
+      $(div_id_to_add).append(html_reg);
         //$(div_id_to_append).
     }
 
@@ -198,11 +212,27 @@ function get_landmarks_by_story_id(story_id) {
         console.log(data);
         console.log(story_id);
 
+		newformat_data = JSON.parse(data);
+		data_json_landmarks_by_story = {"table":[]};
+		for(var i in newformat_data){
+			if(i==0)continue;
+			data_json_landmarks_by_story.table.push(
+				{
+					lat:newformat_data[i][6],
+					lng:newformat_data[i][7],
+					name:newformat_data[i][0],
+					notes:newformat_data[i][4],
+					link:newformat_data[i][9],
+					landmark_id:newformat_data[i][1],
+				}
+			)
+		}
 
-        data_json_landmarks_by_story = JSON.parse(data);
+
+        //data_json_landmarks_by_story = JSON.parse(data);
 
         //dbg = data_json_landmarks_by_story;
-        var gps_locations = [];
+        gps_locations = [];
         content_reg = '';
         player_id = 'collapse_player_' + story_id;
         console.log(StoriesDict[story_id].type_);

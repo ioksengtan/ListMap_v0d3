@@ -1,5 +1,3 @@
-var appUrl = 'https://script.google.com/macros/s/AKfycbx1bqAa5nG7JA6mt0Xf0Im3CUYFLVtSymiFgpn3/exec';
-var sheetsUrl = 'https://docs.google.com/spreadsheets/d/1kzMM_-o1G-rf6eAWLm8HMy6JGfz2HxP05H3TcB_k3Zk/edit#gid=1264616887';
 
 var sheetName = 'landmarks';
 parameter = {
@@ -20,6 +18,7 @@ $(document).ready(
     });
 
 function renderMap() {
+	console.log('function:'+arguments.callee.name);
     var mymap = L.map('map').setView([25.1130643, 121.5227629], 7);
     console.log('test');
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -44,6 +43,7 @@ function renderMap() {
 }
 
 function addMarker() {
+	console.log('function:'+arguments.callee.name);
     //google.maps.Marker.prototype.getDraggable = function() { return false; };
     marker = new google.maps.Marker({
         position: {
@@ -58,6 +58,7 @@ function addMarker() {
 
 
 function getGPSbyStoryID(story_id) {
+	console.log('function:'+arguments.callee.name);
     //console.log(story_id);
     // let point = document.querySelectorAll('leaflet-marker-icon')
     // point.forEach(a => {
@@ -126,7 +127,7 @@ function getGPSbyStoryID(story_id) {
 }
 
 function getGPSbyStoryID2(story_id) {
-
+	console.log('function:'+arguments.callee.name);
     // let point = document.querySelectorAll('leaflet-marker-icon')
     // point.forEach(a => {
     //     a.style.visibility = 'hidden'
@@ -186,6 +187,7 @@ function getGPSbyStoryID2(story_id) {
 }
 
 function ZoomByStoryID(story_id) {
+	console.log('function:'+arguments.callee.name);
     console.log(story_id);
     // let point = document.querySelectorAll('leaflet-marker-icon')
     // point.forEach(a => {
@@ -260,6 +262,7 @@ function ZoomByStoryID(story_id) {
 // });
 
 function addmyappList(div_id_to_add, data_to_append, where_to_add, id_div) {
+	console.log('function:'+arguments.callee.name);
     //console.log(div_id_to_add);
     //console.log(data_to_append);
     myapp_what = data_to_append.what;
@@ -306,6 +309,7 @@ function addmyappList(div_id_to_add, data_to_append, where_to_add, id_div) {
 var global_markers;
 
 function addStoriesToLayer(locations) {
+	console.log('function:'+arguments.callee.name);
     //mymap.removeLayer(global_markers);
     var markers = L.markerClusterGroup();
     locations.map(item => L.marker(new L.LatLng(item.lat, item.lng)))
@@ -332,6 +336,7 @@ function addStoriesToLayer(locations) {
 
 
 function ShowHideMarker(input, loc, opt) {
+	console.log('function:'+arguments.callee.name);
 
     input.addEventListener('click', () => {
         if (input.checked === false) {
@@ -343,6 +348,7 @@ function ShowHideMarker(input, loc, opt) {
 }
 
 function SingleZoom(name, loc) {
+	console.log('function:'+arguments.callee.name);
     name.addEventListener('click', () => {
 
         mymap.flyTo(loc._latlng, 16, {
@@ -353,6 +359,7 @@ function SingleZoom(name, loc) {
 }
 
 function ZoomToGroup(coor) {
+	console.log('function:'+arguments.callee.name);
 
     var markers = L.markerClusterGroup();
     //var landmarks_layergroup = L.layerGroup();
@@ -370,6 +377,7 @@ function ZoomToGroup(coor) {
 }
 
 function ShowHideCluster(location, input) {
+	console.log('function:'+arguments.callee.name);
     var markers = L.markerClusterGroup();
     input.addEventListener('click', () => {
         if (input.checked === false) {
@@ -385,13 +393,17 @@ function ShowHideCluster(location, input) {
 }
 
 function onclickTitleShowMarker(location) {
+	console.log('function:'+arguments.callee.name);
     var markers = L.markerClusterGroup();
     markers.addLayer(location)
 
     mymap.addLayer(markers)
 }
 
+
 function GetCluster(story_id) {
+	console.log('function:'+arguments.callee.name);
+
     parameter = {
         url: sheetsUrl,
         //command:"get_landmarks_by_story_id",
@@ -425,6 +437,7 @@ function GetCluster(story_id) {
 }
 
 function MultiCheck(id, val) {
+	console.log('function:'+arguments.callee.name);
     let childIcon = document.querySelectorAll(`.chilInput${id}`)
     childIcon.forEach(child => {
         child.checked = val
@@ -432,7 +445,7 @@ function MultiCheck(id, val) {
 }
 
 function refreshMap(locations, sid) {
-
+	console.log('function:'+arguments.callee.name);
     // if(markerIcon.length !== locations.length) {
     //     let test = markerIcon[0]
     //     console.log(markerIcon)
@@ -529,7 +542,7 @@ mymap = L.map('map', {
 }
 
 function refreshMap2(locations, sid) {
-
+	console.log('function:'+arguments.callee.name);
 
     var streets = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -599,6 +612,7 @@ function refreshMap2(locations, sid) {
 
 
 function refreshGMap(locations) {
+	console.log('function:'+arguments.callee.name);
     map = new google.maps.Map(document.getElementById("map"), {
         zoom: 8,
         center: {
@@ -660,6 +674,7 @@ function refreshGMap(locations) {
 
 
 function initMap() {
+	console.log('function:'+arguments.callee.name);
     //mymap = L.map('map').setView([25.1130643, 121.5227629], 7);
     //console.log('test');
     var streets = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
@@ -684,7 +699,8 @@ function initMap() {
         layers: [streets]
     });
 
-    mymap.on('zoomend', function() {
+    mymap.on('zoomend', function mymap_on_zoomend() {
+		console.log('function:'+arguments.callee.name);
         if(this.getZoom()>11){
         console.log('zoom');
         console.log(this.getZoom() + ' ' + this.getCenter() + ' ' + this.getBounds().getWest());
@@ -692,7 +708,8 @@ function initMap() {
     });
 
 
-    mymap.on('moveend', function() {
+    mymap.on('moveend', function mymap_on_moveend() {
+		console.log('function:'+arguments.callee.name);
       $('#DivStoriesList').empty();
         console.log('zoom');
         console.log(this.getZoom() + ' ' + this.getCenter() + ' ' + this.getBounds().getWest() + ' ' + this.getBounds().getEast() + ' ' + this.getBounds().getNorth() + ' ' + this.getBounds().getSouth());
@@ -704,18 +721,45 @@ function initMap() {
             $.get(appUrl, {
                 url: sheetsUrl,
                 name: sheetName,
-                command: "getGPSByZone",
+                command: "get_landmarks_by_zone",
                 lat_south: south,
                 lat_north: north,
                 lng_west: west,
                 lng_east: east
             }, function(data) {
                 $('#DivStoriesList').empty();
-                data_json = JSON.parse(data);
-                console.log(data_json)
+                new_format_data_json = JSON.parse(data);
+                console.log(new_format_data_json);
                 var gps_locations = [];
                 var landmarks = {};
-                for (i in data_json.table){
+                data_json = {
+                  'table':{},
+                  'table_stories':{}
+                };
+
+                for (var i in new_format_data_json.stories){
+                  if(i==0)continue;
+                  data_json.table_stories[new_format_data_json.stories[i][1]] = new_format_data_json.stories[i][0];
+                }
+
+                for (var i in new_format_data_json.landmarks){
+                    if(i==0){
+                      continue;
+                    }else{
+                        data_json.table[i] = {
+                          story_id : new_format_data_json.landmarks[i][11],
+                          lat_lng : new_format_data_json.landmarks[i][6] + ',' + new_format_data_json.landmarks[i][7],
+                          name:new_format_data_json.landmarks[i][0],
+                          content:new_format_data_json.landmarks[i][4],
+                          link:new_format_data_json.landmarks[i][9],
+                          landmark_id:new_format_data_json.landmarks[i][1],
+                          notes:new_format_data_json.landmarks[i][4],
+                        }
+                    //console.log(data_json.table);
+                    }
+
+
+
                     if(typeof(landmarks[data_json.table[i].story_id])=="undefined"){
                       landmarks[data_json.table[i].story_id] = [];
                       landmarks[data_json.table[i].story_id].push(data_json.table[i]);
@@ -767,6 +811,7 @@ function initMap() {
 }
 
 function initGMap() {
+	console.log('function:'+arguments.callee.name);
     map = new google.maps.Map(document.getElementById("map"), {
         zoom: 8,
         center: {

@@ -52,6 +52,34 @@
   background-color: #EEEEEE;
 
 }
+#TagList ul {
+   height: 700px;
+    overflow:hiden;
+    scrollbar-width:thin;
+    padding-right:50px;
+}
+#TagList ul::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+#TagList ul::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: #F5F5F5;
+}
+
+#TagList ul::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #555;
+}
+#TagList ul:hover {
+  overflow-y: scroll;
+}
 
 #TagList {
     width:15%;
@@ -62,7 +90,6 @@
     right:30px;
     position: absolute;
     z-index:999;
-    overflow:auto;
     font-size:14px;
     padding-top:10px;
 
@@ -304,4 +331,64 @@ margin-top:10px;
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
   background-color: #3e8e41;
+}
+
+
+/* Popup container - can be anything you want */
+.popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* The actual popup */
+.popup .popuptext {
+  visibility: hidden;
+  width: 160px;
+  background-color: #ececec;
+  color: #fff;
+  text-align: right;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1000000;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -80px;
+  text-decoration: none;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+  text-decoration: none;
+}
+
+/* Toggle this class - hide and show the popup */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;} 
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
 }

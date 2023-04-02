@@ -95,6 +95,7 @@ function seekto(story_id, time) {
 }
 
 function append_stories_list(div_id_to_add, data_to_append, where_to_add, id_div) {
+    console.log('find_storieslist_fullscreen_map.js')
     //console.log(data_to_append);
     myapp_what = data_to_append.what;
     myapp_where = data_to_append.where;

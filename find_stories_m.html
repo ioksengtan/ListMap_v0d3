@@ -15,11 +15,38 @@
 <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 			<script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js"></script>
 <link rel="stylesheet" href="css/find_stories_m.css">
+<script src="js/apps.js"></script>
 <script src="js/find_stories_m.js"></script>
+<script src="js/map.js"></script>
 	<style>body { padding: 0; margin: 0; } #map { height: 100%; width: 100vw; }</style>
+
+	<script type="text/javascript" src="js/leaflet-control-credits.js"></script>
+<link rel="stylesheet" href="css/leaflet-control-credits.css" />
+
 </head>
 <body>
-
+	<div class='container example-two'>
+	  <header class='example-one-header scroll'>
+	    <span class='logo'>Listmap</span>
+	    <nav class='vertical-align-middle'>
+	      <span class='nav-item'>展覽/活動</span>
+	      <span class='nav-item'>漫遊</span>
+	      <span class='nav-item'>優惠兌換</span>
+	      <span class='nav-item'>會員</span>
+	    </nav>
+	  </header>
+	</div>
+	<div class='container example-one'>
+	  <header class='example-one-header scroll'>
+	    <nav class='vertical-align-middle'>
+	      <span class='nav-item'>景點</span>
+	      <span class='nav-item'>餐廳</span>
+	      <span class='nav-item'>住宿</span>
+	      <span class='nav-item'>交通</span>
+	      <span class='nav-item'>博物館</span>
+	    </nav>
+	  </header>
+	</div>
 <div id='map'></div>
 
 <script>
@@ -29,6 +56,57 @@ var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 	maxZoom: 19,
 	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(mymap);
+
+var credctrl = L.controlCredits({
+    image: "img/greeninfo.png",
+    link: "stories.html",
+    text: "stories"
+}).addTo(mymap);
+
+// start
+var customControl =  L.Control.extend({
+
+ options: {
+   position: 'topleft'
+   // control position - allowed: 'topleft', 'topright', 'bottomleft', 'bottomright'
+ },
+
+ onAdd: function (map) {
+   var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+
+   container.style.backgroundColor = 'white';
+   container.style.backgroundImage = "url(img/paris.png)";
+   container.style.backgroundSize = "50px 50px";
+   container.style.width = '50px';
+   container.style.height = '50px';
+
+   container.onclick = function(){
+       $(function () {
+				 zoomto(loc = {'lat': 48.86281668431866,'lng': 2.3414038056525746}, zoom = 16);
+
+				 /*
+           $.ajax({
+           type: 'GET',
+           url: "https://ptx.transportdata.tw/MOTC/v2/Bus/RealTimeByFrequency/InterCity/9018?$filter=Direction%20eq%20'0'&$top=150&$format=JSON",
+           dataType: 'json',
+           headers: zoomto(),
+           success: function (Data) {
+               //showBusWay2(Data);
+               //console.log(chosen);
+           }
+           });
+					 */
+       }
+
+		 );
+       chosen = 0 ;
+   }
+   return container;
+ }
+});
+mymap.addControl(new customControl());
+
+// end
 
 //var markers = L.markerClusterGroup();
 function getPosition(position) {
@@ -62,8 +140,7 @@ function onLocationError(e) {
 mymap.on('locationerror', onLocationError);
 mymap.on('locationfound', onLocationFound);
 mymap.locate({setView: true, maxZoom: 16});
-var appUrl = 'https://script.google.com/macros/s/AKfycby-gL9w_PIzt4TDnqfpErNP1YTck93p4j7z1FTpt52bCkryg5Iu/exec';
-var sheetsUrl = 'https://docs.google.com/spreadsheets/d/1GNvkC8t3xua_ibN2GnnXJi-MXasuX5SXb4y1G6idFSc/edit#gid=1023127248';
+
 
 var sheetName = 'landmarks';
 
@@ -81,15 +158,134 @@ function clean_map() {
  //console.log(layer);
 });
 }
-function addStoriesToLayer(locations) {
+function addStoriesToLayer(landmarks) {
+		console.log(landmarks);
     //mymap.removeLayer(global_markers);
     var markers = L.markerClusterGroup();
-    locations.map(item => L.marker(new L.LatLng(item.lat, item.lng)))
-        .forEach((marker,i) => {
+		var icons = {};
+		icons['default'] = L.icon({
+    iconUrl: 'img/leaf-green.png',
+    shadowUrl: 'img/leaf-shadow.png',
+
+    iconSize:     [38, 95], // size of the icon
+    shadowSize:   [50, 64], // size of the shadow
+    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    shadowAnchor: [4, 62],  // the same for the shadow
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+		icons['museum'] = L.icon({
+			iconUrl: 'img/leaf-museum.png',
+			//shadowUrl: 'img/leaf-shadow.png',
+
+			iconSize:     [38, 95], // size of the icon
+			shadowSize:   [50, 64], // size of the shadow
+			iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+			shadowAnchor: [4, 62],  // the same for the shadow
+			popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+			});
+	icons['hotel'] = L.icon({
+    iconUrl: 'img/leaf-hotel.png',
+    //shadowUrl: 'img/leaf-shadow.png',
+
+    iconSize:     [38, 95], // size of the icon
+    shadowSize:   [50, 64], // size of the shadow
+    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    shadowAnchor: [4, 62],  // the same for the shadow
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+		icons['traffic'] = L.icon({
+			iconUrl: 'img/leaf-traffic.png',
+			//shadowUrl: 'img/leaf-shadow.png',
+
+			iconSize:     [38, 95], // size of the icon
+			shadowSize:   [50, 64], // size of the shadow
+			iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+			shadowAnchor: [4, 62],  // the same for the shadow
+			popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+			});
+		icons['view'] = L.icon({
+			iconUrl: 'img/leaf-view.png',
+			//shadowUrl: 'img/leaf-shadow.png',
+
+			iconSize:     [38, 95], // size of the icon
+			shadowSize:   [50, 64], // size of the shadow
+			iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+			shadowAnchor: [4, 62],  // the same for the shadow
+			popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+			});
+		icons['food'] = L.icon({
+	    iconUrl: 'img/leaf-food.png',
+	    //shadowUrl: 'img/leaf-shadow.png',
+
+	    iconSize:     [38, 95], // size of the icon
+	    shadowSize:   [50, 64], // size of the shadow
+	    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+	    shadowAnchor: [4, 62],  // the same for the shadow
+	    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+	    });
+		var defaultIcon = L.icon();
+		tmp_markers = [];
+		for (id_landmark in landmarks) {
+			landmark = landmarks[id_landmark];
+
+			if(landmark.tags.includes('food')){
+				tmp_markers.push(L.marker(new L.LatLng(landmark.lat, landmark.lng),{icon:icons['food']}))
+			}else if(landmark.tags.includes('museum')){
+				tmp_markers.push(L.marker(new L.LatLng(landmark.lat, landmark.lng),{icon:icons['museum']}))
+			}else if(landmark.tags.includes('view')){
+				tmp_markers.push(L.marker(new L.LatLng(landmark.lat, landmark.lng),{icon:icons['view']}))
+			}else if(landmark.tags.includes('traffic')){
+				tmp_markers.push(L.marker(new L.LatLng(landmark.lat, landmark.lng),{icon:icons['traffic']}))
+			}else if(landmark.tags.includes('hotel')){
+				tmp_markers.push(L.marker(new L.LatLng(landmark.lat, landmark.lng),{icon:icons['hotel']}))
+			}
+			//
+			else if(landmark.name.includes('博物館') | landmark.name.includes('歌劇院') ){
+				tmp_markers.push(L.marker(new L.LatLng(landmark.lat, landmark.lng),{icon:icons['museum']}))
+			}else if(landmark.name.includes('市場') | landmark.name.includes('公園') | landmark.name.includes('廣場')){
+				tmp_markers.push(L.marker(new L.LatLng(landmark.lat, landmark.lng),{icon:icons['view']}))
+			}else if(landmark.name.includes('飯糰') |landmark.name.includes('私房菜') | landmark.name.includes('咖啡') | landmark.name.includes('可頌')  | landmark.name.includes('鰻魚') | landmark.name.includes('食堂') | landmark.name.includes('飯店') | landmark.name.includes('PIZZA') | landmark.name.includes('古早味')  ){
+				tmp_markers.push(L.marker(new L.LatLng(landmark.lat, landmark.lng),{icon:icons['food']}))
+			}else if(landmark.name.includes('酒店')   ){
+				tmp_markers.push(L.marker(new L.LatLng(landmark.lat, landmark.lng),{icon:icons['hotel']}))
+			}
+			//
+			else if(landmark.story.includes('米其林') | landmark.story.includes('餐廳') | landmark.story.includes('咖啡') | landmark.story.includes('海產') | landmark.story.includes('美食') ){
+				tmp_markers.push(L.marker(new L.LatLng(landmark.lat, landmark.lng),{icon:icons['food']}))
+			}else if(landmark.story.includes('書店') | landmark.story.includes('文具店') | landmark.story.includes('景點')){
+				tmp_markers.push(L.marker(new L.LatLng(landmark.lat, landmark.lng),{icon:icons['view']}))
+			}else if(landmark.story.includes('住宿')){
+				tmp_markers.push(L.marker(new L.LatLng(landmark.lat, landmark.lng),{icon:icons['hotel']}))
+			}else{
+				tmp_markers.push(L.marker(new L.LatLng(landmark.lat, landmark.lng)))
+
+			}
+
+		}
+		tmp_markers.forEach((marker,i) => {
           markers.addLayer(marker);
-          marker.bindPopup("<b>"+ locations[i].name +"</b><br>" + locations[i].notes).openPopup();
+					var popup_text = "";
+					popup_text += "<b>landmark:"+ landmarks[i].name + "</b><br>";
+					popup_text += "<b>story:</b><a href=\"stories.html\">" + data_json.table_stories[landmarks[i].story_id] +"</a><br>";
+					popup_text += "<b>description</b>:" +  landmarks[i].notes
+          marker.bindPopup(popup_text).openPopup();
           }
         );
+		/*
+    landmarks.map(landmark =>
+				L.marker(new L.LatLng(landmark.lat, landmark.lng),{icon:icons[landmark.tags]})
+
+	)
+		.forEach((marker,i) => {
+          markers.addLayer(marker);
+					var popup_text = "";
+					popup_text += "<b>landmark:"+ landmarks[i].name + "</b><br>";
+					popup_text += "<b>story:</b><a href=\"stories.html\">" + data_json.table_stories[landmarks[i].story_id] +"</a><br>";
+					popup_text += "<b>description</b>:" +  landmarks[i].notes
+          marker.bindPopup(popup_text).openPopup();
+          }
+        );
+				*/
     global_markers = markers;
     mymap.addLayer(global_markers)
 }
@@ -105,18 +301,75 @@ mymap.on('moveend', function() {
 				$.get(appUrl, {
 						url: sheetsUrl,
 						name: sheetName,
-						command: "getGPSByZone",
+						command: "get_landmarks_by_zone",
 						lat_south: south,
 						lat_north: north,
 						lng_west: west,
 						lng_east: east
 				}, function(data) {
+/*
+new_format_data_json = JSON.parse(data);
+console.log(new_format_data_json);
+var gps_locations = [];
+var landmarks = {};
+data_json = {
+	'table':{},
+	'table_stories':{}
+};
 
-						data_json = JSON.parse(data);
-						console.log(data_json)
-						var gps_locations = [];
+for (var i in new_format_data_json.stories){
+	if(i==0)continue;
+	data_json.table_stories[i] = new_format_data_json.stories[i][0];
+}
+
+for (var i in new_format_data_json.landmarks){
+		if(i==0){
+			continue;
+		}else{
+				data_json.table[i] = {
+					story_id : new_format_data_json.landmarks[i][11],
+					lat_lng : new_format_data_json.landmarks[i][6] + ',' + new_format_data_json.landmarks[i][7],
+					name:new_format_data_json.landmarks[i][0],
+					content:new_format_data_json.landmarks[i][4],
+					link:new_format_data_json.landmarks[i][9],
+					landmark_id:new_format_data_json.landmarks[i][1],
+					notes:new_format_data_json.landmarks[i][4],
+				}
+		//console.log(data_json.table);
+		}
+
+*/
+						new_format_data_json = JSON.parse(data);
+						//data_json = JSON.parse(data);
+						//console.log(data_json)
+						gps_locations = [];
 						var landmarks = {};
-						for (i in data_json.table){
+						data_json = {
+							'table':{},
+							'table_stories':{}
+						};
+
+						for (var i in new_format_data_json.stories){
+							if(i==0)continue;
+							data_json.table_stories[new_format_data_json.stories[i][1]] = new_format_data_json.stories[i][0];
+						}
+
+						for (var i in new_format_data_json.landmarks){
+								if(i==0){
+									continue;
+								}else{
+										data_json.table[i] = {
+											story_id : new_format_data_json.landmarks[i][11],
+											lat_lng : new_format_data_json.landmarks[i][6] + ',' + new_format_data_json.landmarks[i][7],
+											name:new_format_data_json.landmarks[i][0],
+											content:new_format_data_json.landmarks[i][4],
+											link:new_format_data_json.landmarks[i][9],
+											landmark_id:new_format_data_json.landmarks[i][1],
+											notes:new_format_data_json.landmarks[i][4],
+											tags:new_format_data_json.landmarks[i][2],
+										}
+								//console.log(data_json.table);
+								}
 								if(typeof(landmarks[data_json.table[i].story_id])=="undefined"){
 									landmarks[data_json.table[i].story_id] = [];
 									landmarks[data_json.table[i].story_id].push(data_json.table[i]);
@@ -131,6 +384,9 @@ mymap.on('moveend', function() {
 										link: data_json.table[i].link,
 										landmark_id: data_json.table[i].landmark_id,
 										notes: data_json.table[i].notes,
+										story_id: data_json.table[i].story_id,
+										tags: data_json.table[i].tags,
+										story: data_json.table_stories[data_json.table[i].story_id],
 								})
 						}
 						console.log(landmarks);

@@ -1,6 +1,4 @@
-//$.getScript('http://www.youtube.com/iframe_api');
-var appUrl = 'https://script.google.com/macros/s/AKfycbx1bqAa5nG7JA6mt0Xf0Im3CUYFLVtSymiFgpn3/exec';
-var sheetsUrl = 'https://docs.google.com/spreadsheets/d/1kzMM_-o1G-rf6eAWLm8HMy6JGfz2HxP05H3TcB_k3Zk/edit#gid=1264616887';
+
 //https://docs.google.com/spreadsheets/d/1GNvkC8t3xua_ibN2GnnXJi-MXasuX5SXb4y1G6idFSc/edit?usp=sharing
 var sheetName = 'landmarks';
 var scriptUrl = 'https:\/\/www.youtube.com\/s\/player\/87b9576a\/www-widgetapi.vflset\/www-widgetapi.js';
@@ -75,7 +73,7 @@ function onYouTubePlayerAPIReady() {
 }
 
 function update_db() {
-    console.log('update_db');
+    console.log('function:'+arguments.callee.name);
     landmarks_new_json = [];
     landmarks_to_update_json = {};
     for (let [key, value] of Object.entries(LandmarkdView.new)) {
@@ -153,6 +151,7 @@ function update_db() {
 }
 
 function utility() {
+    console.log('function:'+arguments.callee.name);
     if (utility_display) {
         utility_display = false;
         $('#utility').hide();
@@ -183,7 +182,7 @@ function dragElement(elmnt) {
     document.getElementById("story_link_preview").onmousedown = dragMouseDown;
 
     function dragMouseDown(e) {
-        console.log('dragMouseDown');
+        console.log('function:'+arguments.callee.name);
         e = e || window.event;
         e.preventDefault();
         // get the mouse cursor position at startup:
@@ -195,6 +194,7 @@ function dragElement(elmnt) {
     }
 
     function elementDrag(e) {
+        console.log('function:'+arguments.callee.name);
         e = e || window.event;
         e.preventDefault();
         // calculate the new cursor position:
@@ -219,7 +219,8 @@ $(document).ready(
     function() {
         story_is_delete = "";
         $('#webpage_id').hide();
-        $('#utility').hide()
+        $('#utility').hide();
+        $('#story_link_preview').hide()
         dragElement(document.getElementById("mydiv"));
         dragElement(document.getElementById("story_link_preview"));
         //get_landmarks_by_story_id(164);
@@ -258,7 +259,7 @@ $(document).ready(
                     $.get(appUrl, parameter, function(data) {
                         $('#status').html('')
                         data_json = JSON.parse(data);
-                        console.log(data);
+                        console.log(data_json);
                         var link = data_json.story[1][3];
                         story_link = data_json.story[1][3];
                         story_type_ = data_json.story[1][2];
@@ -286,17 +287,16 @@ $(document).ready(
                         }
                         output_reg = '';
 
-
                         for (var i in data_json.landmarks) {
                             //console.log(i);
                             if (i != 0) {
                                 var name = data_json.landmarks[i][0];
-                                var landmark_tags = data_json.landmarks[i][1];
-                                var notes = data_json.landmarks[i][3];
-                                var lat_lng = data_json.landmarks[i][5];
-                                var landmark_id = data_json.landmarks[i][9];
-                                var is_delete = data_json.landmarks[i][6];
-                                var landmark_link = String(data_json.landmarks[i][8]);
+                                var landmark_tags = data_json.landmarks[i][2];
+                                var notes = data_json.landmarks[i][4];
+                                var lat_lng = data_json.landmarks[i][6]+','+data_json.landmarks[i][7];
+                                var landmark_id = data_json.landmarks[i][1];
+                                var is_delete = data_json.landmarks[i][8];
+                                var landmark_link = String(data_json.landmarks[i][9]);
                                 var num_landmark_links = landmark_link.split(',').length;
                                 var str_link = '';
                                 for(var landmark_link_i = 0; landmark_link_i<num_landmark_links; landmark_link_i++){
@@ -320,7 +320,7 @@ $(document).ready(
                         switch (story_type_) {
                             case 'youtube':
                                 $('#webpage_id').hide();
-                                get_landmarks_by_story_id(0);
+                                get_landmarks_by_story_id(1);
                                 break;
                             case 'webpage':
                                 console.log('webpage');
@@ -385,7 +385,7 @@ $(document).ready(
 
 var markers = [];
 function preview_link(){
-  console.log('preview_link');
+    console.log('function:'+arguments.callee.name);
   if (story_link_preview_display) {
       story_link_preview_display = false;
       $('#story_link_preview').hide()
@@ -396,6 +396,7 @@ function preview_link(){
 
 }
 function text_input_on_change() {
+    console.log('function:'+arguments.callee.name);
     //preview.innerHTML = "";
     content = doc.getValue();
     //console.log(content);
@@ -478,6 +479,7 @@ function seekto(story_id, time) {
 
 wizzard_content = '';
 function utility_proc() {
+    console.log('function:'+arguments.callee.name);
     wizzard_content = $('#text-input-utility').val().split('\n');
     //console.log(wizzard_content);
     var output_reg = '';
@@ -519,6 +521,7 @@ function utility_proc() {
 }
 
 function str2view(content) {
+    console.log('function:'+arguments.callee.name);
     var cmd = content.split('\n');
     var LandmarkdView = {};
     LandmarkdView.to_update = {};
@@ -562,7 +565,7 @@ function str2view(content) {
             //console.log(cmd_list);
             cmd_list.shift();
             var content = cmd_list.join(' ');
-            console.log(content);
+            //console.log(content);
             debug = content;
             if(header == 'lat_lng'){
                 if(content.includes('www.google.com')){
@@ -600,6 +603,7 @@ function str2view(content) {
 }
 
 function onPlayerStateChange(evt) {
+    console.log('function:'+arguments.callee.name);
     if (evt.data == 1) {
         // this will seek to a certain point when video starts
         // but you're better off using 'start' parameter
@@ -617,7 +621,7 @@ function onPlayerReady(evt) {
 }
 
 function seekto(story_id, time) {
-    console.log('seekto');
+    console.log('function:'+arguments.callee.name);
     youtube_players[story_id].seekTo(time, true);
     //console.log('seekto:'+player+' '+time);
     //console.log('seekto:'+time);
@@ -626,7 +630,7 @@ function seekto(story_id, time) {
 }
 
 function append_stories_list(div_id_to_add, data_to_append, where_to_add, id_div) {
-    //console.log(data_to_append);
+    console.log('function:'+arguments.callee.name);
     myapp_what = data_to_append.what;
     myapp_where = data_to_append.where;
     myapp_title = data_to_append.title;
@@ -703,6 +707,7 @@ function append_stories_list(div_id_to_add, data_to_append, where_to_add, id_div
 }
 
 function YoutubePlayerRender(video_id) {
+    console.log('function:'+arguments.callee.name);
     youtube_players[0] = new YT.Player('collapse_player_0', {
         height: '600',
         width: '900',
@@ -721,7 +726,7 @@ function YoutubePlayerRender(video_id) {
 }
 
 function get_landmarks_by_story_id(story_id) {
-    console.log('get_landmarks_by_story_id');
+    console.log('function:'+arguments.callee.name);
     //console.log(story_id);
     parameter = {
         url: sheetsUrl,
@@ -749,7 +754,10 @@ function get_landmarks_by_story_id(story_id) {
         //console.log(content_reg)
         test_str = '#collapse_' + story_id;
         $('#collapse_ul_' + story_id).html(content_reg);
+        console.log(gps_locations);
+        console.log(story_id);
         UpdateMap(gps_locations, story_id);
+
 
         let markerIcon = document.querySelectorAll('.leaflet-marker-icon')
         let markerShadow = document.querySelectorAll('.leaflet-marker-shadow')

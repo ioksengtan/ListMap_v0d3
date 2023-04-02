@@ -1,5 +1,5 @@
-var appUrl = 'https://script.google.com/macros/s/AKfycbx1bqAa5nG7JA6mt0Xf0Im3CUYFLVtSymiFgpn3/exec';
-var sheetsUrl = 'https://docs.google.com/spreadsheets/d/1kzMM_-o1G-rf6eAWLm8HMy6JGfz2HxP05H3TcB_k3Zk/edit#gid=1264616887';
+var appUrl = 'https://script.google.com/macros/s/AKfycby-gL9w_PIzt4TDnqfpErNP1YTck93p4j7z1FTpt52bCkryg5Iu/exec';
+var sheetsUrl = 'https://docs.google.com/spreadsheets/d/1GNvkC8t3xua_ibN2GnnXJi-MXasuX5SXb4y1G6idFSc/edit#gid=1023127248';
 
 var sheetName = 'landmarks';
 parameter = {
@@ -343,6 +343,7 @@ function ShowHideMarker(input, loc, opt) {
 }
 
 function SingleZoom(name, loc) {
+    console.log('function:'+arguments.callee.name);
     name.addEventListener('click', () => {
 
         mymap.flyTo(loc._latlng, 16, {
@@ -704,7 +705,7 @@ function initMap() {
             $.get(appUrl, {
                 url: sheetsUrl,
                 name: sheetName,
-                command: "getGPSByZone",
+                command: "get_landmarks_by_zone",
                 lat_south: south,
                 lat_north: north,
                 lng_west: west,

@@ -9,6 +9,7 @@ var display_var = (input)=>{
 
 
 var slidebar_on = (input)=>{
+	console.log('function:'+arguments.callee.name);
 	console.log(input);
 	forfun = input;
 	var new_var = {'name':input.name, 'value':eval(input.value)};

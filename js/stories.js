@@ -1,5 +1,3 @@
-var appUrl = 'https://script.google.com/macros/s/AKfycbx1bqAa5nG7JA6mt0Xf0Im3CUYFLVtSymiFgpn3/exec';
-var sheetsUrl = 'https://docs.google.com/spreadsheets/d/1kzMM_-o1G-rf6eAWLm8HMy6JGfz2HxP05H3TcB_k3Zk/edit#gid=1264616887';
 var sheetName = 'landmarks';
 
 StoriesDict = {}
@@ -15,8 +13,7 @@ $(document).ready(
             i18n
         }).$mount('#dropdown')
         $('#text-input-story').keydown(function(e) {
-            if(e.which == 13) {
-                // Enter was pressed. Run your code.
+            if(e.which == 13) {// Enter was pressed. Run your code.
                 story_content = $('#text-input-story').val().trim();
                 //$('#text-input-story').val("");
                 $(this).val('').focus();
@@ -35,6 +32,7 @@ $(document).ready(
                   $('#status').html('processing...')
                   $.get(appYoutube, function(data) {
                       $('#status').html('');
+                      console.log(data);
                       //tmp = data;
                       youtube_title = data.items[0].snippet.title;
                       youtube_channel = data.items[0].snippet.channelTitle;
@@ -44,6 +42,7 @@ $(document).ready(
                       //get_landmarks_by_story_id(0);
                       data_to_append.type_ = 'youtube';
                       data_to_append.title = youtube_title
+                      var current = new Date();
 
                       var parameter = {
                           url: sheetsUrl,
@@ -53,8 +52,10 @@ $(document).ready(
                           link: "https://www.youtube.com/watch?v=" + videoId,
                           //landmarks: JSON.stringify(landmarks_json),
                           author: youtube_channel,
-                          tags:''
+                          tags:'',
+                          update_timestamp:current.toString(),
                       }
+                      console.log(parameter);
                       $('#status').html('processing...')
                       $.post(appUrl, parameter, function(data) {
                           $('#status').html('');
@@ -78,6 +79,7 @@ $(document).ready(
                       author: "",
                       tags:''
                   }
+
                   $('#status').html('processing...')
                   $.post(appUrl, parameter, function(data) {
                       $('#status').html('');
@@ -132,7 +134,28 @@ $(document).ready(
         $.get(appUrl, parameter, function(data) {
             $('#status').html('')
             console.log(data);
-            data_json = JSON.parse(data);
+
+			var newformat_data = JSON.parse(data);
+			var data_json = {"table":[]};
+			for(var i in newformat_data){
+				if(i==0)continue
+				data_json.table.push(
+					{
+						"title":newformat_data[i][0],
+						"story_id":newformat_data[i][1],
+						"type_":newformat_data[i][2],
+						"link":newformat_data[i][3],
+						"author":newformat_data[i][4],
+						"tags":newformat_data[i][5],
+						"gpstory":newformat_data[i][6],
+						"update_time_stamp":newformat_data[i][7],
+						"is_delete":newformat_data[i][8],
+					}
+				);
+
+			}
+
+            //data_json = JSON.parse(data);
             $('#TagList ul').append("<b>authors</b>");
             for (i in data_json.table_authors){
               //console.log(data_json.table_authors[i].tag);
@@ -146,7 +169,7 @@ $(document).ready(
               }
             }
             for (i in data_json.table) {
-                append_stories_list(DivStoriesList, data_json.table[i], 'prepend')
+                append_stories_list(DivStoriesList, data_json.table[i], 'append')
                 switch(data_json.table[i].type_){
                   case 'podcast':
                     StoriesDict[data_json.table[i].story_id] = {
@@ -178,7 +201,7 @@ $(document).ready(
 
 
 function search_by_keyword(){
-  console.log('search');
+  console.log('function:'+arguments.callee.name);
   var keyword = $('#text-input-search').val();
   get_stories_by_keyword(keyword);
 }

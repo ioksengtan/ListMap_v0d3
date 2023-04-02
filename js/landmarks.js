@@ -1,6 +1,6 @@
 
-var appUrl = 'https://script.google.com/macros/s/AKfycbx1bqAa5nG7JA6mt0Xf0Im3CUYFLVtSymiFgpn3/exec';
-var sheetsUrl = 'https://docs.google.com/spreadsheets/d/1kzMM_-o1G-rf6eAWLm8HMy6JGfz2HxP05H3TcB_k3Zk/edit#gid=1264616887'; //$('#sheetsUrl'),
+var appUrl = 'https://script.google.com/macros/s/AKfycbxGHZlc66cCVD0I5vemPkuD8xaN9HO--4shiGMpcnGB9vHEp9s/exec';
+var sheetsUrl = 'https://docs.google.com/spreadsheets/d/16CGCzPc9QMw_werSUgrvps4khWn3ccuuFquKFLP5g8Y/edit#gid=960765453'; //$('#sheetsUrl'),
 
 var sheetName = 'landmarks';
 parameter = {
