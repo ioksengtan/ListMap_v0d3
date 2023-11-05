@@ -21,11 +21,15 @@ $(document).ready(
                 data_to_append = {
                 }
                 if(story_content.includes('@select')){
+				  console.log('@select');
                   $('#DivStoriesListQuery').html("");
                   var data_to_append = {}
                   data_to_append.title = story_content;
                   data_to_append.type_ = '';
                   append_stories_list(DivStoriesListQuery, data_to_append, 'prepend')
+				}else if(story_content.includes('@listmap')){
+					$(this).val('').focus();
+					
                 }else if(story_content.includes('www.youtube.com')){
                   videoId = story_content.split("&")[0].split("=")[1];//https://www.youtube.com/watch?v=dtXONHulWcA&bls
                   var appYoutube = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + videoId + '&key=AIzaSyCsiStpIlMr_0RhLo9gvJ_gUjjpCRvPXmk'

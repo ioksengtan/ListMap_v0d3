@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -35,7 +35,7 @@
     <!--our own code to create the map-->
     <script>
       let map = L.map('map-container');
-      map.setView([24.831623, 121.069580], 7);
+      map.setView([52.268, 4.998], 7);
       let bglayer_Positron = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
         subdomains: 'abcd',
@@ -90,8 +90,12 @@
       }
       
       //fetch the geojson and add it to our geojson layer
-      //getGeoData('https://gist.githubusercontent.com/hpfast/2fb8de57c356d8c45ce511189eec5d6a/raw/ea3c117cec1a75dbd1de80f683397a16a6a81efc/gemeenten2017.topojson').then(data => geojson.addData(data));
-	  getGeoData('./counties.json').then(data => geojson.addData(data));
+      //getGeoData('countries.json').then(data => geojson.addData(data));
+	  fetch("./countries.json")
+		.then(response => {
+		   return response.json();
+		})
+		.then(data => console.log(data));
     </script>
   </body>
 </html>

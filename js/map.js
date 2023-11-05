@@ -378,7 +378,7 @@ function ZoomToGroup(input, coor) {
 
 
 function ShowHideMarker(input, loc, opt) {
-
+	console.log(input);
     input.addEventListener('click', () => {
         if (input.checked === false) {
             mymap.removeLayer(loc)
